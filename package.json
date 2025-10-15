@@ -1,0 +1,23 @@
+{
+  "name": "one-life-crossfit---website--cms",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "turbo build",
+    "dev": "turbo dev",
+    "lint": "npx ultracite check",
+    "format": "npx ultracite fix",
+    "check-types": "turbo check-types"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.2.5",
+    "@workspace/typescript-config": "workspace:*",
+    "turbo": "^2.5.4",
+    "typescript": "5.9.2",
+    "ultracite": "5.6.2"
+  },
+  "packageManager": "pnpm@10.12.2",
+  "engines": {
+    "node": ">=20"
+  }
+}
