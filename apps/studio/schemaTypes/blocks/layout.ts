@@ -1,13 +1,13 @@
-import { Star } from "lucide-react";
+import { LayoutPanelTop } from "lucide-react";
 import { defineField, defineType } from "sanity";
 
 import { buttonsField } from "../common";
 import { customRichText } from "../definitions/rich-text";
 
-export const hero = defineType({
-  name: "hero",
-  title: "Hero",
-  icon: Star,
+export const layout = defineType({
+  name: "layout",
+  title: "Layout",
+  icon: LayoutPanelTop,
   type: "object",
   fields: [
     defineField({
@@ -22,13 +22,13 @@ export const hero = defineType({
       type: "string",
       title: "Title",
       description:
-        "The main heading text for the hero section that captures attention",
+        "The main heading text for the layout section that captures attention",
     }),
     defineField({
       name: "variant",
       type: "string",
       title: "Variant",
-      description: "Choose how content and media are arranged",
+      description: "Choose how content and image are arranged",
       options: {
         layout: "radio",
         list: [
@@ -60,15 +60,6 @@ export const hero = defineType({
         },
       ],
     }),
-    // Legacy single image for backward compatibility
-    defineField({
-      name: "image",
-      type: "image",
-      title: "Image (Legacy)",
-      description:
-        "Deprecated: use Media above. Kept for backward compatibility.",
-      options: { hotspot: true },
-    }),
     buttonsField,
   ],
   preview: {
@@ -78,7 +69,7 @@ export const hero = defineType({
     },
     prepare: ({ title, variant }) => ({
       title,
-      subtitle: `Hero Block — ${variant ?? "imageRight"}`,
+      subtitle: `Layout Block — ${variant ?? "imageRight"}`,
     }),
   },
 });

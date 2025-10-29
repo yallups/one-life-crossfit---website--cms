@@ -130,7 +130,22 @@ img {
   display: block;
   max-width: 100%;
   width: 100%;
-  height: auto;
+  /*height: auto;*/
   object-fit: cover;
-  border-radius: var(--radius-md);
+  /*border-radius: var(--radius-md);*/
+}
+
+/* Ensure react-slick backgrounds can stretch to the full available height */
+/* This targets the slick containers and the extra wrapper divs react-slick adds around each slide */
+.slick-slider,
+.slick-list,
+.slick-track {
+  height: 100%;
+}
+
+/* Each slide, and its immediate wrappers, should inherit full height */
+.slick-slide,
+.slick-slide > div,
+.slick-slide > div > div {
+  height: 100%;
 }

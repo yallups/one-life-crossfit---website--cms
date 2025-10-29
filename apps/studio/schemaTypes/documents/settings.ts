@@ -20,6 +20,12 @@ const socialLinks = defineField({
       type: "string",
     }),
     defineField({
+      name: "yelp",
+      title: "Yelp URL",
+      description: "Full URL to your Yelp page",
+      type: "string",
+    }),
+    defineField({
       name: "twitter",
       title: "Twitter/X URL",
       description: "Full URL to your Twitter/X profile",
@@ -85,6 +91,12 @@ export const settings = defineType({
       title: "Contact Email",
       description: "Primary contact email address for your website",
       validation: (rule) => rule.email(),
+    }),
+    defineField({
+      name: "googleReviewsFeaturableId",
+      type: "string",
+      title: "Featureable ID",
+      description: "Featureable ID for Google Reviews",
     }),
     socialLinks,
   ],

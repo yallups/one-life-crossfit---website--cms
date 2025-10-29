@@ -176,19 +176,19 @@ function MobileMenu({ navbarData, settingsData }: NavigationData) {
       {/* Mobile menu overlay */}
       {isOpen && (
         <div className="fixed inset-0 top-16 z-50 bg-background/80 backdrop-blur-sm md:hidden">
-          <div className="fixed top-16 left-0 h-[calc(100vh-4rem)] w-full border-r bg-background p-6 shadow-lg">
+          <div className="fixed top-0 left-0 h-[calc(100vh-4rem)] w-full overflow-auto border-r bg-background p-6 shadow-lg">
             <div className="grid gap-6">
               {/* Logo for mobile */}
-              {logo && (
-                <div className="flex justify-center border-b pb-4">
-                  <Logo
-                    alt={siteTitle || ""}
-                    height={40}
-                    image={logo}
-                    width={120}
-                  />
-                </div>
-              )}
+              {/*{logo && (*/}
+              {/*  <div className="flex justify-center border-b pb-4">*/}
+              {/*    <Logo*/}
+              {/*      alt={siteTitle || ""}*/}
+              {/*      height={40}*/}
+              {/*      image={logo}*/}
+              {/*      width={120}*/}
+              {/*    />*/}
+              {/*  </div>*/}
+              {/*)}*/}
 
               {/* Navigation items */}
               <div className="grid gap-4">
@@ -247,9 +247,9 @@ function MobileMenu({ navbarData, settingsData }: NavigationData) {
 
               {/* Action buttons */}
               <div className="grid gap-3 border-t pt-4">
-                <div className="flex justify-center">
-                  <ModeToggle />
-                </div>
+                {/*<div className="flex justify-center">*/}
+                {/*  <ModeToggle />*/}
+                {/*</div>*/}
                 <SanityButtons
                   buttonClassName="w-full justify-center"
                   buttons={buttons || []}
