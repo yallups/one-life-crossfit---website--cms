@@ -1,7 +1,6 @@
 import { Badge } from "@workspace/ui/components/badge";
-
+import { SanityImage } from "@/components/elements/sanity-image";
 import type { PagebuilderType } from "@/types";
-
 import { RichText } from "../elements/rich-text";
 import { SanityIcon } from "../elements/sanity-icon";
 
@@ -12,12 +11,24 @@ type FeatureCardProps = {
 };
 
 function FeatureCard({ card }: FeatureCardProps) {
-  const { icon, title, richText } = card ?? {};
+  const { icon, title, richText, image } = card ?? {};
   return (
     <div className="rounded-3xl bg-accent p-8 md:min-h-[300px] md:p-8">
-      <span className="mb-9 flex w-fit items-center justify-center rounded-full bg-background p-3 drop-shadow-xl">
-        <SanityIcon icon={icon} />
-      </span>
+      {icon ? (
+        <span className="mb-9 flex w-fit items-center justify-center rounded-full bg-background p-3 drop-shadow-xl">
+          <SanityIcon icon={icon} />
+        </span>
+      ) : image?.id ? (
+        <span className="mb-9 flex w-fit items-center justify-center rounded-full bg-background p-3 drop-shadow-xl">
+          <SanityImage
+            className="-inset-4 pointer-events-none object-cover opacity-40 duration-1000 group-hover:opacity-100 group-hover:transition-opacity dark:opacity-100 dark:group-hover:opacity-[2]"
+            height={1080}
+            image={image}
+            loading="eager"
+            width={1920}
+          />
+        </span>
+      ) : null}
 
       <div>
         <h3 className="mb-2 font-medium text-lg md:text-2xl">{title}</h3>

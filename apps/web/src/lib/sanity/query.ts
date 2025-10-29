@@ -1,4 +1,4 @@
-import { defineQuery } from "next-sanity";
+import {defineQuery} from "next-sanity";
 
 const imageFields = /* groq */ `
   "id": asset._ref,
@@ -111,6 +111,7 @@ const imageLinkCardsBlock = /* groq */ `
         url.href
       ),
       ${imageFragment},
+      ${buttonsFragment},
     })
   }
 `;
@@ -119,6 +120,39 @@ const heroBlock = /* groq */ `
   _type == "hero" => {
     ...,
     ${imageFragment},
+    "media": array::compact(media[]{
+      ...,
+      _type == "image" => {
+        ${imageFields},
+        _type
+      },
+      _type == "file" => {
+        _type,
+        "url": asset->url,
+        "mimeType": asset->mimeType
+      }
+    }),
+    ${buttonsFragment},
+    ${richTextFragment}
+  }
+`;
+
+const layoutBlock = /* groq */ `
+  _type == "layout" => {
+    ...,
+    ${imageFragment},
+    "media": array::compact(media[]{
+      ...,
+      _type == "image" => {
+        ${imageFields},
+        _type
+      },
+      _type == "file" => {
+        _type,
+        "url": asset->url,
+        "mimeType": asset->mimeType
+      }
+    }),
     ${buttonsFragment},
     ${richTextFragment}
   }
@@ -169,9 +203,43 @@ const featureCardsIconBlock = /* groq */ `
     ${richTextFragment},
     "cards": array::compact(cards[]{
       ...,
+      ${imageFragment},
       ${richTextFragment},
     })
   }
+`;
+
+const logosBlockQuery = /* groq */ `
+  _type == "logos" => {
+    ...,
+    ${richTextFragment},
+    "images": array::compact(images[]{
+      ...,
+      ${imageFragment},
+      // Flatten customUrl to a simple href string for the component
+      "url": select(
+        url.type == "internal" => url.internal->slug.current,
+        url.type == "external" => url.external,
+        url.href
+      )
+    })
+  }
+`;
+
+const googleReviewsBlock = /* groq */ `
+  _type == "googleReviews" => {
+    ...,
+    reviewsNumber,
+    layout,
+    hideDate,
+    showReviewDate,
+    showReviewer,
+    showRating,
+    showReviewText,
+    autoplay,
+    autoplaySpeed,
+    "googleReviewsFeaturableId": *[_type == "settings"][0].googleReviewsFeaturableId
+  },
 `;
 
 const pageBuilderFragment = /* groq */ `
@@ -180,10 +248,13 @@ const pageBuilderFragment = /* groq */ `
     _type,
     ${ctaBlock},
     ${heroBlock},
+    ${layoutBlock},
     ${faqAccordionBlock},
     ${featureCardsIconBlock},
+    ${logosBlockQuery},
     ${subscribeNewsletterBlock},
-    ${imageLinkCardsBlock}
+    ${imageLinkCardsBlock},
+    ${googleReviewsBlock}
   }
 `;
 
@@ -376,6 +447,7 @@ export const queryGlobalSeoSettings = defineQuery(`
     siteDescription,
     socialLinks{
       linkedin,
+      yelp,
       facebook,
       twitter,
       instagram,
@@ -393,6 +465,7 @@ export const querySettingsData = defineQuery(`
     "logo": logo.asset->url + "?w=80&h=40&dpr=3&fit=max",
     "socialLinks": socialLinks,
     "contactEmail": contactEmail,
+    "googleReviewsFeaturableId": googleReviewsFeaturableId, 
   }
 `);
 

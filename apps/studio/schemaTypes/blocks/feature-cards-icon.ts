@@ -11,6 +11,12 @@ const featureCardIcon = defineField({
   fields: [
     iconField,
     defineField({
+      name: "image",
+      title: "Image",
+      type: "image",
+      description: "Add an image or illustration for this card (replaces icon)",
+    }),
+    defineField({
       name: "title",
       type: "string",
       description: "The heading text for this feature card",

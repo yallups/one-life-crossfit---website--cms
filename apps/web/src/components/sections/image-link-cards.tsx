@@ -19,7 +19,7 @@ export function ImageLinkCards({
       <div className="container mx-auto px-4 md:px-6">
         <div className="flex w-full flex-col items-center">
           <div className="flex flex-col items-center space-y-4 text-center sm:space-y-6 md:text-center">
-            <Badge variant="secondary">{eyebrow}</Badge>
+            {eyebrow && <Badge variant="secondary">{eyebrow}</Badge>}
             <h2 className="text-balance font-semibold text-3xl md:text-5xl">
               {title}
             </h2>
@@ -28,7 +28,7 @@ export function ImageLinkCards({
 
           {/* Social Media Grid */}
           {Array.isArray(cards) && cards.length > 0 && (
-            <div className="mt-16 grid w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-1">
+            <div className="mt-16 grid w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-1">
               {cards?.map((card, idx) => (
                 <CTACard
                   card={card}

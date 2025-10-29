@@ -1,19 +1,20 @@
 "use client";
 
-import { useOptimistic } from "@sanity/visual-editing/react";
-import { createDataAttribute } from "next-sanity";
-import { useCallback, useMemo } from "react";
-
-import { dataset, projectId, studioUrl } from "@/config";
-import type { QueryHomePageDataResult } from "@/lib/sanity/sanity.types";
-import type { PageBuilderBlockTypes, PagebuilderType } from "@/types";
-
-import { CTABlock } from "./sections/cta";
-import { FaqAccordion } from "./sections/faq-accordion";
-import { FeatureCardsWithIcon } from "./sections/feature-cards-with-icon";
-import { HeroBlock } from "./sections/hero";
-import { ImageLinkCards } from "./sections/image-link-cards";
-import { SubscribeNewsletter } from "./sections/subscribe-newsletter";
+import {useOptimistic} from "@sanity/visual-editing/react";
+import {createDataAttribute} from "next-sanity";
+import {useCallback, useMemo} from "react";
+import {GoogleReviews} from "@/components/sections/google-reviews";
+import {Logos} from "@/components/sections/logos";
+import {dataset, projectId, studioUrl} from "@/config";
+import type {QueryHomePageDataResult} from "@/lib/sanity/sanity.types";
+import type {PageBuilderBlockTypes, PagebuilderType} from "@/types";
+import {CTABlock} from "./sections/cta";
+import {FaqAccordion} from "./sections/faq-accordion";
+import {FeatureCardsWithIcon} from "./sections/feature-cards-with-icon";
+import {HeroBlock} from "./sections/hero";
+import {ImageLinkCards} from "./sections/image-link-cards";
+import {LayoutBlock} from "./sections/layout";
+import {SubscribeNewsletter} from "./sections/subscribe-newsletter";
 
 // More specific and descriptive type aliases
 type PageBuilderBlock = NonNullable<
@@ -25,7 +26,6 @@ export type PageBuilderProps = {
   readonly id: string;
   readonly type: string;
 };
-
 
 type SanityDataAttributeConfig = {
   readonly id: string;
@@ -40,6 +40,7 @@ const BLOCK_COMPONENTS = {
     PagebuilderType<"faqAccordion">
   >,
   hero: HeroBlock as React.ComponentType<PagebuilderType<"hero">>,
+  layout: LayoutBlock as React.ComponentType<PagebuilderType<"layout">>,
   featureCardsIcon: FeatureCardsWithIcon as React.ComponentType<
     PagebuilderType<"featureCardsIcon">
   >,
@@ -49,6 +50,10 @@ const BLOCK_COMPONENTS = {
   imageLinkCards: ImageLinkCards as React.ComponentType<
     PagebuilderType<"imageLinkCards">
   >,
+  googleReviews: GoogleReviews as React.ComponentType<
+    PagebuilderType<"googleReviews">
+  >,
+  logos: Logos as React.ComponentType<PagebuilderType<"logos">>,
 } as const satisfies Record<PageBuilderBlockTypes, React.ComponentType<any>>;
 
 /**
@@ -69,9 +74,9 @@ function createSanityDataAttribute(config: SanityDataAttributeConfig): string {
  * Error fallback component for unknown block types
  */
 function UnknownBlockError({
-  blockType,
-  blockKey,
-}: {
+                             blockType,
+                             blockKey,
+                           }: {
   blockType: string;
   blockKey: string;
 }) {
@@ -151,22 +156,22 @@ function useBlockRenderer(id: string, type: string) {
     [createBlockDataAttribute]
   );
 
-  return { renderBlock };
+  return {renderBlock};
 }
 
 /**
  * PageBuilder component for rendering dynamic content blocks from Sanity CMS
  */
 export function PageBuilder({
-  pageBuilder: initialBlocks = [],
-  id,
-  type,
-}: PageBuilderProps) {
+                              pageBuilder: initialBlocks = [],
+                              id,
+                              type,
+                            }: PageBuilderProps) {
   const blocks = useOptimisticPageBuilder(initialBlocks, id);
-  const { renderBlock } = useBlockRenderer(id, type);
+  const {renderBlock} = useBlockRenderer(id, type);
 
   const containerDataAttribute = useMemo(
-    () => createSanityDataAttribute({ id, type, path: "pageBuilder" }),
+    () => createSanityDataAttribute({id, type, path: "pageBuilder"}),
     [id, type]
   );
 
@@ -177,7 +182,7 @@ export function PageBuilder({
   return (
     <section
       aria-label="Page content"
-      className="mx-auto my-16 flex max-w-7xl flex-col gap-16"
+      className="flex flex-col gap-16"
       data-sanity={containerDataAttribute}
     >
       {blocks.map(renderBlock)}

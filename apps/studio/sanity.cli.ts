@@ -1,4 +1,4 @@
-import { defineCliConfig } from "sanity/cli";
+import {defineCliConfig} from "sanity/cli";
 
 const projectId = process.env.SANITY_STUDIO_PROJECT_ID;
 const dataset = process.env.SANITY_STUDIO_DATASET;
@@ -34,5 +34,8 @@ export default defineCliConfig({
     dataset,
   },
   studioHost: getStudioHost(),
+  deployment: {
+    appId: 'u5d113unbe5ufo15pdlki0ix',
+  },
   autoUpdates: false,
 });

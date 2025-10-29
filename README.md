@@ -1,8 +1,8 @@
-# Next.js Monorepo with Sanity CMS
+# One Life CrossFit Website and CMS
+
+[Build with Next.js Monorepo with Sanity CMS](https://raw.githubusercontent.com/robotostudio/turbo-start-sanity/main/README.md)
 
 A modern, full-stack monorepo template built with Next.js App Router, Sanity CMS, Shadcn UI, and TurboRepo.
-
-![Easiest way to build a webpage](https://raw.githubusercontent.com/robotostudio/turbo-start-sanity/main/turbo-start-sanity-og.png)
 
 ## Features
 
@@ -31,19 +31,107 @@ A modern, full-stack monorepo template built with Next.js App Router, Sanity CMS
 - Live preview capabilities
 - Asset management
 
+## TODO
+- [ ] Home Page
+  - [X] Value Prop section 
+  - [ ] Guide section - trusted authority - social proof
+  - [ ] Plan section - "How it works" - fun easy
+  - [ ] explanitory - SEO keyword rich
+    - At company name we know that you want to be (a/an) identity transformation In order to do that, you need character want The problem is external problem which makes you feel internal problem we believe philosophical problem. We understand empathy, which is why we authority. Here's how we do it."
+      1. Plan step one
+      2. Plan step two
+      3. Plan step three
+         So, direct CTA so you can stop failure and instead success.
+  - [ ] FAQs
+- [ ] Website Structures
+  - [ ] Contact Section - from settings (Should be included with footer)
+    - Map of address
+    - Business hours 
+    - email
+    - phone number
+  - [ ] Value Props component
+    - variant
+      - title, image, text
+      - image background
+    - Value Prop
+      - Title
+      - image
+      - rich text
+      - link?
+      - CTAs?
+  - [ ] testimonial
+    - image
+    - rich text
+    - page tags (group training, private, crossfit, etc)
+  - [ ] Global Component - Lead generator - free 30 day plan to get fit... (Lead magnet)
+- [ ] Programs/services
+  - [ ] group training
+    - Pages
+      - [ ] crossfit
+      - [ ] bootcamp
+      - [ ] AA
+    - Page structure
+      - Hero
+      - Announcements component - from Wodify
+      - Value Prop
+      - WOD - from Wodify - https://docs.wodify.com/reference/get_workouts-1
+      - Schedule component - from Wodify
+      - CTA - book consult
+      - Testimonial
+  - [ ] Private training
+    - Pages
+      - [ ] 1:1
+      - [ ] semi-private
+    - Page Structure
+      - Hero
+      - Value Prop
+      - CTA - book consult
+      - Testimonial
+  - [ ] Nutrition / Lifestyle
+      - Page Structure
+        - Hero
+        - Value Prop
+        - CTA - book consult
+        - Testimonial
+  - [ ] Sports Massage Therapy
+    - Page Structure
+      - Hero
+      - Value Prop
+      - CTA
+- [ ] Memberships
+  - [ ] New Foundations
+    - You’ll complete the fundamentals sessions (4 of them 30 min each) - these are not heavy workouts, they are informational and form developing. It’s usually recommended to do them just before or right after a class.
+    - Then Hans or a coach will conduct a base line private training session with you where he will coach your through a couple benchmarks.
+    - I’ll put you down in the next 60 days for a nutrition review after you’ve had some time in class so we can check energy levels and make sure you’re getting the right fuel.
+    - Finally at day 90 you’ll use your last Private Training session to retest your baselines and we will make sure your one the right path to maximum health.
+  - [ ] "Jump start"
+    - Group + Fundamentals
+  - [ ] Hybrid 1, 2, 4
+  - [ ] Private Coaching
+    - Nutrition
+    - Custom program (Hyrox, Spartan, CrossFit, Endurance, Running, Weightlifting)
+    - packs, monthly
+- [ ] Schedule
+  - Master schedule with booking links - from wodify
+  - Map to gym
+  - Contact Section
+- [ ] Fill out blog pages
+- [ ] About / Team
+  - Page Structure
+    - Hero - CTA "talk with a team member"
+    - Team Member List - Pull Coaches from Wodify https://docs.wodify.com/reference/get_coaches-1
+- [ ] Gym Gallery
+- [ ] Instagram Feed component
+- [ ] Yelp Review component
+
+
 ## Getting Started
 
-### Installing the template
+### Installing locally
 
 #### 1. Initialize template with Sanity CLI
 
-Run the command in your Terminal to initialize this template on your local computer.
-
-See the documentation if you are [having issues with the CLI](https://www.sanity.io/help/cli-errors).
-
-```shell
-npm create sanity@latest -- --template robotostudio/turbo-start-sanity
-```
+Check out project from github
 
 #### 2. Run Studio and Next.js app locally
 
@@ -69,22 +157,7 @@ From the Studio, click "+ Create" and select the `Blog` document type. Go ahead 
 
 Your content should now appear in your Next.js app ([http://localhost:3000](http://localhost:3000)) as well as in the Studio on the "Presentation" Tab
 
-#### 2. Sample Content
-
-When you initialize the template using the Sanity CLI, sample content is not automatically imported into your project. However, you can import it after the init is done. This data includes example blog posts, authors, and other content types to help you get started quickly (see next step).
-
-#### 3. Seed data using script
-
-To add sample data programmatically, run the following command:
-
-```shell
-cd apps/studio
-npx sanity dataset import ./seed-data.tar.gz production --replace
-```
-
-This command imports seed content into your Sanity dataset.
-
-#### 4. Extending the Sanity schema
+#### 2. Extending the Sanity schema
 
 The schemas for all document types are defined in the `studio/schemaTypes/documents` directory. You can [add more document types](https://www.sanity.io/docs/schema-types) to the schema to suit your needs.
 
