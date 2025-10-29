@@ -21,8 +21,8 @@ importers:
         specifier: 5.9.2
         version: 5.9.2
       ultracite:
-        specifier: 5.6.2
-        version: 5.6.2(typescript@5.9.2)(valibot@1.1.0(typescript@5.9.2))
+        specifier: 6.0.5
+        version: 6.0.5(typescript@5.9.2)(valibot@1.1.0(typescript@5.9.2))
 
   apps/studio:
     dependencies:
@@ -2883,8 +2883,8 @@ packages:
   '@tootallnate/quickjs-emscripten@0.23.0':
     resolution: {integrity: sha512-C5Mc6rdnsaJDjO3UpGW/CQTHtCKaYlScZTly4JIu97Jxo/odCiH0ITnDXSJPTOrEKk/ycSZ0AOgTmkDtkOsvIA==}
 
-  '@trpc/server@11.6.0':
-    resolution: {integrity: sha512-skTso0AWbOZck40jwNeYv++AMZXNWLUWdyk+pB5iVaYmEKTuEeMoPrEudR12VafbEU6tZa8HK3QhBfTYYHDCdg==}
+  '@trpc/server@11.7.1':
+    resolution: {integrity: sha512-N3U8LNLIP4g9C7LJ/sLkjuPHwqlvE3bnspzC4DEFVdvx2+usbn70P80E3wj5cjOTLhmhRiwJCSXhlB+MHfGeCw==}
     peerDependencies:
       typescript: '>=5.7.2'
 
@@ -3468,8 +3468,8 @@ packages:
     resolution: {integrity: sha512-y4Mg2tXshplEbSGzx7amzPwKKOCGuoSRP/CjEdwwk0FOGlUbq6lKuoyDZTNZkmxHdJtp54hdfY/JUrdL7Xfdug==}
     engines: {node: '>=14'}
 
-  commander@14.0.1:
-    resolution: {integrity: sha512-2JkV3gUZUVrbNA+1sjBOYLsMZ5cEEl8GTFP2a4AVz5hvasAMCQ1D2l2le/cX+pV4N6ZU17zjUahLpIXRrnWL8A==}
+  commander@14.0.2:
+    resolution: {integrity: sha512-TywoWNNRbhoD0BXs1P3ZEScW8W5iKrnbithIl0YH+uCmBd0QpPOA8yc82DS3BIE5Ma6FnBVUsJ7wVUDz4dvOWQ==}
     engines: {node: '>=20'}
 
   commander@2.20.3:
@@ -6368,8 +6368,8 @@ packages:
     resolution: {integrity: sha512-c1PTsA3tYrIsLGkJkzHF+w9F2EyxfXGo4UyJc4pFL++FMjnq0HJS69T3M7d//gKrFKwy429bouPescbjecU+Zw==}
     engines: {node: '>=8'}
 
-  trpc-cli@0.11.0:
-    resolution: {integrity: sha512-cFt5LVl1EzwmhZtWa6xPBWr6rgLXGgEOqmcTMIYcI6fLQE1REgu6tS55LmqUJs5kVSXrOd1z5/aufJS71xUUyA==}
+  trpc-cli@0.12.0:
+    resolution: {integrity: sha512-MRzoqm2rPbUsSpVWiMdmHsXJJezAsq8kDJlO9d/uOX17tImxiBjA0aU52RthVHrftn++wFOE1uqBSCVs+88e6w==}
     engines: {node: '>=18'}
     hasBin: true
     peerDependencies:
@@ -6512,8 +6512,8 @@ packages:
     engines: {node: '>=0.8.0'}
     hasBin: true
 
-  ultracite@5.6.2:
-    resolution: {integrity: sha512-ku0OhXCE8P7HZ8eUghFxhWroNiDTGv+5sKOgtyeTuOIvdfyyhVie5ijG/qFcleDOq5nvENolj/y51SJ5ddXbfw==}
+  ultracite@6.0.5:
+    resolution: {integrity: sha512-H5OrSBQzZmjxL1qwLgi21cmWI46i9sk0iBIVurb+iGOmr6XdzPANcydpOS3h4dN/dCzDGp29GOCqVaUGHeET1g==}
     hasBin: true
 
   undici-types@6.21.0:
@@ -10267,7 +10267,7 @@ snapshots:
 
   '@tootallnate/quickjs-emscripten@0.23.0': {}
 
-  '@trpc/server@11.6.0(typescript@5.9.2)':
+  '@trpc/server@11.7.1(typescript@5.9.2)':
     dependencies:
       typescript: 5.9.2
 
@@ -10910,7 +10910,7 @@ snapshots:
 
   commander@10.0.1: {}
 
-  commander@14.0.1: {}
+  commander@14.0.2: {}
 
   commander@2.20.3:
     optional: true
@@ -14350,11 +14350,11 @@ snapshots:
 
   trim-newlines@3.0.1: {}
 
-  trpc-cli@0.11.0(@trpc/server@11.6.0(typescript@5.9.2))(valibot@1.1.0(typescript@5.9.2))(zod@4.1.12):
+  trpc-cli@0.12.0(@trpc/server@11.7.1(typescript@5.9.2))(valibot@1.1.0(typescript@5.9.2))(zod@4.1.12):
     dependencies:
-      commander: 14.0.1
+      commander: 14.0.2
     optionalDependencies:
-      '@trpc/server': 11.6.0(typescript@5.9.2)
+      '@trpc/server': 11.7.1(typescript@5.9.2)
       valibot: 1.1.0(typescript@5.9.2)
       zod: 4.1.12
 
@@ -14452,14 +14452,14 @@ snapshots:
   uglify-js@3.19.3:
     optional: true
 
-  ultracite@5.6.2(typescript@5.9.2)(valibot@1.1.0(typescript@5.9.2)):
+  ultracite@6.0.5(typescript@5.9.2)(valibot@1.1.0(typescript@5.9.2)):
     dependencies:
       '@clack/prompts': 0.11.0
-      '@trpc/server': 11.6.0(typescript@5.9.2)
+      '@trpc/server': 11.7.1(typescript@5.9.2)
       deepmerge: 4.3.1
       jsonc-parser: 3.3.1
       nypm: 0.6.2
-      trpc-cli: 0.11.0(@trpc/server@11.6.0(typescript@5.9.2))(valibot@1.1.0(typescript@5.9.2))(zod@4.1.12)
+      trpc-cli: 0.12.0(@trpc/server@11.7.1(typescript@5.9.2))(valibot@1.1.0(typescript@5.9.2))(zod@4.1.12)
       zod: 4.1.12
     transitivePeerDependencies:
       - '@orpc/server'
