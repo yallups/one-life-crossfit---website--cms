@@ -4,7 +4,7 @@ import "slick-carousel/slick/slick-theme.css";
 
 import { Geist, Geist_Mono } from "next/font/google";
 import { draftMode } from "next/headers";
-import { VisualEditing } from "next-sanity";
+import { VisualEditing } from 'next-sanity/visual-editing'
 import { Suspense } from "react";
 import { preconnect } from "react-dom";
 import { FooterServer, FooterSkeleton } from "@/components/footer";
@@ -34,25 +34,25 @@ export default async function RootLayout({
   const nav = await getNavigationData();
   return (
     <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${fontSans.variable} ${fontMono.variable} font-sans antialiased`}
-      >
-        <Providers>
-          <Navbar navbarData={nav.navbarData} settingsData={nav.settingsData} />
-          {children}
-          <Suspense fallback={<FooterSkeleton />}>
-            <FooterServer />
-          </Suspense>
-          <SanityLive />
-          <CombinedJsonLd includeOrganization includeWebsite />
-          {(await draftMode()).isEnabled && (
-            <>
-              <PreviewBar />
-              <VisualEditing />
-            </>
-          )}
-        </Providers>
-      </body>
+    <body
+      className={`${fontSans.variable} ${fontMono.variable} font-sans antialiased`}
+    >
+    <Providers>
+      <Navbar navbarData={nav.navbarData} settingsData={nav.settingsData}/>
+      {children}
+      <Suspense fallback={<FooterSkeleton/>}>
+        <FooterServer/>
+      </Suspense>
+      <SanityLive/>
+      <CombinedJsonLd includeOrganization includeWebsite/>
+      {(await draftMode()).isEnabled && (
+        <>
+          <PreviewBar/>
+          <VisualEditing/>
+        </>
+      )}
+    </Providers>
+    </body>
     </html>
   );
 }

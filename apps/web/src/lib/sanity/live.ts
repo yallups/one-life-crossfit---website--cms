@@ -1,4 +1,4 @@
-import { defineLive } from "next-sanity";
+import { defineLive } from 'next-sanity/live'
 
 import { client } from "./client";
 import { token } from "./token";
@@ -8,7 +8,7 @@ import { token } from "./token";
  * Learn more: https://github.com/sanity-io/next-sanity?tab=readme-ov-file#1-configure-definelive
  */
 
-export const { sanityFetch, SanityLive } = defineLive({
+export const {sanityFetch, SanityLive} = defineLive({
   client,
   // Required for showing draft content when the Sanity Presentation Tool is used, or to enable the Vercel Toolbar Edit Mode
   serverToken: token,
