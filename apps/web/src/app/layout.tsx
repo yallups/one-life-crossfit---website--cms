@@ -14,6 +14,7 @@ import { PreviewBar } from "@/components/preview-bar";
 import { Providers } from "@/components/providers";
 import { getNavigationData } from "@/lib/navigation";
 import { SanityLive } from "@/lib/sanity/live";
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 const fontSans = Geist({
   subsets: ["latin"],
@@ -38,17 +39,18 @@ export default async function RootLayout({
       className={`${fontSans.variable} ${fontMono.variable} font-sans antialiased`}
     >
     <Providers>
-      <Navbar navbarData={nav.navbarData} settingsData={nav.settingsData}/>
+      <Navbar navbarData={nav.navbarData} settingsData={nav.settingsData} />
       {children}
-      <Suspense fallback={<FooterSkeleton/>}>
-        <FooterServer/>
+      <Suspense fallback={<FooterSkeleton />}>
+        <FooterServer />
       </Suspense>
-      <SanityLive/>
-      <CombinedJsonLd includeOrganization includeWebsite/>
+      <SanityLive />
+      <CombinedJsonLd includeOrganization includeWebsite />
+      <SpeedInsights />
       {(await draftMode()).isEnabled && (
         <>
-          <PreviewBar/>
-          <VisualEditing/>
+          <PreviewBar />
+          <VisualEditing />
         </>
       )}
     </Providers>
