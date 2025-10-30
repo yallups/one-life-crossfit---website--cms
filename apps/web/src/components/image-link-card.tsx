@@ -20,7 +20,7 @@ export function CTACard({ card, className }: CTACardProps) {
   return (
     <Comp
       className={cn(
-        "group relative flex flex-col space-y-2 overflow-hidden rounded-3xl p-4 md:p-6",
+        "group relative flex flex-col space-y-2 overflow-hidden rounded-3xl p-4 md:p-6 bg-card text-card-foreground border shadow",
         className
       )}
       href={href ?? "#"}
@@ -35,10 +35,10 @@ export function CTACard({ card, className }: CTACardProps) {
         />
       )}
       <div className="z-[2] mb-4 flex grow-1 flex-col space-y-2 duration-500">
-        <h3 className="font-[500] text-primary text-xl transition-colors delay-150 duration-300">
+        <h3 className="font-[500] text-foreground text-xl transition-colors delay-150 duration-300">
           {title}
         </h3>
-        <p className="text-primary text-sm transition-opacity delay-150 duration-300">
+        <p className="text-foreground text-sm transition-opacity delay-150 duration-300">
           {description}
         </p>
       </div>

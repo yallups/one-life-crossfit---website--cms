@@ -7,10 +7,7 @@ import Link from "next/link";
 import { useState } from "react";
 import useSWR from "swr";
 
-import type {
-  QueryGlobalSeoSettingsResult,
-  QueryNavbarDataResult,
-} from "@/lib/sanity/sanity.types";
+import type { QueryGlobalSeoSettingsResult, QueryNavbarDataResult, } from "@/lib/sanity/sanity.types";
 
 import { SanityButtons } from "./elements/sanity-buttons";
 import { SanityIcon } from "./elements/sanity-icon";
@@ -28,8 +25,8 @@ type NavColumn = NonNullable<
 >[number];
 
 type ColumnLink = Extract<NavColumn, { type: "column" }>["links"] extends Array<
-  infer T
->
+    infer T
+  >
   ? T
   : never;
 
@@ -176,7 +173,8 @@ function MobileMenu({ navbarData, settingsData }: NavigationData) {
       {/* Mobile menu overlay */}
       {isOpen && (
         <div className="fixed inset-0 top-16 z-50 bg-background/80 backdrop-blur-sm md:hidden">
-          <div className="fixed top-0 left-0 h-[calc(100vh-4rem)] w-full overflow-auto border-r bg-background p-6 shadow-lg">
+          <div
+            className="fixed top-0 left-0 h-[calc(100vh-4rem)] w-full overflow-auto border-r bg-background p-6 shadow-lg">
             <div className="grid gap-6">
               {/* Logo for mobile */}
               {/*{logo && (*/}
@@ -196,7 +194,7 @@ function MobileMenu({ navbarData, settingsData }: NavigationData) {
                   if (column.type === "link") {
                     return (
                       <Link
-                        className="flex items-center py-2 font-medium text-sm transition-colors hover:text-primary"
+                        className="flex items-center py-2 font-medium text-sm transition-colors hover:text-foreground"
                         href={column.href || "#"}
                         key={column._key}
                         onClick={closeMenu}
@@ -211,7 +209,7 @@ function MobileMenu({ navbarData, settingsData }: NavigationData) {
                     return (
                       <div className="grid gap-2" key={column._key}>
                         <button
-                          className="flex items-center justify-between py-2 font-medium text-sm transition-colors hover:text-primary"
+                          className="flex items-center justify-between py-2 font-medium text-sm transition-colors hover:text-foreground"
                           onClick={() => toggleDropdown(column._key)}
                           type="button"
                         >

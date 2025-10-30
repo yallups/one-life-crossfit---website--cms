@@ -1,9 +1,4 @@
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@workspace/ui/components/accordion";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger, } from "@workspace/ui/components/accordion";
 import { Badge } from "@workspace/ui/components/badge";
 import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
@@ -71,7 +66,7 @@ export function FaqAccordion({
                   {link?.description}
                 </p>
                 <span className="rounded-full border p-1">
-                  <ArrowUpRight className="text-primary" size={16} />
+                  <ArrowUpRight className="text-foreground" size={16} />
                 </span>
               </Link>
             </div>

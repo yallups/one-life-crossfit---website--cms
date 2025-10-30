@@ -1,11 +1,11 @@
-import {Badge} from "@workspace/ui/components/badge";
-import {kebabCase} from "change-case";
-import type {PagebuilderType} from "@/types";
-import {RichText} from "../elements/rich-text";
-import {SanityButtons} from "../elements/sanity-buttons";
-import {BackgroundMedia} from "../shared/background-media";
-import {MediaDisplay} from "../shared/media-display";
-import {normalizeMedia} from "../shared/media-utils";
+import { Badge } from "@workspace/ui/components/badge";
+import { kebabCase } from "change-case";
+import type { PagebuilderType } from "@/types";
+import { RichText } from "../elements/rich-text";
+import { SanityButtons } from "../elements/sanity-buttons";
+import { BackgroundMedia } from "../shared/background-media";
+import { MediaDisplay } from "../shared/media-display";
+import { normalizeMedia } from "../shared/media-utils";
 
 export type SharedSectionProps = (
   | PagebuilderType<"hero">
@@ -29,7 +29,7 @@ export function SectionShared(props: SharedSectionProps) {
   } = (props as any) ?? {};
   const rawMedia = (props as any)?.media as any[] | undefined;
   const fallbackImage = (props as any)?.image; // for layout legacy support
-  const {images, videos} = normalizeMedia(rawMedia, fallbackImage);
+  const { images, videos } = normalizeMedia(rawMedia, fallbackImage);
 
   const isCentered = variant === "centered";
   const isImageLeft = variant === "imageLeft";
@@ -77,7 +77,7 @@ export function SectionShared(props: SharedSectionProps) {
         <div
           className={
             backgroundFill
-              ? "absolute top-0 right-0 bottom-0 left-0 z-10 grid min-h-screen place-items-center px-6 py-10 text-center text-primary md:px-8 lg:py-16"
+              ? "absolute top-0 right-0 bottom-0 left-0 z-10 grid min-h-screen place-items-center px-6 py-10 text-center text-foreground md:px-8 lg:py-16"
               : "dark container absolute top-0 right-0 bottom-0 left-0 mx-auto overflow-hidden rounded-3xl px-4 md:px-8"
           }
         >
@@ -107,7 +107,7 @@ export function SectionShared(props: SharedSectionProps) {
           {isCentered ? (
             <>
               {TextContent}
-              <MediaDisplay images={images} videos={videos}/>
+              <MediaDisplay images={images} videos={videos} />
             </>
           ) : (
             <>
@@ -121,7 +121,7 @@ export function SectionShared(props: SharedSectionProps) {
                   isImageLeft ? "order-2 lg:order-1" : "order-2"
                 } flex content-center justify-center align-middle`}
               >
-                <MediaDisplay images={images} videos={videos}/>
+                <MediaDisplay images={images} videos={videos} />
               </div>
             </>
           )}

@@ -1,9 +1,6 @@
 "use client";
 import { memo } from "react";
-import {
-  SanityImage as BaseSanityImage,
-  type WrapperProps,
-} from "sanity-image";
+import { SanityImage as BaseSanityImage, type WrapperProps, } from "sanity-image";
 
 import { dataset, projectId } from "@/config";
 import type { SanityImageProps as SanityImageData } from "@/types";
