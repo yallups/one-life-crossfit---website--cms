@@ -1,20 +1,20 @@
 "use client";
 
-import {useOptimistic} from "@sanity/visual-editing/react";
-import {createDataAttribute} from "next-sanity";
-import {useCallback, useMemo} from "react";
-import {GoogleReviews} from "@/components/sections/google-reviews";
-import {Logos} from "@/components/sections/logos";
-import {dataset, projectId, studioUrl} from "@/config";
-import type {QueryHomePageDataResult} from "@/lib/sanity/sanity.types";
-import type {PageBuilderBlockTypes, PagebuilderType} from "@/types";
-import {CTABlock} from "./sections/cta";
-import {FaqAccordion} from "./sections/faq-accordion";
-import {FeatureCardsWithIcon} from "./sections/feature-cards-with-icon";
-import {HeroBlock} from "./sections/hero";
-import {ImageLinkCards} from "./sections/image-link-cards";
-import {LayoutBlock} from "./sections/layout";
-import {SubscribeNewsletter} from "./sections/subscribe-newsletter";
+import { useOptimistic } from "@sanity/visual-editing/react";
+import { createDataAttribute } from "next-sanity";
+import { useCallback, useMemo } from "react";
+import { Logos } from "@/components/sections/logos";
+import { dataset, projectId, studioUrl } from "@/config";
+import type { QueryHomePageDataResult } from "@/lib/sanity/sanity.types";
+import type { PageBuilderBlockTypes, PagebuilderType } from "@/types";
+import { CTABlock } from "./sections/cta";
+import { FaqAccordion } from "./sections/faq-accordion";
+import { FeatureCardsWithIcon } from "./sections/feature-cards-with-icon";
+import { HeroBlock } from "./sections/hero";
+import { ImageLinkCards } from "./sections/image-link-cards";
+import { LayoutBlock } from "./sections/layout";
+import { SubscribeNewsletter } from "./sections/subscribe-newsletter";
+import { GoogleReviews } from "@/components/sections/google-reviews";
 
 // More specific and descriptive type aliases
 type PageBuilderBlock = NonNullable<
@@ -74,9 +74,9 @@ function createSanityDataAttribute(config: SanityDataAttributeConfig): string {
  * Error fallback component for unknown block types
  */
 function UnknownBlockError({
-                             blockType,
-                             blockKey,
-                           }: {
+  blockType,
+  blockKey,
+}: {
   blockType: string;
   blockKey: string;
 }) {
@@ -156,22 +156,22 @@ function useBlockRenderer(id: string, type: string) {
     [createBlockDataAttribute]
   );
 
-  return {renderBlock};
+  return { renderBlock };
 }
 
 /**
  * PageBuilder component for rendering dynamic content blocks from Sanity CMS
  */
 export function PageBuilder({
-                              pageBuilder: initialBlocks = [],
-                              id,
-                              type,
-                            }: PageBuilderProps) {
+  pageBuilder: initialBlocks = [],
+  id,
+  type,
+}: PageBuilderProps) {
   const blocks = useOptimisticPageBuilder(initialBlocks, id);
-  const {renderBlock} = useBlockRenderer(id, type);
+  const { renderBlock } = useBlockRenderer(id, type);
 
   const containerDataAttribute = useMemo(
-    () => createSanityDataAttribute({id, type, path: "pageBuilder"}),
+    () => createSanityDataAttribute({ id, type, path: "pageBuilder" }),
     [id, type]
   );
 

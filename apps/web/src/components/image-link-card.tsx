@@ -28,10 +28,10 @@ export function CTACard({ card, className }: CTACardProps) {
       {image?.id && (
         <SanityImage
           className="-inset-4 pointer-events-none object-cover"
-          height={1080}
+          height={1080 / 6}
           image={image}
           loading="eager"
-          width={1920}
+          width={1920 / 6}
         />
       )}
       <div className="z-[2] mb-4 flex grow-1 flex-col space-y-2 duration-500">
