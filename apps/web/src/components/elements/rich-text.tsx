@@ -1,11 +1,7 @@
 "use client";
 import { cn } from "@workspace/ui/lib/utils";
 import Link from "next/link";
-import {
-  PortableText,
-  type PortableTextBlock,
-  type PortableTextReactComponents,
-} from "next-sanity";
+import { PortableText, type PortableTextBlock, type PortableTextReactComponents, } from "next-sanity";
 
 import { parseChildrenToSlug } from "@/utils";
 
@@ -83,6 +79,20 @@ const components: Partial<PortableTextReactComponents> = {
         </Link>
       );
     },
+  },
+  list: props => {
+    return (
+      <ul>
+        {props.children}
+      </ul>
+    )
+  },
+  listItem: props => {
+    return (
+      <li>
+        {props.children}
+      </li>
+    )
   },
   types: {
     image: ({ value }) => {

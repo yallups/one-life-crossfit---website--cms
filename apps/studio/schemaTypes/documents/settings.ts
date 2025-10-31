@@ -86,6 +86,15 @@ export const settings = defineType({
       },
     }),
     defineField({
+      name: "siteIcon",
+      type: "image",
+      title: "Site Icon",
+      description: "Upload a square image used to generate favicons and the Apple touch icon.",
+      options: {
+        hotspot: true,
+      },
+    }),
+    defineField({
       name: "contactEmail",
       type: "string",
       title: "Contact Email",

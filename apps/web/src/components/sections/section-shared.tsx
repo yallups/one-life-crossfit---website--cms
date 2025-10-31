@@ -1,11 +1,9 @@
-import { Badge } from "@workspace/ui/components/badge";
 import { kebabCase } from "change-case";
 import type { PagebuilderType } from "@/types";
-import { RichText } from "../elements/rich-text";
-import { SanityButtons } from "../elements/sanity-buttons";
 import { BackgroundMedia } from "../shared/background-media";
 import { MediaDisplay } from "../shared/media-display";
 import { normalizeMedia } from "../shared/media-utils";
+import { CommonTextComponent } from "@/components/shared/commom-text-sction";
 
 export type SharedSectionProps = (
   | PagebuilderType<"hero">
@@ -28,45 +26,22 @@ export function SectionShared(props: SharedSectionProps) {
     outerSectionClassName,
   } = (props as any) ?? {};
   const rawMedia = (props as any)?.media as any[] | undefined;
-  const fallbackImage = (props as any)?.image; // for layout legacy support
-  const { images, videos } = normalizeMedia(rawMedia, fallbackImage);
+  const { images, videos } = normalizeMedia(rawMedia);
 
   const isCentered = variant === "centered";
   const isImageLeft = variant === "imageLeft";
   const isBackground = variant === "background";
 
   const gridCols = isCentered ? "" : "lg:grid-cols-2";
-  const textAlign = isCentered
-    ? "text-center"
-    : "text-center lg:items-start lg:justify-items-start lg:text-left";
-
-  const HeadingTag = heading;
 
   const TextContent = (
-    <div
-      className={`grid h-full grid-rows-[auto_1fr_auto] items-center justify-items-center gap-4 ${textAlign}`}
-    >
-      {badge && <Badge variant="secondary">{badge}</Badge>}
-      <div className="grid gap-4">
-        <HeadingTag className="text-balance font-semibold text-4xl lg:text-6xl">
-          {title}
-        </HeadingTag>
-        <RichText
-          className="font-normal text-base md:text-lg"
-          richText={richText}
-        />
-      </div>
-      <SanityButtons
-        buttonClassName="w-full sm:w-auto"
-        buttons={buttons}
-        className="grid w-full gap-2 sm:w-fit sm:grid-flow-col lg:justify-start"
-      />
-    </div>
+    <CommonTextComponent isCentered={isCentered} heading={heading} badge={badge} title={title} richText={richText}
+                         buttons={buttons} />
   );
 
   if (isBackground) {
     return (
-      <section className={outerSectionClassName} id={kebabCase(title)}>
+      <section className={outerSectionClassName} id={kebabCase(title ?? "")}>
         <BackgroundMedia
           className={backgroundFill ? "size-full" : undefined}
           fill={backgroundFill}
@@ -101,7 +76,7 @@ export function SectionShared(props: SharedSectionProps) {
 
   // Non-background variants
   return (
-    <section className="mt-4 md:my-16" id={kebabCase(title)}>
+    <section className="mt-4 md:my-16" id={kebabCase(title ?? "")}>
       <div className="container mx-auto px-4 md:px-6">
         <div className={`grid items-center gap-8 ${gridCols}`}>
           {isCentered ? (

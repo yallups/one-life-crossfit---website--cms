@@ -383,18 +383,6 @@ export type Hero = {
     _type: "video";
     _key: string;
   }>;
-  image?: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    _type: "image";
-  };
   buttons?: Array<{
     _key: string;
   } & Button>;
@@ -1034,7 +1022,55 @@ export type SanityAssetSourceData = {
   url?: string;
 };
 
-export type AllSanitySchemaTypes = GoogleReviews | SubscribeNewsletter | Logos | ImageLinkCards | FaqAccordion | FeatureCardsIcon | Cta | Layout | Hero | PageBuilder | Button | RichText | Redirect | Navbar | Footer | Settings | BlogIndex | HomePage | Author | Faq | Page | Blog | CustomUrl | SanityAssistInstructionTask | SanityAssistTaskStatus | SanityAssistSchemaTypeAnnotations | SanityAssistOutputType | SanityAssistOutputField | SanityAssistInstructionContext | AssistInstructionContext | SanityAssistInstructionUserInput | SanityAssistInstructionPrompt | SanityAssistInstructionFieldRef | SanityAssistInstruction | SanityAssistSchemaTypeField | IconPicker | MediaTag | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageHotspot | SanityImageCrop | SanityFileAsset | SanityImageAsset | SanityImageMetadata | Geopoint | Slug | SanityAssetSourceData;
+export type AllSanitySchemaTypes =
+  GoogleReviews
+  | SubscribeNewsletter
+  | Logos
+  | ImageLinkCards
+  | FaqAccordion
+  | FeatureCardsIcon
+  | Cta
+  | Layout
+  | Hero
+  | PageBuilder
+  | Button
+  | RichText
+  | Redirect
+  | Navbar
+  | Footer
+  | Settings
+  | BlogIndex
+  | HomePage
+  | Author
+  | Faq
+  | Page
+  | Blog
+  | CustomUrl
+  | SanityAssistInstructionTask
+  | SanityAssistTaskStatus
+  | SanityAssistSchemaTypeAnnotations
+  | SanityAssistOutputType
+  | SanityAssistOutputField
+  | SanityAssistInstructionContext
+  | AssistInstructionContext
+  | SanityAssistInstructionUserInput
+  | SanityAssistInstructionPrompt
+  | SanityAssistInstructionFieldRef
+  | SanityAssistInstruction
+  | SanityAssistSchemaTypeField
+  | IconPicker
+  | MediaTag
+  | SanityImagePaletteSwatch
+  | SanityImagePalette
+  | SanityImageDimensions
+  | SanityImageHotspot
+  | SanityImageCrop
+  | SanityFileAsset
+  | SanityImageAsset
+  | SanityImageMetadata
+  | Geopoint
+  | Slug
+  | SanityAssetSourceData;
 export declare const internalGroqTypeReferenceTo: unique symbol;
 // Source: ../web/src/lib/sanity/query.ts
 // Variable: queryImageType
@@ -1320,20 +1356,6 @@ export type QueryHomePageDataResult = {
       _type: "video";
       _key: string;
     }> | null;
-    image: {
-      id: string | null;
-      preview: string | null;
-      hotspot: {
-        x: number;
-        y: number;
-      } | null;
-      crop: {
-        bottom: number;
-        left: number;
-        right: number;
-        top: number;
-      } | null;
-    } | null;
     buttons: Array<{
       text: string | null;
       variant: "default" | "link" | "outline" | "secondary" | null;
@@ -1879,20 +1901,6 @@ export type QuerySlugPageDataResult = {
       _type: "video";
       _key: string;
     }> | null;
-    image: {
-      id: string | null;
-      preview: string | null;
-      hotspot: {
-        x: number;
-        y: number;
-      } | null;
-      crop: {
-        bottom: number;
-        left: number;
-        right: number;
-        top: number;
-      } | null;
-    } | null;
     buttons: Array<{
       text: string | null;
       variant: "default" | "link" | "outline" | "secondary" | null;
@@ -1901,6 +1909,7 @@ export type QuerySlugPageDataResult = {
       openInNewTab: boolean | null;
       href: string | null;
     }> | null;
+    image: null;
   } | {
     _key: string;
     _type: "imageLinkCards";
@@ -2432,20 +2441,6 @@ export type QueryBlogIndexPageDataResult = {
       _type: "video";
       _key: string;
     }> | null;
-    image: {
-      id: string | null;
-      preview: string | null;
-      hotspot: {
-        x: number;
-        y: number;
-      } | null;
-      crop: {
-        bottom: number;
-        left: number;
-        right: number;
-        top: number;
-      } | null;
-    } | null;
     buttons: Array<{
       text: string | null;
       variant: "default" | "link" | "outline" | "secondary" | null;
@@ -2454,6 +2449,7 @@ export type QueryBlogIndexPageDataResult = {
       openInNewTab: boolean | null;
       href: string | null;
     }> | null;
+    image: null;
   } | {
     _key: string;
     _type: "imageLinkCards";
@@ -3072,6 +3068,7 @@ export type QueryRedirectsResult = Array<{
 
 // Query TypeMap
 import "@sanity/client";
+
 declare module "@sanity/client" {
   interface SanityQueries {
     "\n  *[_type == \"page\" && defined(image)][0]{\n    \n  image {\n    \n  \"id\": asset._ref,\n  \"preview\": asset->metadata.lqip,\n  hotspot {\n    x,\n    y\n  },\n  crop {\n    bottom,\n    left,\n    right,\n    top\n  }\n\n  }\n\n  }.image\n": QueryImageTypeResult;

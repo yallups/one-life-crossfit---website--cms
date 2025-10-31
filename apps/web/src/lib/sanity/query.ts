@@ -1,4 +1,4 @@
-import {defineQuery} from "next-sanity";
+import { defineQuery } from "next-sanity";
 
 const imageFields = /* groq */ `
   "id": asset._ref,
@@ -119,7 +119,6 @@ const imageLinkCardsBlock = /* groq */ `
 const heroBlock = /* groq */ `
   _type == "hero" => {
     ...,
-    ${imageFragment},
     "media": array::compact(media[]{
       ...,
       _type == "image" => {

@@ -23,7 +23,6 @@ function buildSanityFileUrlFromRef(
  */
 export function normalizeMedia(
   rawMedia: any[] | undefined,
-  fallbackImage?: any
 ): NormalizedMedia {
   const images: SanityImageProps[] = [];
   const videos: { url: string; mimeType?: string }[] = [];
@@ -66,10 +65,6 @@ export function normalizeMedia(
         }
       }
     }
-  }
-
-  if (!images.length && fallbackImage) {
-    images.push(fallbackImage as SanityImageProps);
   }
 
   return { images, videos };

@@ -60,15 +60,6 @@ export const hero = defineType({
         },
       ],
     }),
-    // Legacy single image for backward compatibility
-    defineField({
-      name: "image",
-      type: "image",
-      title: "Image (Legacy)",
-      description:
-        "Deprecated: use Media above. Kept for backward compatibility.",
-      options: { hotspot: true },
-    }),
     buttonsField,
   ],
   preview: {
