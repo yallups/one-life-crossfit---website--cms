@@ -1,8 +1,76 @@
-"use client"
 import { CommonTextComponent } from "@/components/shared/commom-text-sction";
 import { SanityButtons } from "@/components/elements/sanity-buttons";
 import Link from "next/link";
 import { Schedule } from "@/components/elements/one-life-wodify-schedule-iframe";
+import { getSEOMetadata } from "@/lib/seo";
+import { sanityFetch } from "@/lib/sanity/live";
+import { querySlugPageData, querySlugPagePaths } from "@/lib/sanity/query";
+import { client } from "@/lib/sanity/client";
+
+async function fetchSlugPageData(slug: string, stega = true) {
+  return await sanityFetch({
+    query: querySlugPageData,
+    params: { slug: `/${slug}` },
+    stega,
+  });
+}
+
+async function fetchSlugPagePaths() {
+  try {
+    const slugs = await client.fetch(querySlugPagePaths);
+
+    // If no slugs found, return empty array to prevent build errors
+    if (!Array.isArray(slugs) || slugs.length === 0) {
+      return [];
+    }
+
+    const paths: { slug: string[] }[] = [];
+    for (const slug of slugs) {
+      if (!slug) {
+        continue;
+      }
+      const parts = slug.split("/").filter(Boolean);
+      paths.push({ slug: parts });
+    }
+    return paths;
+  } catch (error) {
+    console.error("Error fetching slug paths:", error);
+    // Return empty array to allow build to continue
+    return [];
+  }
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string[] }>;
+}) {
+  const slug = ['schedule']
+  const slugString = slug.join("/");
+  const { data: pageData } = await fetchSlugPageData(slugString, false);
+  console.log('pageData', pageData)
+  return getSEOMetadata(
+    pageData
+      ? {
+        title: pageData?.title ?? pageData?.seoTitle ?? "",
+        description: pageData?.description ?? pageData?.seoDescription ?? "",
+        slug: pageData?.slug,
+        contentId: pageData?._id,
+        contentType: pageData?._type,
+        pageType: pageData.pageType ?? "website",
+      }
+      : {}
+  );
+}
+
+export async function generateStaticParams() {
+  const paths = await fetchSlugPagePaths();
+  return paths;
+}
+
+// Allow dynamic params for paths not generated at build time
+export const dynamicParams = true;
+
 
 export default function SchedulePage() {
   return (

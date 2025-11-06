@@ -31,10 +31,10 @@ type OgImageParams = {
 
 // Default site configuration
 const siteConfig: SiteConfig = {
-  title: "Roboto Studio Demo",
-  description: "Roboto Studio Demo",
-  twitterHandle: "@studioroboto",
-  keywords: ["roboto", "studio", "demo", "sanity", "next", "react", "template"],
+  title: "One Life CrossFit Santa Maria",
+  description: "Train with expert coaches at One Life CrossFit in Santa Maria, CA. Group classes, personal training, weightlifting & fitness for all levels.",
+  keywords: ["crossfit", "onelife", "one", "life", "health", "fitness", "bootcamp", "training", "personal training", "private training", "nutrition", "nutrition coaching", "coaching"],
+  twitterHandle: "@onelifecrossfit",
 };
 
 function generateOgImageUrl(params: OgImageParams = {}): string {
@@ -155,6 +155,7 @@ export function getSEOMetadata(page: PageSeoData = {}): Metadata {
       url: pageUrl,
     },
   };
+
 
   // Override any defaults with page-specific metadata
   return {

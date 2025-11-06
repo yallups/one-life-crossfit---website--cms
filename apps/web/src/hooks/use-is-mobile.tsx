@@ -61,6 +61,5 @@ export function useIsMobile(mobileScreenSize = 768) {
     return removeListener;
   }, [mobileScreenSize, checkIsMobile]);
 
-  console.log("isMobile", isMobile);
   return isMobile;
 }

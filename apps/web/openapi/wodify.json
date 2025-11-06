@@ -1,0 +1,630 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Wodify (Unofficial) Schedule & Content API",
+    "version": "0.1.0-draft",
+    "description": "\u26a0\ufe0f **DRAFT \u2014 best\u2011effort**: This OpenAPI spec was generated from public reference pages and common REST patterns.\nYou should validate endpoint paths, parameter names, and schemas against your Wodify tenant before production use.\n\nIncluded endpoints:\n- Locations (list & get)\n- Workouts (list & get one)\n- Classes (schedule; list with filters & get one)\n\nAuthentication:\n- Assumes HTTP Bearer (token) for server-to-server requests.\n- Replace placeholder examples and verify scopes/permissions with Wodify support.\n\nNotes on schemas:\n- Properties marked as \"example\" are illustrative only.\n- `additionalProperties: true` is set on most objects to avoid validation failures while you refine fields."
+  },
+  "servers": [
+    {
+      "url": "https://api.wodify.com",
+      "description": "Production (verify base path)"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Locations"
+    },
+    {
+      "name": "Workouts"
+    },
+    {
+      "name": "Classes"
+    },
+    {
+      "name": "Coaches"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-Api-Key"
+      }
+    },
+    "parameters": {
+      "LocationId": {
+        "name": "locationId",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "string"
+        },
+        "description": "Filter by location id."
+      },
+      "ProgramId": {
+        "name": "programId",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "string"
+        },
+        "description": "Filter by program id."
+      },
+      "CoachId": {
+        "name": "coachId",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "string"
+        },
+        "description": "Filter by coach id."
+      },
+      "StartDate": {
+        "name": "startDate",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "format": "date"
+        },
+        "description": "Start date (YYYY-MM-DD)."
+      },
+      "EndDate": {
+        "name": "endDate",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "format": "date"
+        },
+        "description": "End date (YYYY-MM-DD)."
+      },
+      "Limit": {
+        "name": "limit",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 200,
+          "default": 50
+        },
+        "description": "Page size."
+      },
+      "Offset": {
+        "name": "offset",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "integer",
+          "minimum": 0,
+          "default": 0
+        },
+        "description": "Pagination offset."
+      },
+      "Sort": {
+        "name": "sort",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "string"
+        },
+        "description": "Sort order: 'sort=snake_cased_attribute' or 'sort=desc_snake_cased_attribute'. Example: sort=desc_updated_on"
+      },
+      "Page": {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "integer",
+          "format": "int32",
+          "minimum": 1,
+          "default": 1
+        },
+        "description": "Page number (1-based)."
+      },
+      "PageSize": {
+        "name": "page_size",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "integer",
+          "format": "int32",
+          "minimum": 1,
+          "maximum": 100,
+          "default": 100
+        },
+        "description": "Number of records per page (max 100)."
+      },
+      "IdPath": {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        },
+        "description": "Resource identifier."
+      }
+    },
+    "schemas": {
+      "Location": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "id": { "type": "integer", "example": 9721 },
+          "name": { "type": "string", "example": "One Life CrossFit" },
+          "street_address_1": { "type": "string", "example": "2627 Skyway Drive" },
+          "street_address_2": { "type": "string", "example": "Unit B" },
+          "city": { "type": "string", "example": "Santa Maria" },
+          "state_id": { "type": "integer", "example": 21 },
+          "state": { "type": "string", "example": "California" },
+          "zip_code": { "type": "string", "example": "93455-1405" },
+          "country_id": { "type": "integer", "example": 57 },
+          "country": { "type": "string", "example": "United States of America" },
+          "province": { "type": "string", "example": "" },
+          "website": { "type": "string", "example": "onelifecrossfit.com" },
+          "phone_number": { "type": "string", "example": "8057140338" },
+          "email": { "type": "string", "format": "email", "example": "info@onelifecrossfit.com" },
+          "show_in_wodifind": { "type": "boolean", "example": true },
+          "wodifind_name": { "type": "string", "example": "One Life CrossFit" },
+          "wodifind_description": { "type": "string" },
+          "email_signature": { "type": "string" },
+          "enable_email_signature": { "type": "boolean", "example": true },
+          "email_from_label": { "type": "string", "example": "One Life CrossFit" },
+          "staff_signature": { "type": "string" },
+          "abn_number": { "type": "string" },
+          "gst_number": { "type": "string" },
+          "business_type_id": { "type": "integer", "example": 2 },
+          "customer_id": { "type": "integer", "example": 9621 },
+          "stripe_terminal_location_id": { "type": "string", "example": "" },
+          "time_zone_id": { "type": "integer", "example": 62 },
+          "time_zone": { "type": "string", "example": "(GMT-08:00) Pacific Time - Los Angeles" },
+          "time_zone_iana": { "type": "string", "example": "America/Los_Angeles" },
+          "formatted_address": { "type": "string", "example": "2627 Skyway Drive<br/>Unit B<br/>Santa Maria, CA 93455-1405" },
+          "lead_owner_id": { "type": "integer", "example": 0 },
+          "lead_owner": { "type": "string", "example": "" },
+          "client_owner_id": { "type": "integer", "example": 0 },
+          "client_owner": { "type": "string", "example": "" },
+          "created": {
+            "type": "object",
+            "additionalProperties": true,
+            "properties": {
+              "created_by_id": { "type": "integer", "example": 17597 },
+              "created_by": { "type": "string", "example": "System User" },
+              "created_on_datetime": { "type": "string", "format": "date-time", "example": "2022-03-10T12:51:51Z" }
+            }
+          },
+          "updated": {
+            "type": "object",
+            "additionalProperties": true,
+            "properties": {
+              "updated_by_id": { "type": "integer", "example": 17597 },
+              "updated_by": { "type": "string", "example": "System User" },
+              "updated_on_datetime": { "type": "string", "format": "date-time", "example": "2025-10-02T16:53:41Z" }
+            }
+          }
+        }
+      },
+      "Workout": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "wo_98765"
+          },
+          "date": {
+            "type": "string",
+            "format": "date",
+            "example": "2025-11-05"
+          },
+          "title": {
+            "type": "string",
+            "example": "WOD: Cindy"
+          },
+          "description": {
+            "type": "string",
+            "example": "AMRAP 20: 5 pull-ups, 10 push-ups, 15 air squats"
+          },
+          "programId": {
+            "type": "string",
+            "example": "prog_gpp"
+          },
+          "locationId": {
+            "type": "string",
+            "example": "loc_12345"
+          },
+          "coachNotes": {
+            "type": "string"
+          },
+          "publicNotes": {
+            "type": "string"
+          }
+        }
+      },
+      "Class": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "class_24680"
+          },
+          "name": {
+            "type": "string",
+            "example": "CrossFit"
+          },
+          "startTime": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2025-11-05T17:00:00-08:00"
+          },
+          "endTime": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2025-11-05T18:00:00-08:00"
+          },
+          "locationId": {
+            "type": "string",
+            "example": "loc_12345"
+          },
+          "programId": {
+            "type": "string",
+            "example": "prog_gpp"
+          },
+          "coach": {
+            "type": "object",
+            "additionalProperties": true,
+            "properties": {
+              "id": {
+                "type": "string",
+                "example": "coach_001"
+              },
+              "name": {
+                "type": "string",
+                "example": "Alex M"
+              }
+            }
+          },
+          "capacity": {
+            "type": "integer",
+            "example": 18
+          },
+          "registeredCount": {
+            "type": "integer",
+            "example": 12
+          },
+          "waitlistCount": {
+            "type": "integer",
+            "example": 0
+          },
+          "status": {
+            "type": "string",
+            "example": "scheduled"
+          }
+        }
+      },
+      "Paged_Classes": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "classes": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/Class" }
+          },
+          "pagination": {
+            "type": "object",
+            "additionalProperties": true,
+            "properties": {
+              "page": { "type": "integer", "example": 1 },
+              "page_size": { "type": "integer", "example": 100 },
+              "has_more": { "type": "boolean", "example": true }
+            }
+          },
+          "wodify_validation_result": { "type": "string", "example": "" }
+        }
+      },
+      "Paged_Locations": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "locations": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/Location" }
+          },
+          "pagination": {
+            "type": "object",
+            "additionalProperties": true,
+            "properties": {
+              "page": { "type": "integer", "example": 1 },
+              "page_size": { "type": "integer", "example": 1 },
+              "has_more": { "type": "boolean", "example": false }
+            }
+          },
+          "wodify_validation_result": { "type": "string", "example": "" }
+        }
+      },
+      "Paged_Workouts": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Workout"
+            }
+          },
+          "limit": {
+            "type": "integer",
+            "example": 50
+          },
+          "offset": {
+            "type": "integer",
+            "example": 0
+          },
+          "total": {
+            "type": "integer",
+            "example": 31
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "error": {
+            "type": "string",
+            "example": "invalid_request"
+          },
+          "message": {
+            "type": "string",
+            "example": "The provided token is expired."
+          },
+          "status": {
+            "type": "integer",
+            "example": 401
+          }
+        }
+      }
+    }
+  },
+  "security": [
+    {
+      "ApiKeyAuth": []
+    }
+  ],
+  "paths": {
+    "/v1/customers/locations": {
+      "get": {
+        "tags": [
+          "Locations"
+        ],
+        "summary": "List locations",
+        "operationId": "listLocations",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Limit"
+          },
+          {
+            "$ref": "#/components/parameters/Offset"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A paged list of locations",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Paged_Locations"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/workouts": {
+      "get": {
+        "tags": [
+          "Workouts"
+        ],
+        "summary": "List workouts",
+        "operationId": "listWorkouts",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/StartDate"
+          },
+          {
+            "$ref": "#/components/parameters/EndDate"
+          },
+          {
+            "$ref": "#/components/parameters/LocationId"
+          },
+          {
+            "$ref": "#/components/parameters/ProgramId"
+          },
+          {
+            "$ref": "#/components/parameters/Limit"
+          },
+          {
+            "$ref": "#/components/parameters/Offset"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A paged list of workouts",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Paged_Workouts"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/workouts/{id}": {
+      "get": {
+        "tags": [
+          "Workouts"
+        ],
+        "summary": "Get a workout",
+        "operationId": "getWorkout",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdPath"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Workout",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Workout"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/classes": {
+      "get": {
+        "tags": [
+          "Classes"
+        ],
+        "summary": "List classes (schedule)",
+        "operationId": "listClasses",
+        "description": "Retrieve classes within a date range and optional filters to build a schedule.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/StartDate"
+          },
+          {
+            "$ref": "#/components/parameters/EndDate"
+          },
+          {
+            "$ref": "#/components/parameters/LocationId"
+          },
+          {
+            "$ref": "#/components/parameters/ProgramId"
+          },
+          {
+            "$ref": "#/components/parameters/CoachId"
+          },
+          {
+            "$ref": "#/components/parameters/Sort"
+          },
+          {
+            "$ref": "#/components/parameters/Page"
+          },
+          {
+            "$ref": "#/components/parameters/PageSize"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A paged list of classes",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Paged_Classes"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid filters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/classes/{id}": {
+      "get": {
+        "tags": [
+          "Classes"
+        ],
+        "summary": "Get a class",
+        "operationId": "getClass",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdPath"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Class",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Class"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

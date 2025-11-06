@@ -3,23 +3,21 @@ import type {
   Answer,
   Article,
   ContactPoint,
+  ExerciseGym,
   FAQPage,
   ImageObject,
   Organization,
   Person,
+  PostalAddress,
   Question,
   WebPage,
   WebSite,
   WithContext,
 } from "schema-dts";
 
-import { client, urlFor } from "@/lib/sanity/client";
-import { querySettingsData } from "@/lib/sanity/query";
-import type {
-  QueryBlogSlugPageDataResult,
-  QuerySettingsDataResult,
-} from "@/lib/sanity/sanity.types";
-import { getBaseUrl, handleErrors } from "@/utils";
+import { urlFor } from "@/lib/sanity/client";
+import type { QueryBlogSlugPageDataResult, QuerySettingsDataResult } from "@/lib/sanity/sanity.types";
+import { getBaseUrl } from "@/utils";
 
 type RichTextChild = {
   _type: string;
@@ -129,6 +127,7 @@ type ArticleJsonLdProps = {
   article: QueryBlogSlugPageDataResult;
   settings?: QuerySettingsDataResult;
 };
+
 export function ArticleJsonLd({
   article: rawArticle,
   settings,
@@ -150,27 +149,27 @@ export function ArticleJsonLd({
     image: imageUrl ? [imageUrl] : undefined,
     author: article.authors
       ? [
-          {
-            "@type": "Person",
-            name: article.authors.name,
-            url: `${baseUrl}`,
-            image: article.authors.image
-              ? ({
-                  "@type": "ImageObject",
-                  url: buildSafeImageUrl(article.authors.image),
-                } as ImageObject)
-              : undefined,
-          } as Person,
-        ]
+        {
+          "@type": "Person",
+          name: article.authors.name,
+          url: `${baseUrl}`,
+          image: article.authors.image
+            ? ({
+              "@type": "ImageObject",
+              url: buildSafeImageUrl(article.authors.image),
+            } as ImageObject)
+            : undefined,
+        } as Person,
+      ]
       : [],
     publisher: {
       "@type": "Organization",
       name: settings?.siteTitle || "Website",
       logo: settings?.logo
         ? ({
-            "@type": "ImageObject",
-            url: settings.logo,
-          } as ImageObject)
+          "@type": "ImageObject",
+          url: settings.logo,
+        } as ImageObject)
         : undefined,
     } as Organization,
     datePublished: new Date(
@@ -196,6 +195,12 @@ type OrganizationJsonLdProps = {
   settings: QuerySettingsDataResult;
 };
 
+// Organization JSON-LD Component
+ type ExercisesGymJsonLdProps = {
+  settings: QuerySettingsDataResult;
+  wodifyLocation?: import("@/lib/location").NormalizedLocation | null;
+};
+
 export function OrganizationJsonLd({ settings }: OrganizationJsonLdProps) {
   if (!settings) {
     return null;
@@ -215,21 +220,95 @@ export function OrganizationJsonLd({ settings }: OrganizationJsonLdProps) {
     url: baseUrl,
     logo: settings.logo
       ? ({
-          "@type": "ImageObject",
-          url: settings.logo,
-        } as ImageObject)
+        "@type": "ImageObject",
+        url: settings.logo,
+      } as ImageObject)
       : undefined,
     contactPoint: settings.contactEmail
       ? ({
-          "@type": "ContactPoint",
-          email: settings.contactEmail,
-          contactType: "customer service",
-        } as ContactPoint)
+        "@type": "ContactPoint",
+        email: settings.contactEmail,
+        contactType: "customer service",
+      } as ContactPoint)
       : undefined,
     sameAs: socialLinks?.length ? socialLinks : undefined,
   };
 
   return <JsonLdScript data={organizationJsonLd} id="organization-json-ld" />;
+}
+
+export function ExerciseGymJsonLd({ settings, wodifyLocation }: ExercisesGymJsonLdProps) {
+  if (!settings) {
+    return null;
+  }
+
+  const baseUrl = getBaseUrl();
+
+  // Prefer Wodify location data when available, fall back to Sanity settings
+  const loc = (wodifyLocation ?? {}) as any;
+
+  // Name
+  const name = (loc.name || loc.locationName || settings.siteTitle) as string;
+
+  // Telephone
+  const telephone = (loc.phone || loc.phoneNumber || loc.telephone || settings.telephone) as string | undefined;
+
+  // Address fields from Wodify (common field names guessed from APIs)
+  const streetAddress = (loc.address1 || loc.address || loc.street || settings.address?.street) as string | undefined;
+  const addressLocality = (loc.city || settings.address?.city) as string | undefined;
+  const addressRegion = (loc.state || loc.stateCode || settings.address?.state) as string | undefined;
+  const postalCode = (loc.postalCode || loc.zip || settings.address?.zip) as string | undefined;
+  const addressCountry = ((loc.countryCode || loc.country || 'US') as string | undefined);
+
+  // Optional geo coordinates
+  const latitude = (loc.latitude || (loc.geo && loc.geo.lat) || undefined) as number | string | undefined;
+  const longitude = (loc.longitude || (loc.geo && loc.geo.lng) || undefined) as number | string | undefined;
+
+  // External references
+  const sameAsCandidate = (loc.googlePlaceUrl || loc.googleMapsUrl || loc.mapsUrl || undefined) as string | undefined;
+
+  const organizationJsonLd: WithContext<ExerciseGym> = {
+    "@context": "https://schema.org",
+    "@type": "ExerciseGym",
+    "@id": `${baseUrl}/#local`,
+    name,
+    description: settings.siteDescription || undefined,
+    url: baseUrl,
+    logo: settings.logo
+      ? ({
+        "@type": "ImageObject",
+        url: settings.logo,
+      } as ImageObject)
+      : undefined,
+    image: settings.logo
+      ? ({
+        "@type": "ImageObject",
+        url: settings.logo,
+      } as ImageObject)
+      : undefined,
+    priceRange: "$$",
+    telephone: telephone || undefined,
+    address: (streetAddress || addressLocality || addressRegion || postalCode)
+      ? ({
+        "@type": "PostalAddress",
+        streetAddress: streetAddress,
+        addressLocality: addressLocality,
+        addressRegion: addressRegion,
+        postalCode: postalCode,
+        addressCountry: addressCountry,
+      } as PostalAddress)
+      : undefined,
+    geo: (latitude && longitude)
+      ? {
+        "@type": "GeoCoordinates",
+        latitude: typeof latitude === 'string' ? parseFloat(latitude) : latitude,
+        longitude: typeof longitude === 'string' ? parseFloat(longitude) : longitude,
+      }
+      : undefined,
+    sameAs: sameAsCandidate || 'https://maps.app.goo.gl/f3VSenK6u712JnGQA',
+  };
+
+  return <JsonLdScript data={organizationJsonLd} id="exercisegym-json-ld" />;
 }
 
 // Website JSON-LD Component
@@ -259,30 +338,3 @@ export function WebSiteJsonLd({ settings }: WebSiteJsonLdProps) {
   return <JsonLdScript data={websiteJsonLd} id="website-json-ld" />;
 }
 
-// Combined JSON-LD Component for pages with multiple structured data
-type CombinedJsonLdProps = {
-  settings?: QuerySettingsDataResult;
-  article?: QueryBlogSlugPageDataResult;
-  faqs?: FlexibleFaq[];
-  includeWebsite?: boolean;
-  includeOrganization?: boolean;
-};
-
-export async function CombinedJsonLd({
-  includeWebsite = false,
-  includeOrganization = false,
-}: CombinedJsonLdProps) {
-  const [res] = await handleErrors(client.fetch(querySettingsData));
-
-  const cleanSettings = stegaClean(res);
-  return (
-    <>
-      {includeWebsite && cleanSettings && (
-        <WebSiteJsonLd settings={cleanSettings} />
-      )}
-      {includeOrganization && cleanSettings && (
-        <OrganizationJsonLd settings={cleanSettings} />
-      )}
-    </>
-  );
-}

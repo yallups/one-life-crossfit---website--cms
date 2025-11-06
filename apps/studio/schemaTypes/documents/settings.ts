@@ -102,10 +102,62 @@ export const settings = defineType({
       validation: (rule) => rule.email(),
     }),
     defineField({
+      name: "telephone",
+      type: "string",
+      title: "Telephone",
+      description: "Primary phone number shown on the site and used in SEO JSON-LD. E.g. +1-805-123-4567",
+      validation: (rule) => rule.min(7).warning("Provide a valid phone number"),
+    }),
+    defineField({
+      name: "address",
+      type: "object",
+      title: "Address",
+      description: "Business address used on the site and in SEO JSON-LD.",
+      fields: [
+        defineField({
+          name: "street",
+          type: "string",
+          title: "Street Address",
+          validation: (rule) => rule.required().warning("Street is recommended"),
+        }),
+        defineField({
+          name: "city",
+          type: "string",
+          title: "City",
+          validation: (rule) => rule.required().warning("City is recommended"),
+        }),
+        defineField({
+          name: "state",
+          type: "string",
+          title: "State/Region",
+          validation: (rule) => rule.required().warning("State is recommended"),
+        }),
+        defineField({
+          name: "zip",
+          type: "string",
+          title: "ZIP/Postal Code",
+          validation: (rule) => rule.required().warning("ZIP is recommended"),
+        }),
+      ],
+    }),
+    defineField({
       name: "googleReviewsFeaturableId",
       type: "string",
       title: "Featureable ID",
       description: "Featureable ID for Google Reviews",
+    }),
+    defineField({
+      name: "wodifyApiToken",
+      type: "string",
+      title: "Wodify API Token",
+      description:
+        "Sensitive: Token used by the website server to call the Wodify API. Do not expose this value publicly. It is only read server-side.",
+      validation: (rule) => rule.min(10).warning("Paste a valid Wodify API token"),
+      options: {
+        // Studio-only hint to reduce accidental exposure
+        // (Note: this does not enforce server-side security; keep dataset private if possible.)
+        // No direct 'secret' type exists; we add clear messaging instead.
+      },
     }),
     socialLinks,
   ],

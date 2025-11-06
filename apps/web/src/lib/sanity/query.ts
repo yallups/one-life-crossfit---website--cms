@@ -464,6 +464,13 @@ export const querySettingsData = defineQuery(`
     "logo": logo.asset->url + "?w=80&h=40&dpr=3&fit=max",
     "socialLinks": socialLinks,
     "contactEmail": contactEmail,
+    telephone,
+    address{
+      street,
+      city,
+      state,
+      zip
+    },
     "googleReviewsFeaturableId": googleReviewsFeaturableId, 
   }
 `);

@@ -3057,6 +3057,21 @@ export type QuerySettingsDataResult = {
   } | null;
   contactEmail: string | null;
   googleReviewsFeaturableId: string | null;
+  telephone?: string
+  address?: {
+    street: string | null;
+    city: string | null;
+    state: string | null;
+    zip: string | null;
+    country: string | null;
+  },
+  hours?: [
+    {
+      dayOfWeek: string;
+      opens: string;
+      closes: string;
+    }
+  ]
 } | null;
 // Variable: queryRedirects
 // Query: *[_type == "redirect" && status == "active" && defined(source.current) && defined(destination.current)]{    "source":source.current,     "destination":destination.current,     "permanent" : permanent == "true"  }

@@ -8,7 +8,7 @@ import { VisualEditing } from 'next-sanity/visual-editing'
 import { Suspense } from "react";
 import { preconnect } from "react-dom";
 import { FooterServer, FooterSkeleton } from "@/components/footer";
-import { CombinedJsonLd } from "@/components/json-ld";
+import { CombinedJsonLd } from "@/components/json-ld.server";
 import { Navbar } from "@/components/navbar";
 import { PreviewBar } from "@/components/preview-bar";
 import { Providers } from "@/components/providers";
