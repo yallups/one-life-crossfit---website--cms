@@ -3,6 +3,9 @@ import { PageBuilder } from "@/components/pagebuilder";
 import { sanityFetch } from "@/lib/sanity/live";
 import { queryHomePageData } from "@/lib/sanity/query";
 import { getSEOMetadata } from "@/lib/seo";
+import { prefetchPageBuilderData } from "@/lib/block-prefetch";
+import { draftMode } from "next/headers";
+import { stegaClean } from "next-sanity";
 
 async function fetchHomePageData() {
   return await sanityFetch({
@@ -15,19 +18,20 @@ export async function generateMetadata() {
   return getSEOMetadata(
     homePageData
       ? {
-          title: homePageData?.title ?? homePageData?.seoTitle ?? "",
-          description:
-            homePageData?.description ?? homePageData?.seoDescription ?? "",
-          slug: homePageData?.slug,
-          contentId: homePageData?._id,
-          contentType: homePageData?._type,
-        }
+        title: homePageData?.title ?? homePageData?.seoTitle ?? "",
+        description:
+          homePageData?.description ?? homePageData?.seoDescription ?? "",
+        slug: homePageData?.slug,
+        contentId: homePageData?._id,
+        contentType: homePageData?._type,
+      }
       : {}
   );
 }
 
 export default async function Page() {
-  const { data: homePageData } = await fetchHomePageData();
+  const { data } = await fetchHomePageData();
+  const homePageData = stegaClean(data);
 
   if (!homePageData) {
     return <div>No home page data</div>;
@@ -35,5 +39,15 @@ export default async function Page() {
 
   const { _id, _type, pageBuilder } = homePageData ?? {};
 
-  return <PageBuilder id={_id} pageBuilder={pageBuilder ?? []} type={_type} />;
+  const { isEnabled: preview } = await draftMode();
+  const preloadedData = await prefetchPageBuilderData(pageBuilder ?? [], { preview });
+
+  return (
+    <PageBuilder
+      id={_id}
+      pageBuilder={pageBuilder ?? []}
+      type={_type}
+      preloadedData={preloadedData}
+    />
+  );
 }

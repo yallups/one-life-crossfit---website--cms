@@ -105,14 +105,14 @@ export const settings = defineType({
       name: "telephone",
       type: "string",
       title: "Telephone",
-      description: "Primary phone number shown on the site and used in SEO JSON-LD. E.g. +1-805-123-4567",
+      description: "Primary phone number shown on the site and used in SEO JSON-LD. If a Wodify API token is configured, the site's default phone will come from your primary Wodify location; this field overrides the Wodify value. Block-level settings can override both. E.g. +1-805-123-4567",
       validation: (rule) => rule.min(7).warning("Provide a valid phone number"),
     }),
     defineField({
       name: "address",
       type: "object",
       title: "Address",
-      description: "Business address used on the site and in SEO JSON-LD.",
+      description: "Business address used on the site and in SEO JSON-LD. If a Wodify API token is configured, the site's default address will pull from your primary Wodify location; values set here override the Wodify address. Block-level settings can override both.",
       fields: [
         defineField({
           name: "street",
@@ -137,6 +137,48 @@ export const settings = defineType({
           type: "string",
           title: "ZIP/Postal Code",
           validation: (rule) => rule.required().warning("ZIP is recommended"),
+        }),
+        defineField({
+          name: "placeId",
+          type: "string",
+          title: "Google Place ID",
+          description: "Optional: Google Maps Place ID for precise map and directions",
+        }),
+      ],
+    }),
+    defineField({
+      name: "hours",
+      type: "array",
+      title: "Hours of Operation",
+      description: "Weekly hours displayed in Contact Us and used across the site",
+      of: [
+        defineField({
+          name: "dayHours",
+          type: "object",
+          title: "Day",
+          fields: [
+            defineField({
+              name: "day",
+              type: "string",
+              title: "Day",
+              options: {
+                list: [
+                  { title: "Monday", value: "monday" },
+                  { title: "Tuesday", value: "tuesday" },
+                  { title: "Wednesday", value: "wednesday" },
+                  { title: "Thursday", value: "thursday" },
+                  { title: "Friday", value: "friday" },
+                  { title: "Saturday", value: "saturday" },
+                  { title: "Sunday", value: "sunday" },
+                ],
+                layout: "dropdown",
+              },
+              validation: (Rule) => Rule.required(),
+            }),
+            defineField({ name: "closed", type: "boolean", title: "Closed", initialValue: false }),
+            defineField({ name: "open", type: "string", title: "Opens (e.g. 5:30 AM)" }),
+            defineField({ name: "close", type: "string", title: "Closes (e.g. 8:00 PM)" }),
+          ],
         }),
       ],
     }),

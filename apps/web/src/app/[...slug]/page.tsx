@@ -5,6 +5,9 @@ import { client } from "@/lib/sanity/client";
 import { sanityFetch } from "@/lib/sanity/live";
 import { querySlugPageData, querySlugPagePaths } from "@/lib/sanity/query";
 import { getSEOMetadata } from "@/lib/seo";
+import { prefetchPageBuilderData } from "@/lib/block-prefetch";
+import { draftMode } from "next/headers";
+import { stegaClean } from "next-sanity";
 
 async function fetchSlugPageData(slug: string, stega = true) {
   return await sanityFetch({
@@ -50,12 +53,12 @@ export async function generateMetadata({
   return getSEOMetadata(
     pageData
       ? {
-          title: pageData?.title ?? pageData?.seoTitle ?? "",
-          description: pageData?.description ?? pageData?.seoDescription ?? "",
-          slug: pageData?.slug,
-          contentId: pageData?._id,
-          contentType: pageData?._type,
-        }
+        title: pageData?.title ?? pageData?.seoTitle ?? "",
+        description: pageData?.description ?? pageData?.seoDescription ?? "",
+        slug: pageData?.slug,
+        contentId: pageData?._id,
+        contentType: pageData?._type,
+      }
       : {}
   );
 }
@@ -67,6 +70,8 @@ export async function generateStaticParams() {
 
 // Allow dynamic params for paths not generated at build time
 export const dynamicParams = true;
+// Force dynamic rendering so SSR prefetch (e.g., Wodify resolvers) runs in dev and honors cache TTLs
+export const dynamic = 'force-dynamic';
 
 export default async function SlugPage({
   params,
@@ -75,13 +80,17 @@ export default async function SlugPage({
 }) {
   const { slug } = await params;
   const slugString = slug.join("/");
-  const { data: pageData } = await fetchSlugPageData(slugString);
+  const { data } = await fetchSlugPageData(slugString);
+  const pageData = stegaClean(data)
 
   if (!pageData) {
     return notFound();
   }
 
   const { title, pageBuilder, _id, _type } = pageData ?? {};
+
+  const { isEnabled: preview } = await draftMode();
+  const preloadedData = await prefetchPageBuilderData(pageBuilder ?? [], { preview });
 
   return !Array.isArray(pageBuilder) || pageBuilder?.length === 0 ? (
     <div className="flex min-h-[50vh] flex-col items-center justify-center p-4 text-center">
@@ -91,6 +100,6 @@ export default async function SlugPage({
       </p>
     </div>
   ) : (
-    <PageBuilder id={_id} pageBuilder={pageBuilder} type={_type} />
+    <PageBuilder id={_id} pageBuilder={pageBuilder} type={_type} preloadedData={preloadedData} />
   );
 }

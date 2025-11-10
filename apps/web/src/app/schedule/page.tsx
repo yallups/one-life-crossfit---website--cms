@@ -48,7 +48,6 @@ export async function generateMetadata({
   const slug = ['schedule']
   const slugString = slug.join("/");
   const { data: pageData } = await fetchSlugPageData(slugString, false);
-  console.log('pageData', pageData)
   return getSEOMetadata(
     pageData
       ? {
@@ -57,7 +56,6 @@ export async function generateMetadata({
         slug: pageData?.slug,
         contentId: pageData?._id,
         contentType: pageData?._type,
-        pageType: pageData.pageType ?? "website",
       }
       : {}
   );

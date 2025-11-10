@@ -28,7 +28,7 @@ const customLinkFragment = /* groq */ `
       type == "internal" => internal->slug.current,
       type == "external" => external,
       "#"
-    ),
+    )
   }
 `;
 
@@ -85,7 +85,7 @@ const buttonsFragment = /* groq */ `
       url.type == "internal" => url.internal->slug.current,
       url.type == "external" => url.external,
       url.href
-    ),
+    )
   }
 `;
 
@@ -94,7 +94,7 @@ const ctaBlock = /* groq */ `
   _type == "cta" => {
     ...,
     ${richTextFragment},
-    ${buttonsFragment},
+    ${buttonsFragment}
   }
 `;
 const imageLinkCardsBlock = /* groq */ `
@@ -111,7 +111,7 @@ const imageLinkCardsBlock = /* groq */ `
         url.href
       ),
       ${imageFragment},
-      ${buttonsFragment},
+      ${buttonsFragment}
     })
   }
 `;
@@ -203,7 +203,7 @@ const featureCardsIconBlock = /* groq */ `
     "cards": array::compact(cards[]{
       ...,
       ${imageFragment},
-      ${richTextFragment},
+      ${richTextFragment}
     })
   }
 `;
@@ -238,7 +238,46 @@ const googleReviewsBlock = /* groq */ `
     autoplay,
     autoplaySpeed,
     "googleReviewsFeaturableId": *[_type == "settings"][0].googleReviewsFeaturableId
-  },
+  }
+`;
+
+const wodifyCoachesBlock = /* groq */ `
+  _type == "wodifyCoaches" => {
+    ...,
+    eyebrow,
+    title,
+    ${richTextFragment},
+    layout,
+    showLinks,
+    itemsPerRow,
+    filters{
+      locations,
+      programs,
+      services
+    }
+  }
+`;
+
+const contactUsBlock = /* groq */ `
+  _type == "contactUs" => {
+    ...,
+    eyebrow,
+    title,
+    ${richTextFragment},
+    email,
+    telephone,
+    address{street, city, state, zip, placeId},
+    hours[]{day, closed, open, close},
+    showMap,
+    mapQuery,
+    googleMapsUrl,
+    "defaults": *[_type == "settings"][0]{
+      "email": contactEmail,
+      telephone,
+      address{street, city, state, zip, placeId},
+      hours[]{day, closed, open, close}
+    }
+  }
 `;
 
 const pageBuilderFragment = /* groq */ `
@@ -253,7 +292,9 @@ const pageBuilderFragment = /* groq */ `
     ${logosBlockQuery},
     ${subscribeNewsletterBlock},
     ${imageLinkCardsBlock},
-    ${googleReviewsBlock}
+    ${googleReviewsBlock},
+    ${wodifyCoachesBlock},
+    ${contactUsBlock}
   }
 `;
 
@@ -469,8 +510,10 @@ export const querySettingsData = defineQuery(`
       street,
       city,
       state,
-      zip
+      zip,
+      placeId
     },
+    hours[]{day, closed, open, close},
     "googleReviewsFeaturableId": googleReviewsFeaturableId, 
   }
 `);

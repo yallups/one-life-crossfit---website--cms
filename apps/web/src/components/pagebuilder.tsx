@@ -15,6 +15,8 @@ import { ImageLinkCards } from "./sections/image-link-cards";
 import { LayoutBlock } from "./sections/layout";
 import { SubscribeNewsletter } from "./sections/subscribe-newsletter";
 import { GoogleReviews } from "@/components/sections/google-reviews";
+import { WodifyCoaches } from "@/components/sections/wodify-coaches";
+import { ContactUs } from "@/components/sections/contact-us";
 
 // More specific and descriptive type aliases
 type PageBuilderBlock = NonNullable<
@@ -25,6 +27,7 @@ export type PageBuilderProps = {
   readonly pageBuilder?: PageBuilderBlock[];
   readonly id: string;
   readonly type: string;
+  readonly preloadedData?: Record<string, any>;
 };
 
 type SanityDataAttributeConfig = {
@@ -54,6 +57,8 @@ const BLOCK_COMPONENTS = {
     PagebuilderType<"googleReviews">
   >,
   logos: Logos as React.ComponentType<PagebuilderType<"logos">>,
+  wodifyCoaches: WodifyCoaches as React.ComponentType<PagebuilderType<"wodifyCoaches">>,
+  contactUs: ContactUs as React.ComponentType<PagebuilderType<"contactUs">>,
 } as const satisfies Record<PageBuilderBlockTypes, React.ComponentType<any>>;
 
 /**
@@ -118,7 +123,7 @@ function useOptimisticPageBuilder(
 /**
  * Custom hook for block component rendering logic
  */
-function useBlockRenderer(id: string, type: string) {
+function useBlockRenderer(id: string, type: string, preloadedData?: Record<string, any>) {
   const createBlockDataAttribute = useCallback(
     (blockKey: string) =>
       createSanityDataAttribute({
@@ -131,8 +136,11 @@ function useBlockRenderer(id: string, type: string) {
 
   const renderBlock = useCallback(
     (block: PageBuilderBlock, _index: number) => {
-      const Component =
-        BLOCK_COMPONENTS[block._type as keyof typeof BLOCK_COMPONENTS];
+      // Map _type to component. Allow fallback for newly added blocks not in type mapping yet.
+      let Component = BLOCK_COMPONENTS[
+        block._type as keyof typeof BLOCK_COMPONENTS
+        ] as React.ComponentType<any> | undefined;
+
 
       if (!Component) {
         return (
@@ -144,16 +152,25 @@ function useBlockRenderer(id: string, type: string) {
         );
       }
 
+      const extraProps = (() => {
+        const pre = preloadedData?.[block._key];
+        const hasPre = pre !== undefined;
+        if (hasPre) {
+          return { preloaded: pre } as Record<string, unknown>;
+        }
+        return {} as Record<string, unknown>;
+      })();
+
       return (
         <div
           data-sanity={createBlockDataAttribute(block._key)}
           key={`${block._type}-${block._key}`}
         >
-          <Component {...(block as any)} />
+          <Component {...(block as any)} {...extraProps} />
         </div>
       );
     },
-    [createBlockDataAttribute]
+    [createBlockDataAttribute, preloadedData]
   );
 
   return { renderBlock };
@@ -166,9 +183,10 @@ export function PageBuilder({
   pageBuilder: initialBlocks = [],
   id,
   type,
+  preloadedData,
 }: PageBuilderProps) {
   const blocks = useOptimisticPageBuilder(initialBlocks, id);
-  const { renderBlock } = useBlockRenderer(id, type);
+  const { renderBlock } = useBlockRenderer(id, type, preloadedData);
 
   const containerDataAttribute = useMemo(
     () => createSanityDataAttribute({ id, type, path: "pageBuilder" }),

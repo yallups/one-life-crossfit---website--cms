@@ -7,6 +7,8 @@ import { imageLinkCards } from "./image-link-cards";
 import { layout } from "./layout";
 import { logos } from "./logos";
 import { subscribeNewsletter } from "./subscribe-newsletter";
+import { wodifyCoaches } from "./wodify-coaches";
+import { contactUs } from "./contact-us";
 
 export const pageBuilderBlocks = [
   hero,
@@ -18,4 +20,6 @@ export const pageBuilderBlocks = [
   logos,
   subscribeNewsletter,
   googleReviews,
+  wodifyCoaches,
+  contactUs,
 ];

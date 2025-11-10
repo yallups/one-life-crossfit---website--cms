@@ -7,6 +7,9 @@ import { queryBlogIndexPageData } from "@/lib/sanity/query";
 import type { QueryBlogIndexPageDataResult } from "@/lib/sanity/sanity.types";
 import { getSEOMetadata } from "@/lib/seo";
 import { handleErrors } from "@/utils";
+import { prefetchPageBuilderData } from "@/lib/block-prefetch";
+import { draftMode } from "next/headers";
+import { stegaClean } from "next-sanity";
 
 type Blog = NonNullable<QueryBlogIndexPageDataResult>["blogs"][number];
 
@@ -22,12 +25,12 @@ export async function generateMetadata() {
   return getSEOMetadata(
     result
       ? {
-          title: result?.title ?? result?.seoTitle ?? "",
-          description: result?.description ?? result?.seoDescription ?? "",
-          slug: result?.slug,
-          contentId: result?._id,
-          contentType: result?._type,
-        }
+        title: result?.title ?? result?.seoTitle ?? "",
+        description: result?.description ?? result?.seoDescription ?? "",
+        slug: result?.slug,
+        contentId: result?._id,
+        contentType: result?._type,
+      }
       : {}
   );
 }
@@ -47,7 +50,10 @@ export default async function BlogIndexPage() {
     _type,
     displayFeaturedBlogs,
     featuredBlogsCount,
-  } = res.data;
+  } = stegaClean(res.data);
+
+  const { isEnabled: preview } = await draftMode();
+  const preloadedData = await prefetchPageBuilderData(pageBuilder ?? [], { preview });
 
   const validFeaturedBlogsCount = featuredBlogsCount
     ? Number.parseInt(featuredBlogsCount, 10)
@@ -63,7 +69,7 @@ export default async function BlogIndexPage() {
           </p>
         </div>
         {pageBuilder && pageBuilder.length > 0 && (
-          <PageBuilder id={_id} pageBuilder={pageBuilder} type={_type} />
+          <PageBuilder id={_id} pageBuilder={pageBuilder} type={_type} preloadedData={preloadedData} />
         )}
       </main>
     );
