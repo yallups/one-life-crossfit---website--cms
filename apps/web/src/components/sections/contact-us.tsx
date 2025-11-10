@@ -66,10 +66,10 @@ function buildEmbedSrc(params: {
   const { placeId, query, apiKey } = params;
   if (!apiKey) return null;
   if (placeId && placeId.trim()) {
-    return `https://www.google.com/maps/embed/v1/place?key=${encodeURIComponent(apiKey)}&q=${encodeURIComponent(`place_id:${placeId}`)}`;
+    return `https://www.google.com/maps/embed/v1/place?key=${encodeURIComponent(apiKey)}&q=${encodeURIComponent(`place_id:${placeId}`)}&zoom=12`;
   }
   if (query && query.trim()) {
-    return `https://www.google.com/maps/embed/v1/place?key=${encodeURIComponent(apiKey)}&q=${encodeURIComponent(query)}`;
+    return `https://www.google.com/maps/embed/v1/place?key=${encodeURIComponent(apiKey)}&q=${encodeURIComponent(query)}&zoom=12`;
   }
   return null;
 }
@@ -79,15 +79,13 @@ function buildDirectionsHref(
   mapsUrl?: string | null,
   query?: string | null
 ): string | null {
-  if (mapsUrl && mapsUrl.trim()) return mapsUrl;
-  // const placeId = address?.placeId?.trim();
-  // if (placeId) {
-  //   return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(`place_id:${placeId}`)}`;
-  // }
-  const q = query ?? buildMapsQuery(address);
-  if (!q) return null;
-
-  return `https://www.google.com/maps/dir/${(q)}`;
+  if (mapsUrl && mapsUrl.trim().length > 0) return mapsUrl.trim();
+  const base = "https://www.google.com/maps/dir/?api=1";
+  const { placeId } = address ?? {};
+  if (placeId) {
+    return `${base}&destination_place_id=${encodeURIComponent(placeId)}&destination=One Life CrossFit`;
+  }
+  return `${base}&destination=${encodeURIComponent(buildMapsQuery(address, query) ?? '')}`;
 }
 
 function HoursTable({ hours }: { hours?: ContactUsBlock["hours"] | null }) {
