@@ -90,7 +90,7 @@ function DesktopColumnDropdown({
   };
 
   return (
-    <div className="group relative">
+    <div className="group/top relative">
       <button
         aria-expanded={isOpen}
         aria-haspopup="menu"
@@ -100,7 +100,7 @@ function DesktopColumnDropdown({
         type="button"
       >
         {column.title}
-        <ChevronDown className="size-3 transition-transform group-hover:rotate-180" />
+        <ChevronDown className="size-3 transition-transform group/top-hover:rotate-180" />
       </button>
       {isOpen ? (
         <div
