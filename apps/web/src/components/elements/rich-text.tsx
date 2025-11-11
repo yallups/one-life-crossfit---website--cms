@@ -9,11 +9,18 @@ import { SanityImage } from "./sanity-image";
 
 const components: Partial<PortableTextReactComponents> = {
   block: {
+    normal: ({ children, value }) => {
+      return (
+        <p className={'my-3'}>
+          {children}
+        </p>
+      )
+    },
     h2: ({ children, value }) => {
       const slug = parseChildrenToSlug(value.children);
       return (
         <h2
-          className="scroll-m-20 border-b pb-2 font-semibold text-3xl first:mt-0"
+          className="scroll-m-20 border-b pb-2 font-semibold text-3xl first:mt-0 my-4"
           id={slug}
         >
           {children}
@@ -23,7 +30,7 @@ const components: Partial<PortableTextReactComponents> = {
     h3: ({ children, value }) => {
       const slug = parseChildrenToSlug(value.children);
       return (
-        <h3 className="scroll-m-20 font-semibold text-2xl" id={slug}>
+        <h3 className="scroll-m-20 font-semibold text-2xl my-4" id={slug}>
           {children}
         </h3>
       );
@@ -31,7 +38,7 @@ const components: Partial<PortableTextReactComponents> = {
     h4: ({ children, value }) => {
       const slug = parseChildrenToSlug(value.children);
       return (
-        <h4 className="scroll-m-20 font-semibold text-xl" id={slug}>
+        <h4 className="scroll-m-20 font-semibold text-xl my-4" id={slug}>
           {children}
         </h4>
       );
@@ -39,7 +46,7 @@ const components: Partial<PortableTextReactComponents> = {
     h5: ({ children, value }) => {
       const slug = parseChildrenToSlug(value.children);
       return (
-        <h5 className="scroll-m-20 font-semibold text-lg" id={slug}>
+        <h5 className="scroll-m-20 font-semibold text-lg my-4" id={slug}>
           {children}
         </h5>
       );
@@ -47,7 +54,7 @@ const components: Partial<PortableTextReactComponents> = {
     h6: ({ children, value }) => {
       const slug = parseChildrenToSlug(value.children);
       return (
-        <h6 className="scroll-m-20 font-semibold text-base" id={slug}>
+        <h6 className="scroll-m-20 font-semibold text-base my-4" id={slug}>
           {children}
         </h6>
       );
@@ -82,7 +89,7 @@ const components: Partial<PortableTextReactComponents> = {
   },
   list: props => {
     return (
-      <ul>
+      <ul className={'my-4'}>
         {props.children}
       </ul>
     )

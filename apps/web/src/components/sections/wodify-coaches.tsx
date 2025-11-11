@@ -2,41 +2,18 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
-import { Badge } from "@workspace/ui/components/badge";
 import { cn } from "@workspace/ui/lib/utils";
 import { RichText } from "@/components/elements/rich-text";
 import { PagebuilderType } from "@/types";
-
-// Basic shape based on WodifyCoach schema
-export type WodifyCoach = {
-  id: string | number;
-  first_name?: string | null;
-  last_name?: string | null;
-  picture_url?: string | null;
-  title?: string | null;
-  biography?: string | null;
-  link_1?: string | null;
-  link_2?: string | null;
-  link_3?: string | null;
-  link_4?: string | null;
-  link_5?: string | null;
-  locations?: string | null; // comma-separated
-  programs?: string | null; // comma-separated
-  services?: string | null; // comma-separated
-};
+import { Badge } from "@workspace/ui/components/badge";
+import { CoachModal } from "./coach-modal";
+import { CoachLinks, CoachMetaBadges, getCoachLinks, splitCSV } from "./coach-parts";
+import type { WodifyCoach } from "./coach-types";
 
 export type WodifyCoachesBlockProps = PagebuilderType<"wodifyCoaches"> & {
   className?: string;
   preloaded?: WodifyCoach[];
 };
-
-function splitCSV(value?: string | null): string[] {
-  if (!value) return [];
-  return value
-    .split(",")
-    .map((s) => s.trim())
-    .filter(Boolean);
-}
 
 function useCoaches(filters?: {
   locations?: string[];
@@ -110,20 +87,22 @@ function useCoaches(filters?: {
   return { data, error, loading };
 }
 
-function CoachCard({ coach, showLinks }: { coach: WodifyCoach; showLinks: boolean }) {
-  const [expanded, setExpanded] = useState(false);
-
+function CoachCard({ coach, showLinks, onReadMore }: {
+  coach: WodifyCoach;
+  showLinks: boolean;
+  onReadMore?: (coach: WodifyCoach) => void
+}) {
   const fullName = [coach.first_name, coach.last_name].filter(Boolean).join(" ");
-  const links = [coach.link_1, coach.link_2, coach.link_3, coach.link_4, coach.link_5].filter(Boolean) as string[];
+  const links = getCoachLinks(coach);
+  const programs = splitCSV(coach.programs);
+  const services = splitCSV(coach.services);
 
   const bio = coach.biography || "";
   const MAX = 260; // peek length
   const isLong = bio.length > MAX;
-  const displayBio = expanded || !isLong ? bio : bio.slice(0, MAX) + "…";
+  const displayBio = !isLong ? bio : bio.slice(0, MAX) + "…";
 
   // const locations = splitCSV(coach.locations);
-  const programs = splitCSV(coach.programs);
-  const services = splitCSV(coach.services);
 
   return (
     <article className="overflow-hidden rounded-2xl border bg-card text-card-foreground shadow-sm">
@@ -141,23 +120,7 @@ function CoachCard({ coach, showLinks }: { coach: WodifyCoach; showLinks: boolea
           <h3 className="truncate text-xl font-semibold leading-tight">{fullName}</h3>
           {coach.title && <p className="text-muted-foreground">{coach.title}</p>}
           {/* Meta chips */}
-          <div className="mt-2 flex flex-wrap gap-2">
-            {/*{locations.map((l) => (*/}
-            {/*  <Badge key={"loc-" + l} variant="secondary" className="bg-muted text-xs">*/}
-            {/*    {l}*/}
-            {/*  </Badge>*/}
-            {/*))}*/}
-            {programs.map((p) => (
-              <Badge key={"prog-" + p} variant="secondary" className="bg-muted text-xs">
-                {p}
-              </Badge>
-            ))}
-            {services.map((s) => (
-              <Badge key={"svc-" + s} variant="secondary" className="bg-muted text-xs">
-                {s}
-              </Badge>
-            ))}
-          </div>
+          <CoachMetaBadges programs={programs} services={services} />
         </div>
       </div>
       {/* Biography */}
@@ -170,10 +133,9 @@ function CoachCard({ coach, showLinks }: { coach: WodifyCoach; showLinks: boolea
             <button
               type="button"
               className="mt-2 text-sm font-medium text-primary hover:underline"
-              onClick={() => setExpanded((v) => !v)}
-              aria-expanded={expanded}
+              onClick={() => onReadMore?.(coach)}
             >
-              {expanded ? "Show less" : "Read more"}
+              Read more
             </button>
           )}
         </div>
@@ -182,19 +144,7 @@ function CoachCard({ coach, showLinks }: { coach: WodifyCoach; showLinks: boolea
       {/* Links */}
       {showLinks && links.length > 0 && (
         <div className="border-t p-5">
-          <div className="flex flex-wrap gap-3">
-            {links.map((href, i) => (
-              <a
-                key={href + i}
-                className="text-sm font-medium text-primary underline-offset-4 hover:underline"
-                href={href}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Link {i + 1}
-              </a>
-            ))}
-          </div>
+          <CoachLinks links={links} />
         </div>
       )}
     </article>
@@ -216,10 +166,19 @@ export function WodifyCoaches({
     ? { data: preloaded, error: null as string | null, loading: false }
     : useCoaches(filters as any);
 
+  const [selectedCoach, setSelectedCoach] = useState<WodifyCoach | null>(null);
+  const [open, setOpen] = useState(false);
+
   const gridCols = useMemo(() => {
     const cols = Math.max(1, Math.min(4, Number(itemsPerRow) || 3));
     return `grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-${cols}`;
   }, [itemsPerRow]);
+
+  const handleReadMore = (coach: WodifyCoach) => {
+    setSelectedCoach(coach);
+    setOpen(true);
+  };
+
 
   return (
     <section className={cn("my-8 md:my-16", className)}>
@@ -256,19 +215,32 @@ export function WodifyCoaches({
             layout === "list" ? (
               <div className="space-y-4">
                 {data.map((coach) => (
-                  <CoachCard key={String(coach.id)} coach={coach} showLinks={showLinks ?? false} />
+                  <CoachCard key={String(coach.id)} coach={coach} showLinks={showLinks ?? false}
+                             onReadMore={handleReadMore} />
                 ))}
               </div>
             ) : (
               <div className={gridCols}>
                 {data.map((coach) => (
-                  <CoachCard key={String(coach.id)} coach={coach} showLinks={showLinks ?? false} />
+                  <CoachCard key={String(coach.id)} coach={coach} showLinks={showLinks ?? false}
+                             onReadMore={handleReadMore} />
                 ))}
               </div>
             )
           )}
         </div>
       </div>
+
+      {/* Modal for full coach details using common UI Sheet */}
+      <CoachModal
+        open={open}
+        onOpenChange={(o) => {
+          setOpen(o);
+          if (!o) setSelectedCoach(null);
+        }}
+        coach={selectedCoach}
+        showLinks={showLinks ?? undefined}
+      />
     </section>
   );
 }

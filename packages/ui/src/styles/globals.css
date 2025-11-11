@@ -179,6 +179,10 @@
     }
 }
 
+html {
+    font-size: 1.125rem;
+}
+
 img {
     display: block;
     max-width: 100%;

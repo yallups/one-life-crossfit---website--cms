@@ -54,13 +54,13 @@ export async function generateMetadata({
   return getSEOMetadata(
     data
       ? {
-          title: data?.title ?? data?.seoTitle ?? "",
-          description: data?.description ?? data?.seoDescription ?? "",
-          slug: data?.slug,
-          contentId: data?._id,
-          contentType: data?._type,
-          pageType: "article",
-        }
+        title: data?.title ?? data?.seoTitle ?? "",
+        description: data?.description ?? data?.seoDescription ?? "",
+        slug: data?.slug,
+        contentId: data?._id,
+        contentType: data?._type,
+        pageType: "article",
+      }
       : {}
   );
 }
@@ -110,7 +110,7 @@ export default async function BlogSlugPage({
         </main>
 
         <div className="hidden lg:block">
-          <div className="sticky top-4 rounded-lg">
+          <div className="sticky top-20 rounded-lg">
             <TableOfContent richText={richText ?? []} />
           </div>
         </div>
