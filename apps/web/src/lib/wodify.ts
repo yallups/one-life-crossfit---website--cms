@@ -25,7 +25,7 @@ async function getWodifyToken(): Promise<string | null> {
 const BASE_URL = 'https://api.wodify.com';
 
 // Generic REST helper for Wodify calls
-async function wodifyFetch<T>(path: string, params: Record<string, string | number | boolean> = {}): Promise<T> {
+async function wodifyFetch<T>(path: string, params: Record<string, string | number | boolean> = {}, opts: RequestInit = {}): Promise<T> {
   const token = await getWodifyToken();
   if (!token) throw new Error("Wodify API token is not configured in Sanity Settings.");
 
@@ -42,7 +42,8 @@ async function wodifyFetch<T>(path: string, params: Record<string, string | numb
       "X-Api-Key": token,
       Accept: 'application/json',
     },
-    cache: 'no-store',
+    next: { revalidate: 600, tags: ['wodify'] },
+    ...opts
   });
 
   if (!res.ok) {
@@ -114,7 +115,9 @@ export type WodifyCoachesResult = {
 export async function getWodifyCoaches(
   params: Record<string, string | number | boolean> = {}
 ): Promise<WodifyCoachesResult> {
-  const data = await wodifyFetch<any>(`/v1/customers/coaches`, params);
+  const data = await wodifyFetch<any>(`/v1/customers/coaches`, params, {
+    next: { revalidate: 24 * 60 * 60, tags: ['/v1/customers/coaches'] },
+  });
 
   // Try a variety of common envelope shapes
   const tryArrays: unknown[] = [
