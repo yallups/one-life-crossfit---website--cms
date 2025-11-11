@@ -15,6 +15,7 @@ import { Providers } from "@/components/providers";
 import { getNavigationData } from "@/lib/navigation";
 import { SanityLive } from "@/lib/sanity/live";
 import { SpeedInsights } from "@vercel/speed-insights/next"
+import { GoogleAnalytics } from "@next/third-parties/google"
 
 const fontSans = Geist({
   subsets: ["latin"],
@@ -33,6 +34,7 @@ export default async function RootLayout({
 }>) {
   preconnect("https://cdn.sanity.io");
   const nav = await getNavigationData();
+  const gaId = process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID;
   return (
     <html lang="en" suppressHydrationWarning>
     <body
@@ -47,6 +49,7 @@ export default async function RootLayout({
       <SanityLive />
       <CombinedJsonLd includeOrganization includeWebsite />
       <SpeedInsights />
+      {gaId ? <GoogleAnalytics gaId={gaId} /> : null}
       {(await draftMode()).isEnabled && (
         <>
           <PreviewBar />
