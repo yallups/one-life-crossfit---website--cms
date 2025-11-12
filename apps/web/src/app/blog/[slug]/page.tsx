@@ -14,6 +14,10 @@ async function fetchBlogSlugPageData(slug: string, stega = true) {
     query: queryBlogSlugPageData,
     params: { slug: `/blog/${slug}` },
     stega,
+    tags: [
+      'sanity:type:blog',
+      `sanity:route:/blog/${slug}`,
+    ],
   });
 }
 

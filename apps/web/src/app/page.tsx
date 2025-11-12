@@ -10,6 +10,10 @@ import { stegaClean } from "next-sanity";
 async function fetchHomePageData() {
   return await sanityFetch({
     query: queryHomePageData,
+    tags: [
+      'sanity:type:homePage',
+      'sanity:route:/'
+    ],
   });
 }
 

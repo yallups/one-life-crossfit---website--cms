@@ -20,9 +20,11 @@ export async function FooterServer() {
   const [response, settingsResponse] = await Promise.all([
     sanityFetch({
       query: queryFooterData,
+      tags: ["sanity:type:footer"],
     }),
     sanityFetch({
       query: queryGlobalSeoSettings,
+      tags: ["sanity:type:settings"],
     }),
   ]);
 

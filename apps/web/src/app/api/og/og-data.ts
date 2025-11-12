@@ -1,4 +1,4 @@
-import { client } from "@/lib/sanity/client";
+import { sanityFetch } from "@/lib/sanity/live";
 import {
   queryBlogPageOGData,
   queryGenericPageOGData,
@@ -8,17 +8,36 @@ import {
 import { handleErrors } from "@/utils";
 
 export async function getHomePageOGData(id: string) {
-  return await handleErrors(client.fetch(queryHomePageOGData, { id }));
+  return await handleErrors(
+    sanityFetch({ query: queryHomePageOGData, params: { id }, stega: false, tags: [
+      'sanity:type:homePage',
+      `sanity:id:${id}`,
+    ]}).then((r) => r.data)
+  );
 }
 
 export async function getSlugPageOGData(id: string) {
-  return await handleErrors(client.fetch(querySlugPageOGData, { id }));
+  return await handleErrors(
+    sanityFetch({ query: querySlugPageOGData, params: { id }, stega: false, tags: [
+      'sanity:type:page',
+      `sanity:id:${id}`,
+    ]}).then((r) => r.data)
+  );
 }
 
 export async function getBlogPageOGData(id: string) {
-  return await handleErrors(client.fetch(queryBlogPageOGData, { id }));
+  return await handleErrors(
+    sanityFetch({ query: queryBlogPageOGData, params: { id }, stega: false, tags: [
+      'sanity:type:blog',
+      `sanity:id:${id}`,
+    ]}).then((r) => r.data)
+  );
 }
 
 export async function getGenericPageOGData(id: string) {
-  return await handleErrors(client.fetch(queryGenericPageOGData, { id }));
+  return await handleErrors(
+    sanityFetch({ query: queryGenericPageOGData, params: { id }, stega: false, tags: [
+      `sanity:id:${id}`,
+    ]}).then((r) => r.data)
+  );
 }

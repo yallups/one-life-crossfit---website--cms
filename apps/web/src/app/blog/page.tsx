@@ -14,13 +14,22 @@ import { stegaClean } from "next-sanity";
 type Blog = NonNullable<QueryBlogIndexPageDataResult>["blogs"][number];
 
 async function fetchBlogPosts() {
-  return await handleErrors(sanityFetch({ query: queryBlogIndexPageData }));
+  return await handleErrors(sanityFetch({ query: queryBlogIndexPageData, tags: [
+    'sanity:type:blogIndex',
+    'sanity:type:blog',
+    'sanity:route:/blog',
+  ] }));
 }
 
 export async function generateMetadata() {
   const { data: result } = await sanityFetch({
     query: queryBlogIndexPageData,
     stega: false,
+    tags: [
+      'sanity:type:blogIndex',
+      'sanity:type:blog',
+      'sanity:route:/blog',
+    ],
   });
   return getSEOMetadata(
     result

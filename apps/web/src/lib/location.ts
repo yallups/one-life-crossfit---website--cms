@@ -1,7 +1,7 @@
 import 'server-only'
 
 import { stegaClean } from 'next-sanity'
-import { client as sanityClient } from '@/lib/sanity/client'
+import { sanityFetch } from '@/lib/sanity/live'
 import { querySettingsData } from '@/lib/sanity/query'
 import { getWodifyLocations } from '@/lib/wodify'
 
@@ -79,7 +79,7 @@ export async function getLocations(params: Record<string, string | number | bool
   }
 
   // Fallback: Sanity settings (single location from Settings)
-  const settings = await sanityClient.fetch(querySettingsData)
+  const { data: settings } = await sanityFetch({ query: querySettingsData, tags: ["sanity:type:settings"], stega: false })
   return { items: [buildFallbackFromSettings(settings)], source: 'sanity' }
 }
 

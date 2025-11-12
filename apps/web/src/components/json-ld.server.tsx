@@ -1,9 +1,8 @@
 import 'server-only'
 
 import { stegaClean } from 'next-sanity'
-import { client } from '@/lib/sanity/client'
+import { sanityFetch } from '@/lib/sanity/live'
 import { querySettingsData } from '@/lib/sanity/query'
-import { handleErrors } from '@/utils'
 
 import { ExerciseGymJsonLd, OrganizationJsonLd, WebSiteJsonLd } from './json-ld'
 import { getPrimaryLocation } from '@/lib/location'
@@ -18,8 +17,8 @@ export async function CombinedJsonLd({
   includeWebsite = false,
   includeOrganization = false,
 }: CombinedJsonLdProps) {
-  const settingsRes = await handleErrors(client.fetch(querySettingsData))
-  const cleanSettings = stegaClean(settingsRes[0])
+  const { data: settings } = await sanityFetch({ query: querySettingsData, tags: ["sanity:type:settings"] })
+  const cleanSettings = stegaClean(settings)
 
   // Load primary location via backend logic (Wodify first, fallback to Sanity)
   let wodifyPrimary: any = undefined

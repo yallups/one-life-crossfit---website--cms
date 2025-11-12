@@ -1,7 +1,6 @@
 import { OrganizationJsonLd, WebSiteJsonLd } from "@/components/json-ld";
-import { handleErrors } from "@/utils";
-import { client } from "@/lib/sanity/client";
 import { querySettingsData } from "@/lib/sanity/query";
+import { sanityFetch } from "@/lib/sanity/live";
 import { stegaClean } from "next-sanity";
 
 export default async function RootLayout({
@@ -9,10 +8,8 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
-  const [res] = await handleErrors(client.fetch(querySettingsData));
-
-  const cleanSettings = stegaClean(res);
+  const { data: settings } = await sanityFetch({ query: querySettingsData, tags: ["sanity:type:settings"] });
+  const cleanSettings = stegaClean(settings);
   return (
     <>
       <section
