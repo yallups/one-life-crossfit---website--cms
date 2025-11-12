@@ -115,7 +115,7 @@ export default function SchedulePage() {
             <h3 className={'text-balance font-bold text-xl lg:text-2xl'}>New to CrossFit? Not sure where to start?</h3>
             <p>
               Start with a <Link
-              className={'font-medium transition-colors hover:text-foreground'}
+              className={'underline decoration-dotted underline-offset-2'}
               href="/free-consultation">free consultation</Link> and we’ll help you pick the right session.
             </p>
 

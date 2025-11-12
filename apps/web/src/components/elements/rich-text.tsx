@@ -20,7 +20,7 @@ const components: Partial<PortableTextReactComponents> = {
       const slug = parseChildrenToSlug(value.children);
       return (
         <h2
-          className="scroll-m-20 border-b pb-2 font-semibold text-3xl first:mt-0 my-4"
+          className="scroll-m-20 border-b pb-2 font-semibold text-3xl first:mt-0 mt-8 mb-4"
           id={slug}
         >
           {children}
@@ -89,7 +89,7 @@ const components: Partial<PortableTextReactComponents> = {
   },
   list: props => {
     return (
-      <ul className={'my-4'}>
+      <ul className={'list-disc list-inside my-4'}>
         {props.children}
       </ul>
     )
