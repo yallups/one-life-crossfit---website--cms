@@ -45,7 +45,7 @@ export function CTACard({ card, className }: CTACardProps) {
       <SanityButtons
         buttonClassName={"grow-2"}
         buttons={buttons ?? []}
-        className={"w-full flex-row-reverse space-x-2 self-end"}
+        className={"w-full flex-col md:flex-row-reverse flex-wrap self-end"}
         size={"lg"}
       />
     </Comp>
