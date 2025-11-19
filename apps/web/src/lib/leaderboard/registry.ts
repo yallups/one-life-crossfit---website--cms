@@ -1,5 +1,6 @@
 import type { ChallengeConfig, SubmissionRow } from "./types";
 import { absolutePerUnit, absoluteScaledLinear } from "./scoring";
+import { parseToZonedISOString } from "./date";
 
 // Helper to build a Google Sheets gviz CSV URL for a given sheet name.
 function gvizCsvUrl(sheetId: string, sheetName: string) {
@@ -144,8 +145,9 @@ export const flex2025: ChallengeConfig = {
     const pu = m("max_pullups_reps") ?? m("Max Pull-ups (reps)");
     if (pu !== undefined) metrics["max_pullups_reps"] = pu;
 
+    const iso = parseToZonedISOString(ts, "America/Los_Angeles") || new Date(ts).toISOString();
     return {
-      timestamp: new Date(ts).toISOString(),
+      timestamp: iso,
       member_id: id,
       member_name: name,
       division,
@@ -270,8 +272,9 @@ export const summerShred2025: ChallengeConfig = {
     const waist = num(row["Waist (in)"] || row["waist_circumference_in"]);
     if (waist !== undefined) metrics["waist_circumference_in"] = waist;
 
+    const iso = parseToZonedISOString(ts, "America/Los_Angeles") || new Date(ts).toISOString();
     return {
-      timestamp: new Date(ts).toISOString(),
+      timestamp: iso,
       member_id: id,
       member_name: name,
       division: "open",
