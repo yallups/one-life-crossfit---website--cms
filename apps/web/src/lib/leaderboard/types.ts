@@ -62,6 +62,18 @@ export interface ChallengeConfig {
   checkinWindow: { startHour: number; durationHours: number }; // daily window, e.g., 19 → 19+24
   challengeWindow: { start: string; end: string }; // ISO yyyy-mm-dd
 
+  // Optional theming/branding per challenge
+  theme?: {
+    // Background color for web page (CSS color string)
+    backgroundColor?: string;
+    // Background image URL for web page (e.g., CDN/public path)
+    backgroundImageUrl?: string;
+    // Background color for generated images (PNG)
+    imageBackgroundColor?: string;
+    // Logo URL to display in header instead of title (web + image)
+    logoUrl?: string;
+  };
+
   divisions: {
     keys: DivisionKey[];
     resolveDivisionForMember?: (m: Member) => DivisionKey;

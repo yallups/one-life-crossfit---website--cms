@@ -1,9 +1,47 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import type { Metadata } from "next";
+import { headers } from "next/headers";
 import { computeLeaderboard } from "@/lib/leaderboard/engine";
 import { getChallengeConfig } from "@/lib/leaderboard/registry";
 
 export const dynamic = "force-dynamic";
+
+export async function generateMetadata(props: {
+  params: Promise<{ challenge: string; year: string }>
+}): Promise<Metadata> {
+  const { challenge, year } = await props.params;
+  const yearNum = Number(year);
+  const cfg = getChallengeConfig(challenge, yearNum);
+  if (!cfg) return {};
+
+  const hs = await headers();
+  const host = hs.get("x-forwarded-host") || hs.get("host") || "onelifecrossfit.com";
+  const proto = hs.get("x-forwarded-proto") || (host.includes("localhost") ? "http" : "https");
+  const origin = `${proto}://${host}`;
+  const division = (cfg.divisions.keys?.[0] || "open").toString();
+  const ogUrl = `${origin}/leaderboard/${cfg.slug}/${cfg.year}/image?division=${encodeURIComponent(division)}&width=1200&height=630`;
+  const title = `${cfg.title} — ${cfg.year} Leaderboard`;
+  const description = `Live leaderboard for ${cfg.title} ${cfg.year}. View podium and rankings by division.`;
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      url: `${origin}/leaderboard/${cfg.slug}/${cfg.year}`,
+      images: [{ url: ogUrl, width: 1200, height: 630, alt: title }],
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [ogUrl],
+    },
+  };
+}
 
 export default async function LeaderboardPage(props: { params: Promise<{ challenge: string; year: string }> }) {
   const { challenge, year } = await props.params;
@@ -17,21 +55,26 @@ export default async function LeaderboardPage(props: { params: Promise<{ challen
     divisions.map(async (division) => ({ division, data: await computeLeaderboard(challengeCfg, division) }))
   );
 
+  const bgStyle: React.CSSProperties = {
+    backgroundColor: challengeCfg.theme?.backgroundColor,
+    backgroundImage: challengeCfg.theme?.backgroundImageUrl ? `url(${challengeCfg.theme.backgroundImageUrl})` : undefined,
+  };
+
   return (
-    <main className="mx-auto max-w-5xl px-4 py-10">
-      <h1 className="mb-2 text-3xl font-extrabold tracking-tight">{challengeCfg.title} — {year}</h1>
-      <p className="mb-6 text-muted-foreground">Leaderboard across configured divisions.</p>
+    <main className="mx-auto max-w-5xl bg-cover bg-center px-4 py-10" style={bgStyle}>
+      <div className="mb-6 flex items-center justify-between">
+        {challengeCfg.theme?.logoUrl ? (
+          <img src={challengeCfg.theme.logoUrl} alt={challengeCfg.title} style={{ width: 200, display: "flex" }} />
+        ) : (
+          <h1 className="text-3xl font-extrabold tracking-tight">{challengeCfg.title} — {year}</h1>
+        )}
+        <span className="text-sm text-muted-foreground">Division(s): {divisions.join(", ")}</span>
+      </div>
 
       {results.map(({ division, data }) => (
         <section key={division} className="mb-12">
           <div className="mb-3 flex items-end justify-between">
             <h2 className="text-xl font-bold">{challengeCfg.title} — {division}</h2>
-            <Link
-              href={`/leaderboard/${challenge}/${year}/image?division=${encodeURIComponent(division)}&limit=10`}
-              className="text-sm text-primary hover:underline"
-            >
-              Open image (Canva)
-            </Link>
           </div>
           {/* Podium layout for Top 3 */}
           {(() => {
@@ -45,9 +88,9 @@ export default async function LeaderboardPage(props: { params: Promise<{ challen
                   <div className="w-full order-2 sm:order-none">
                     {top3[1] ? (
                       <Link href={`/leaderboard/${challenge}/${year}/member/${encodeURIComponent(top3[1].member_id)}`}
-                            className="block">
+                            className="group block">
                         <div
-                          className="mx-auto flex h-40 w-full max-w-xs flex-col items-center justify-center rounded-md border border-border bg-card p-3 text-center">
+                          className="mx-auto flex h-40 w-full max-w-xs flex-col items-center justify-center rounded-md border border-border bg-card p-3 text-center transition-colors group-hover:bg-foreground/25 group-hover:border-foreground/30">
                           <div className="text-3xl">🥈</div>
                           <div className="mt-1 line-clamp-1 text-sm font-medium">{top3[1].member_name}</div>
                           <div className="mt-1 text-2xl font-extrabold tabular-nums">{top3[1].total.toFixed(2)}</div>
@@ -60,9 +103,9 @@ export default async function LeaderboardPage(props: { params: Promise<{ challen
                   <div className="w-full order-1 sm:order-none">
                     {top3[0] ? (
                       <Link href={`/leaderboard/${challenge}/${year}/member/${encodeURIComponent(top3[0].member_id)}`}
-                            className="block">
+                            className="group block">
                         <div
-                          className="mx-auto flex h-52 w-full max-w-xs flex-col items-center justify-center rounded-md border border-border bg-card p-4 text-center shadow-md">
+                          className="mx-auto flex h-52 w-full max-w-xs flex-col items-center justify-center rounded-md border border-border bg-card p-4 text-center shadow-md transition-colors group-hover:bg-foreground/25 group-hover:border-foreground/30">
                           <div className="text-4xl">🥇</div>
                           <div className="mt-1 line-clamp-1 text-base font-semibold">{top3[0].member_name}</div>
                           <div className="mt-1 text-3xl font-extrabold tabular-nums">{top3[0].total.toFixed(2)}</div>
@@ -75,9 +118,9 @@ export default async function LeaderboardPage(props: { params: Promise<{ challen
                   <div className="w-full order-3 sm:order-none">
                     {top3[2] ? (
                       <Link href={`/leaderboard/${challenge}/${year}/member/${encodeURIComponent(top3[2].member_id)}`}
-                            className="block">
+                            className="group block">
                         <div
-                          className="mx-auto flex h-32 w-full max-w-xs flex-col items-center justify-center rounded-md border border-border bg-card p-3 text-center">
+                          className="mx-auto flex h-32 w-full max-w-xs flex-col items-center justify-center rounded-md border border-border bg-card p-3 text-center transition-colors group-hover:bg-foreground/25 group-hover:border-foreground/30">
                           <div className="text-3xl">🥉</div>
                           <div className="mt-1 line-clamp-1 text-sm font-medium">{top3[2].member_name}</div>
                           <div className="mt-1 text-2xl font-extrabold tabular-nums">{top3[2].total.toFixed(2)}</div>
@@ -99,7 +142,7 @@ export default async function LeaderboardPage(props: { params: Promise<{ challen
                       className="group block"
                     >
                       <div
-                        className="flex items-center justify-between rounded-md border border-border bg-card p-3 transition-colors group-hover:bg-accent/10">
+                        className="flex items-center justify-between rounded-md border border-border bg-card p-3 transition-colors group-hover:bg-foreground/25 group-hover:border-foreground/30">
                         <div className="flex items-center gap-3 overflow-hidden">
                           <div className="min-w-10 text-right text-sm font-semibold tabular-nums">{r.rank}</div>
                           <div className="line-clamp-1 text-sm">{r.member_name}</div>

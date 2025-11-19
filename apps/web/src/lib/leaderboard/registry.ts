@@ -20,6 +20,12 @@ export const flex2025: ChallengeConfig = {
   timezone: "America/Los_Angeles",
   checkinWindow: { startHour: 19, durationHours: 24 },
   challengeWindow: { start: "2025-11-17", end: "2025-12-27" },
+  theme: {
+    // backgroundColor: "#0B0F1A",
+    // imageBackgroundColor: "#0B0F1A",
+    backgroundImageUrl: "https://cdn.sanity.io/images/kuaamikv/production/bc7332e2ac09e514a961497c1485954d3b6cd016-1295x864.png", // optional
+    logoUrl: "https://cdn.sanity.io/images/kuaamikv/production/0cfb9bec9cc7340810a4e6eb94ce451920cdcb33-581x407.png", // optional
+  },
   divisions: {
     keys: ["open"],
   },
@@ -171,6 +177,10 @@ export const summerShred2025: ChallengeConfig = {
   title: "Summer Shred Challenge 2025",
   timezone: "America/Los_Angeles",
   checkinWindow: { startHour: 19, durationHours: 24 },
+  theme: {
+    backgroundColor: "#0B0F1A",
+    imageBackgroundColor: "#0B0F1A",
+  },
   // Example dates; adjust if your challenge dates differ
   challengeWindow: { start: "2025-04-06", end: "2025-05-18" },
   divisions: {

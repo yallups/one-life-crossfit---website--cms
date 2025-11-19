@@ -33,6 +33,10 @@ export async function GET(req: NextRequest, context: { params: Promise<{ challen
     const data = await computeLeaderboard(cfg, division);
     const rows = data.rows.slice(0, limit);
 
+    const bg = cfg.theme?.imageBackgroundColor || cfg.theme?.backgroundColor || "#0B0F1A";
+    const bgImg = cfg.theme?.backgroundImageUrl || undefined;
+    const logo = cfg.theme?.logoUrl;
+
     const nowStr = new Date(data.updatedAt).toLocaleString("en-US", {
       timeZone: cfg.timezone,
       month: "short",
@@ -55,14 +59,18 @@ export async function GET(req: NextRequest, context: { params: Promise<{ challen
           height: height,
           display: "flex",
           flexDirection: "column",
-          background: "#0B0F1A",
+          background: bg,
           color: "white",
           padding: 40,
           fontFamily: "Inter, ui-sans-serif, system-ui",
         }}
       >
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
-          <div style={{ display: 'flex', fontSize: 48, fontWeight: 900, letterSpacing: -0.5 }}>{cfg.title}</div>
+          {logo ? (
+            <img src={logo} alt={cfg.title} style={{ display: 'flex', height: 48 }} />
+          ) : (
+            <div style={{ display: 'flex', fontSize: 48, fontWeight: 900, letterSpacing: -0.5 }}>{cfg.title}</div>
+          )}
           <div style={{ display: 'flex', fontSize: 24, opacity: 0.9 }}>{(division || data.division).toUpperCase()}</div>
         </div>
 

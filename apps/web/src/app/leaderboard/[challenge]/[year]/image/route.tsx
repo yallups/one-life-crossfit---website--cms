@@ -33,6 +33,10 @@ export async function GET(req: NextRequest, context: { params: Promise<{ challen
     const data = await computeLeaderboard(cfg, division);
     const rows = data.rows.slice(0, limit);
 
+    const bg = cfg.theme?.imageBackgroundColor || cfg.theme?.backgroundColor || "#0B0F1A";
+    const bgImg = cfg.theme?.backgroundImageUrl || undefined;
+    const logo = cfg.theme?.logoUrl;
+
     const nowStr = new Date(data.updatedAt).toLocaleString("en-US", {
       timeZone: cfg.timezone,
       month: "short",
@@ -55,15 +59,23 @@ export async function GET(req: NextRequest, context: { params: Promise<{ challen
           height: height,
           display: "flex",
           flexDirection: "column",
-          background: "transparent",
+          backgroundColor: bg,
+          backgroundImage: bgImg ? `url(${bgImg})` : undefined,
+          backgroundSize: bgImg ? "cover" : undefined,
+          backgroundPosition: bgImg ? "center" : undefined,
           color: "white",
           padding: 40,
           fontFamily: "Inter, ui-sans-serif, system-ui",
         }}
       >
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
-          <div style={{ display: 'flex', fontSize: 48, fontWeight: 900, letterSpacing: -0.5 }}>{cfg.title}</div>
           <div style={{ display: 'flex', fontSize: 24, opacity: 0.9 }}>{(division || data.division).toUpperCase()}</div>
+          {logo ? (
+            <img src={logo} alt={cfg.title}
+                 style={{ display: 'flex', height: 200, marginBottom: -80, marginTop: -40, justifySelf: 'right' }} />
+          ) : (
+            <div style={{ display: 'flex', fontSize: 48, fontWeight: 900, letterSpacing: -0.5 }}>{cfg.title}</div>
+          )}
         </div>
 
         {/* Podium */}
@@ -84,7 +96,7 @@ export async function GET(req: NextRequest, context: { params: Promise<{ challen
                 border: '1px solid rgba(255,255,255,0.12)',
                 borderRadius: 8,
                 background: '#121829',
-                opacity: 0.75,
+                // opacity: 0.75,
                 padding: 12,
                 alignItems: 'flex-end',
                 justifyContent: 'center',
@@ -122,7 +134,7 @@ export async function GET(req: NextRequest, context: { params: Promise<{ challen
                 border: '1px solid rgba(255,255,255,0.16)',
                 borderRadius: 8,
                 background: '#151B2E',
-                opacity: 0.75,
+                // opacity: 0.75,
 
                 padding: 16,
                 alignItems: 'flex-end',
@@ -161,7 +173,7 @@ export async function GET(req: NextRequest, context: { params: Promise<{ challen
                 border: '1px solid rgba(255,255,255,0.12)',
                 borderRadius: 8,
                 background: '#121829',
-                opacity: 0.75,
+                // opacity: 0.75,
                 padding: 12,
                 alignItems: 'flex-end',
                 justifyContent: 'center',
@@ -204,7 +216,7 @@ export async function GET(req: NextRequest, context: { params: Promise<{ challen
                 border: '1px solid rgba(255,255,255,0.08)',
                 borderRadius: 8,
                 background: '#0F1424',
-                opacity: 0.75,
+                // opacity: 0.75,
 
               }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12, overflow: 'hidden' }}>
@@ -239,7 +251,7 @@ export async function GET(req: NextRequest, context: { params: Promise<{ challen
                 border: '1px solid rgba(255,255,255,0.08)',
                 borderRadius: 8,
                 background: '#0F1424',
-                opacity: 0.75,
+                // opacity: 0.75,
 
               }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12, overflow: 'hidden' }}>
@@ -265,16 +277,16 @@ export async function GET(req: NextRequest, context: { params: Promise<{ challen
           </div>
         </div>
 
-        <div style={{
-          marginTop: 'auto',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          opacity: 0.8
-        }}>
-          <div style={{ display: 'flex', fontSize: 20 }}>Updated: {nowStr} PT</div>
-          <div style={{ display: 'flex', fontSize: 20 }}>onelifecrossfit.com</div>
-        </div>
+        {/*<div style={{*/}
+        {/*  marginTop: 'auto',*/}
+        {/*  display: 'flex',*/}
+        {/*  justifyContent: 'space-between',*/}
+        {/*  alignItems: 'center',*/}
+        {/*  opacity: 0.8*/}
+        {/*}}>*/}
+        {/*  <div style={{ display: 'flex', fontSize: 20 }}>Updated: {nowStr} PT</div>*/}
+        {/*  <div style={{ display: 'flex', fontSize: 20 }}>onelifecrossfit.com</div>*/}
+        {/*</div>*/}
       </div>
     );
 
