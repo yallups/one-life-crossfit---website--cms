@@ -43,7 +43,7 @@
   "devDependencies": {
     "@types/node": "^24.10.0",
     "@types/react": "^19.2.2",
-    "@types/react-dom": "^19.2.2",
+    "@types/react-dom": "^19.2.3",
     "@types/react-slick": "^0.23.13",
     "@workspace/typescript-config": "workspace:*",
     "openapi-typescript": "^7.10.1",
