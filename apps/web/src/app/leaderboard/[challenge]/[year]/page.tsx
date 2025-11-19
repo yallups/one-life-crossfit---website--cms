@@ -15,30 +15,49 @@ export async function generateMetadata(props: {
   const cfg = getChallengeConfig(challenge, yearNum);
   if (!cfg) return {};
 
-  const hs = await headers();
-  const host = hs.get("x-forwarded-host") || hs.get("host") || "onelifecrossfit.com";
-  const proto = hs.get("x-forwarded-proto") || (host.includes("localhost") ? "http" : "https");
-  const origin = `${proto}://${host}`;
+  // Resolve origin robustly: env → headers → fallback
+  function safeOriginFromEnv() {
+    const envUrl = process.env.NEXT_PUBLIC_SITE_URL;
+    if (envUrl) {
+      try { return new URL(envUrl).origin; } catch { /* ignore */ }
+    }
+    return undefined;
+  }
+  let origin = safeOriginFromEnv();
+  if (!origin) {
+    try {
+      const hs = await headers();
+      const host = hs.get("x-forwarded-host") || hs.get("host") || "onelifecrossfit.com";
+      const proto = hs.get("x-forwarded-proto") || (host.includes("localhost") ? "http" : "https");
+      origin = `${proto}://${host}`;
+    } catch {
+      origin = "https://onelifecrossfit.com";
+    }
+  }
+
   const division = (cfg.divisions.keys?.[0] || "open").toString();
-  const ogUrl = `${origin}/leaderboard/${cfg.slug}/${cfg.year}/image?division=${encodeURIComponent(division)}&width=1200&height=630`;
+  const canonical = `${origin}/leaderboard/${cfg.slug}/${cfg.year}`;
+  const ogImage = `${origin}/leaderboard/${cfg.slug}/${cfg.year}/image?division=${encodeURIComponent(division)}&width=1200&height=630`;
   const title = `${cfg.title} — ${cfg.year} Leaderboard`;
   const description = `Live leaderboard for ${cfg.title} ${cfg.year}. View podium and rankings by division.`;
 
   return {
     title,
     description,
+    alternates: { canonical },
     openGraph: {
       title,
       description,
-      url: `${origin}/leaderboard/${cfg.slug}/${cfg.year}`,
-      images: [{ url: ogUrl, width: 1200, height: 630, alt: title }],
+      url: canonical,
+      siteName: "One Life CrossFit",
+      images: [{ url: ogImage, width: 1200, height: 630, alt: title }],
       type: "website",
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
-      images: [ogUrl],
+      images: [ogImage],
     },
   };
 }
