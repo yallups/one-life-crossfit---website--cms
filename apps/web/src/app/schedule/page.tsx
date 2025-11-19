@@ -6,6 +6,7 @@ import { getSEOMetadata } from "@/lib/seo";
 import { sanityFetch } from "@/lib/sanity/live";
 import { querySlugPageData, querySlugPagePaths } from "@/lib/sanity/query";
 import { client } from "@/lib/sanity/client";
+import { Metadata } from "next";
 
 async function fetchSlugPageData(slug: string, stega = true) {
   return await sanityFetch({
@@ -48,7 +49,7 @@ export async function generateMetadata({
   params,
 }: {
   params: Promise<{ slug: string[] }>;
-}) {
+}): Promise<Metadata> {
   const slug = ['schedule']
   const slugString = slug.join("/");
   const { data: pageData } = await fetchSlugPageData(slugString, false);

@@ -8,6 +8,7 @@ import { getSEOMetadata } from "@/lib/seo";
 import { prefetchPageBuilderData } from "@/lib/block-prefetch";
 import { draftMode } from "next/headers";
 import { stegaClean } from "next-sanity";
+import { Metadata } from "next";
 
 async function fetchSlugPageData(slug: string, stega = true) {
   return await sanityFetch({
@@ -50,7 +51,7 @@ export async function generateMetadata({
   params,
 }: {
   params: Promise<{ slug: string[] }>;
-}) {
+}): Promise<Metadata> {
   const { slug } = await params;
   const slugString = slug.join("/");
   const { data: pageData } = await fetchSlugPageData(slugString, false);

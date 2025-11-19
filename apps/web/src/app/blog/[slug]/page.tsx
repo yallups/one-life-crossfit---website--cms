@@ -8,6 +8,8 @@ import { client } from "@/lib/sanity/client";
 import { sanityFetch } from "@/lib/sanity/live";
 import { queryBlogPaths, queryBlogSlugPageData } from "@/lib/sanity/query";
 import { getSEOMetadata } from "@/lib/seo";
+import BlogMeta from "@/components/blog-meta";
+import { Metadata } from "next";
 
 async function fetchBlogSlugPageData(slug: string, stega = true) {
   return await sanityFetch({
@@ -52,7 +54,7 @@ export async function generateMetadata({
   params,
 }: {
   params: Promise<{ slug: string }>;
-}) {
+}): Promise<Metadata> {
   const { slug } = await params;
   const { data } = await fetchBlogSlugPageData(slug, false);
   return getSEOMetadata(
@@ -64,6 +66,7 @@ export async function generateMetadata({
         contentId: data?._id,
         contentType: data?._type,
         pageType: "article",
+        authors: data?.authors?.name ? [{ name: data.authors.name }] : undefined,
       }
       : {}
   );
@@ -87,7 +90,7 @@ export default async function BlogSlugPage({
   if (!data) {
     return notFound();
   }
-  const { title, description, image, richText } = data ?? {};
+  const { title, description, image, richText, authors, publishedAt } = data ?? {};
 
   return (
     <div className="container mx-auto my-16 px-4 md:px-6">
@@ -97,6 +100,7 @@ export default async function BlogSlugPage({
           <header className="mb-8">
             <h1 className="mt-2 font-bold text-4xl">{title}</h1>
             <p className="mt-4 text-lg text-muted-foreground">{description}</p>
+            <BlogMeta author={authors} publishedAt={publishedAt} />
           </header>
           {image && (
             <div className="mb-12">

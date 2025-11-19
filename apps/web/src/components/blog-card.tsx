@@ -60,7 +60,7 @@ export function BlogAuthor({ author }: BlogAuthorProps) {
   }
 
   return (
-    <div className="flex items-center gap-x-2.5 font-semibold text-gray-900 text-sm/6">
+    <div className="flex items-center gap-x-2.5 font-semibold text-sm/6">
       <AuthorImage author={author} />
       {author.name}
     </div>
@@ -77,10 +77,10 @@ function BlogMeta({ publishedAt }: { publishedAt: string | null }) {
       <time className="text-muted-foreground" dateTime={publishedAt ?? ""}>
         {publishedAt
           ? new Date(publishedAt).toLocaleDateString("en-US", {
-              year: "numeric",
-              month: "short",
-              day: "numeric",
-            })
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+          })
           : ""}
       </time>
     </div>

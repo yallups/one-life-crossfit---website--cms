@@ -10,18 +10,21 @@ import { handleErrors } from "@/utils";
 import { prefetchPageBuilderData } from "@/lib/block-prefetch";
 import { draftMode } from "next/headers";
 import { stegaClean } from "next-sanity";
+import { Metadata } from "next";
 
 type Blog = NonNullable<QueryBlogIndexPageDataResult>["blogs"][number];
 
 async function fetchBlogPosts() {
-  return await handleErrors(sanityFetch({ query: queryBlogIndexPageData, tags: [
-    'sanity:type:blogIndex',
-    'sanity:type:blog',
-    'sanity:route:/blog',
-  ] }));
+  return await handleErrors(sanityFetch({
+    query: queryBlogIndexPageData, tags: [
+      'sanity:type:blogIndex',
+      'sanity:type:blog',
+      'sanity:route:/blog',
+    ]
+  }));
 }
 
-export async function generateMetadata() {
+export async function generateMetadata(): Promise<Metadata> {
   const { data: result } = await sanityFetch({
     query: queryBlogIndexPageData,
     stega: false,

@@ -234,7 +234,7 @@ export function WodifyCoaches({
       {/* Modal for full coach details using common UI Sheet */}
       <CoachModal
         open={open}
-        onOpenChange={(o) => {
+        onOpenChangeAction={(o) => {
           setOpen(o);
           if (!o) setSelectedCoach(null);
         }}

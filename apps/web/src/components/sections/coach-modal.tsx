@@ -1,25 +1,32 @@
 "use client";
 
 import Image from "next/image";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetFooter } from "@workspace/ui/components/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle
+} from "@workspace/ui/components/sheet";
 import type { WodifyCoach } from "./coach-types";
 import { CoachLinks, CoachMetaBadges, getCoachLinks, splitCSV } from "./coach-parts";
 
 export function CoachModal({
   open,
-  onOpenChange,
+  onOpenChangeAction,
   coach,
   showLinks = true,
   side = "center",
 }: {
   open: boolean;
-  onOpenChange: (open: boolean) => void;
+  onOpenChangeAction: (open: boolean) => void;
   coach: WodifyCoach | null;
   showLinks?: boolean;
   side?: "top" | "right" | "bottom" | "left" | "center";
 }) {
   if (!coach) return (
-    <Sheet open={open} onOpenChange={onOpenChange}>
+    <Sheet open={open} onOpenChange={onOpenChangeAction}>
       <SheetContent side={side} aria-hidden />
     </Sheet>
   );
@@ -30,7 +37,7 @@ export function CoachModal({
   const links = getCoachLinks(coach);
 
   return (
-    <Sheet open={open} onOpenChange={onOpenChange}>
+    <Sheet open={open} onOpenChange={onOpenChangeAction}>
       <SheetContent side={side} className="p-0">
         <div className="flex flex-col">
           <div className="flex gap-4 p-5">

@@ -6,6 +6,7 @@ import { getSEOMetadata } from "@/lib/seo";
 import { prefetchPageBuilderData } from "@/lib/block-prefetch";
 import { draftMode } from "next/headers";
 import { stegaClean } from "next-sanity";
+import { Metadata } from "next";
 
 async function fetchHomePageData() {
   return await sanityFetch({
@@ -17,7 +18,7 @@ async function fetchHomePageData() {
   });
 }
 
-export async function generateMetadata() {
+export async function generateMetadata(): Promise<Metadata> {
   const { data: homePageData } = await fetchHomePageData();
   return getSEOMetadata(
     homePageData
