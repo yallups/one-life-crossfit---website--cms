@@ -55,7 +55,7 @@ export async function GET(req: NextRequest, context: { params: Promise<{ challen
           height: height,
           display: "flex",
           flexDirection: "column",
-          background: "#0B0F1A",
+          background: "transparent",
           color: "white",
           padding: 40,
           fontFamily: "Inter, ui-sans-serif, system-ui",
@@ -84,6 +84,7 @@ export async function GET(req: NextRequest, context: { params: Promise<{ challen
                 border: '1px solid rgba(255,255,255,0.12)',
                 borderRadius: 8,
                 background: '#121829',
+                opacity: 0.75,
                 padding: 12,
                 alignItems: 'flex-end',
                 justifyContent: 'center',
@@ -121,6 +122,8 @@ export async function GET(req: NextRequest, context: { params: Promise<{ challen
                 border: '1px solid rgba(255,255,255,0.16)',
                 borderRadius: 8,
                 background: '#151B2E',
+                opacity: 0.75,
+
                 padding: 16,
                 alignItems: 'flex-end',
                 justifyContent: 'center',
@@ -158,6 +161,7 @@ export async function GET(req: NextRequest, context: { params: Promise<{ challen
                 border: '1px solid rgba(255,255,255,0.12)',
                 borderRadius: 8,
                 background: '#121829',
+                opacity: 0.75,
                 padding: 12,
                 alignItems: 'flex-end',
                 justifyContent: 'center',
@@ -199,7 +203,9 @@ export async function GET(req: NextRequest, context: { params: Promise<{ challen
                 padding: '10px 14px',
                 border: '1px solid rgba(255,255,255,0.08)',
                 borderRadius: 8,
-                background: '#0F1424'
+                background: '#0F1424',
+                opacity: 0.75,
+
               }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12, overflow: 'hidden' }}>
                   <div style={{
@@ -232,7 +238,9 @@ export async function GET(req: NextRequest, context: { params: Promise<{ challen
                 padding: '10px 14px',
                 border: '1px solid rgba(255,255,255,0.08)',
                 borderRadius: 8,
-                background: '#0F1424'
+                background: '#0F1424',
+                opacity: 0.75,
+
               }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12, overflow: 'hidden' }}>
                   <div style={{
@@ -299,7 +307,11 @@ export async function GET(req: NextRequest, context: { params: Promise<{ challen
         </div>
       </div>
     );
-    return new ImageResponse(err as any, { width: DEFAULT_WIDTH, height: DEFAULT_HEIGHT, headers: { ...noStoreHeaders } });
+    return new ImageResponse(err as any, {
+      width: DEFAULT_WIDTH,
+      height: DEFAULT_HEIGHT,
+      headers: { ...noStoreHeaders }
+    });
   }
 }
 
