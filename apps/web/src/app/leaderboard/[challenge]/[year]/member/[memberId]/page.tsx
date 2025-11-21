@@ -1,6 +1,8 @@
 import { notFound } from "next/navigation";
 import { getChallengeConfig } from "@/lib/leaderboard/registry";
 import { Fragment } from "react";
+import Link from "next/link";
+import { ChevronLeft } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
@@ -33,6 +35,11 @@ export default async function MemberDetailPage(props: {
 
   return (
     <main className="mx-auto max-w-5xl px-4 py-10">
+      <Link
+        className="flex items-center gap-1 transition-colors hover:text-accent"
+        href={`${origin}/leaderboard/${challenge}/${year}/`}>
+        <ChevronLeft className="size-5" /><span>Back to Leaderboard</span>
+      </Link>
       <h1 className="mb-1 text-3xl font-extrabold tracking-tight">{detail.member_name}</h1>
       <p className="mb-6 text-muted-foreground">{cfg.title} — {year} · Division: {detail.division}</p>
 
