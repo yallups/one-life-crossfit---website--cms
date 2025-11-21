@@ -35,13 +35,25 @@ export const flex2025: ChallengeConfig = {
       { key: "water", label: "Hydration target", points: 1 },
       { key: "creatine", label: "Creatine", points: 1 },
       { key: "protein_powder_max1_scoop", label: "Protein powder ≤1 scoop", points: 1 },
-      { key: "group_class", label: "Group Class participation", points: 1 },
-      { key: "daily_program_done", label: "Daily program done", points: 1 },
+      {
+        key: "group_class", label: "Group Class participation", points: 1,
+        limits: [{ window: 'week', maxPoints: 5, weekStartsOn: 'mon' }]
+      },
+      {
+        key: "daily_program_done", label: "Daily program done", points: 1,
+        limits: [{ window: 'week', maxPoints: 5, weekStartsOn: 'mon' }]
+      },
       { key: "sleep_8h", label: "8h sleep", points: 1 },
       { key: "social_post", label: "Social post", points: 1 },
+      {
+        key: 'inbody_scan',
+        label: 'InBody Scan',
+        points: 1,
+        limits: [{ window: 'week', maxPoints: 1, weekStartsOn: 'mon' }]
+      },
       { key: "daily_submission", label: "Submitted daily", points: 1 },
     ],
-    maxDailyPoints: 8,
+    // maxDailyPoints: 8,
   },
   performance: {
     baselineWindow: { start: "2025-11-16", end: "2025-11-22" },
@@ -128,6 +140,7 @@ export const flex2025: ChallengeConfig = {
       daily_program_done: truthy(row["daily_program_done"]) || truthy(row["Body Building"]) || truthy(row["Program Done"]) || truthy(row["Daily program done"]),
       sleep_8h: truthy(row["sleep_8h"]) || truthy(row["Sleep"]) || truthy(row["Slept 8h"]) || truthy(row["8h sleep"]),
       social_post: truthy(row["social_post"]) || truthy(row["Social media"]) || truthy(row["Social Post"]) || truthy(row["Social post"]),
+      inbody_scan: truthy(row["inbody_scan"]) || truthy(row["InBody Scan"]),
       daily_submission: true,
     };
 
