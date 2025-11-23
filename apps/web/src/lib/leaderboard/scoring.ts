@@ -3,7 +3,7 @@
 export function absolutePerUnit(unit: number, pointsPerUnit: number) {
   return ({ improvement }: { improvement: number }) => {
     if (!isFinite(improvement) || improvement <= 0) return 0;
-    return Math.floor(improvement / unit) * pointsPerUnit;
+    return (improvement / unit) * pointsPerUnit;
   };
 }
 
@@ -12,6 +12,15 @@ export function absoluteScaledLinear(maxPoints: number, normalizeMax: number) {
     if (!isFinite(improvement) || improvement <= 0) return 0;
     const norm = Math.max(0, Math.min(1, improvement / normalizeMax));
     return norm * maxPoints;
+  };
+}
+
+// Linear points without flooring or cap: awards pointsPerUnit per 1 unit improvement
+// Example: absoluteLinear(80) with improvement=2.5 → 200 points
+export function absoluteLinear(pointsPerUnit: number) {
+  return ({ improvement }: { improvement: number }) => {
+    if (!isFinite(improvement) || improvement <= 0) return 0;
+    return improvement * pointsPerUnit;
   };
 }
 

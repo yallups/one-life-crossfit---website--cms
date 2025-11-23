@@ -19,7 +19,9 @@ export async function loadSubmissions(config: ChallengeConfig): Promise<Submissi
   const out: SubmissionRow[] = [];
   for (const r of rows) {
     const mapped = config.mapCsvRow(r);
-    if (mapped) out.push(mapped);
+    if (!mapped) continue;
+    if (Array.isArray(mapped)) out.push(...mapped);
+    else out.push(mapped);
   }
   return out;
 }
@@ -262,6 +264,7 @@ export interface DailySubmissionAudit {
   metrics: Record<string, number>;
   isLatestForWindow: boolean; // only latest submission per 7pm window counts
   notCountedReason?: string; // explanation when not counted (e.g., superseded)
+  dayOfChallenge: number;
 }
 
 export interface DailyWindowAudit {
@@ -360,17 +363,22 @@ export async function computeMemberDetail(cfg: ChallengeConfig, memberId: string
       // Should not happen since subs.length > 0, but guard for type safety
       continue;
     }
-    const submissionsAudit: DailySubmissionAudit[] = subs.map((s, idx) => ({
-      timestamp: s.timestamp,
-      checkins: s.checkins,
-      metrics: s.metrics,
-      isLatestForWindow: idx === countedIndex,
-      notCountedReason: idx === countedIndex ? undefined : `Superseded by later submission at ${new Date(latest.timestamp).toLocaleTimeString("en-US", {
-        timeZone: cfg.timezone,
-        hour: "numeric",
-        minute: "2-digit"
-      })}`,
-    }));
+    const submissionsAudit: DailySubmissionAudit[] = subs.map((s, idx) => {
+      const dayOfChallenge = Math.round((new Date(s.date).getTime() - new Date(cfg.challengeWindow.start).getTime()) / (1000 * 60 * 60 * 24)) + 1;
+      return ({
+        // calculate the day of the challenge base on challengeWindow + checkinWindow
+        dayOfChallenge,
+        timestamp: s.timestamp,
+        checkins: s.checkins,
+        metrics: s.metrics,
+        isLatestForWindow: idx === countedIndex,
+        notCountedReason: idx === countedIndex ? undefined : `Superseded by later submission at ${new Date(latest.timestamp).toLocaleTimeString("en-US", {
+          timeZone: cfg.timezone,
+          hour: "numeric",
+          minute: "2-digit"
+        })}`,
+      })
+    });
 
     const counted = latest;
     const perHabitAwards: Record<string, HabitAwardDetail> = {};
@@ -455,7 +463,13 @@ export async function computeMemberDetail(cfg: ChallengeConfig, memberId: string
     const direction: "up" | "down" = spec.direction === "down" ? "down" : "up";
     const imp = improvementForMetric(spec.kind, baseline, final, direction);
     const points = spec.scoring({ improvement: imp, baseline, final });
-    improvements[spec.key] = { improvement: imp, points, baseline, final };
+    const hide = !!(spec as any).sensitive;
+    improvements[spec.key] = {
+      improvement: imp,
+      points,
+      baseline: hide ? undefined : baseline,
+      final: hide ? undefined : final,
+    };
     perfTotal += points;
   }
 

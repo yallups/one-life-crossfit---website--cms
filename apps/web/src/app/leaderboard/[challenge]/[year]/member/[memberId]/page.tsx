@@ -74,10 +74,16 @@ export default async function MemberDetailPage(props: {
                       <tr key={w.date + "|" + s.timestamp}
                           className={["border-b border-border/60", counted ? "" : "opacity-60 text-muted-foreground line-through"].join(" ")}
                           title={rowTitle}>
-                        <td className="px-2 py-2 text-left tabular-nums">
-                          {idx === 0 ? w.date : ""}
-                          {!counted && <span className="ml-2 text-[10px]">(earlier)</span>}
-                          {counted && <span className="ml-2 text-[10px] text-primary">(latest)</span>}
+                        <td className="px-2 py-2 text-left tabular-nums text-nowrap"
+                            title={new Date(s.timestamp).toLocaleTimeString("en-US", {
+                              timeZone: cfg.timezone,
+                              year: "numeric",
+                              month: "2-digit",
+                              day: "2-digit",
+                              hour: "numeric",
+                              minute: "2-digit"
+                            })}>
+                          {`Day: ${s.dayOfChallenge}`}
                         </td>
                         {habits.map((h) => {
                           const attempted = !!s.checkins?.[h.key];
@@ -99,7 +105,7 @@ export default async function MemberDetailPage(props: {
                                   title={title}
                                 >
                                   {attempted ? "✓" : ""}
-                                </span>
+                                </span>{attempted ? ` +${h.points}` : ''}
                             </td>
                           );
                         })}
@@ -135,7 +141,7 @@ export default async function MemberDetailPage(props: {
                             title={h.label}
                           >
                             {done ? "✓" : ""}
-                          </span>
+                          </span> +{h.points}
                       </td>
                     );
                   })}
@@ -153,23 +159,37 @@ export default async function MemberDetailPage(props: {
         <div className="overflow-x-auto">
           <table className="w-full border-collapse text-sm">
             <thead>
-            <tr className="text-right text-[11px] uppercase text-muted-foreground">
+            <tr className="text-center text-sm uppercase text-muted-foreground">
               <th className="border-b border-border px-2 py-2 text-left">Metric</th>
               <th className="border-b border-border px-2 py-2">Baseline</th>
               <th className="border-b border-border px-2 py-2">Final</th>
               <th className="border-b border-border px-2 py-2">Improvement</th>
+              <th className="border-b border-border px-2 py-2">Scoring</th>
               <th className="border-b border-border px-2 py-2">Points</th>
             </tr>
             </thead>
             <tbody>
             {metrics.map((m) => {
               const imp = detail.improvements?.[m.key];
+              const improvement =
+                m.kind === 'percent_gain' ?
+                  `${fmtNum(100 * imp?.improvement)}%` :
+                  fmtNum(imp?.improvement)
+              const pointsPerUnit = m.scoring({
+                improvement: m.kind === 'percent_gain' ? .01 : 1,
+                baseline: 100, final: 120
+              });
+              const unit = m.kind === 'percent_gain' ? '%' : 'unit';
+              const dir = m.direction === 'up' ? 'gained' : 'lost';
+
+              console.log(`${pointsPerUnit} points per ${unit} ${dir}`)
               return (
                 <tr key={m.key} className="border-b border-border/60">
                   <td className="px-2 py-2 text-left">{m.label}</td>
                   <td className="px-2 py-2 tabular-nums">{fmtNum(imp?.baseline)}</td>
                   <td className="px-2 py-2 tabular-nums">{fmtNum(imp?.final)}</td>
-                  <td className="px-2 py-2 tabular-nums">{fmtNum(imp?.improvement)}</td>
+                  <td className="px-2 py-2 tabular-nums">{improvement}</td>
+                  <td className="px-2 py-2 tabular-nums">{`${pointsPerUnit} points per ${unit} ${dir}`}</td>
                   <td className="px-2 py-2 tabular-nums">{fmtNum(imp?.points)}</td>
                 </tr>
               );

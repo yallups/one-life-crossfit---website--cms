@@ -51,6 +51,8 @@ export interface MetricSpec {
   ) => number;
   sanityMax?: number; // guard-rail upper bound for value ingestion
   roundDisplayTo?: number;
+  // If true, baseline and final raw values are hidden from UI/detail exports while still scoring on improvement
+  sensitive?: boolean;
 }
 
 export interface ChallengeConfig {
@@ -110,8 +112,9 @@ export interface ChallengeConfig {
     // sheet?: string;
   };
 
-  // Challenge-specific mapping from raw CSV row (header:value) to normalized SubmissionRow
-  mapCsvRow: (row: Record<string, string>) => SubmissionRow | undefined;
+  // Challenge-specific mapping from raw CSV row (header:value) to normalized SubmissionRow(s)
+  // Allow returning multiple synthetic submissions from a single CSV row (e.g., baseline and final)
+  mapCsvRow: (row: Record<string, string>) => SubmissionRow | SubmissionRow[] | undefined;
 }
 
 export interface DailyScore {

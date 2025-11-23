@@ -87,6 +87,11 @@ Metrics are dynamic per challenge. You can combine:
   - `absoluteScaledLinear(maxPoints, normalizeMax)` → linear scale to max points
   - `relativeScaledMax(maxPoints)` → top improvement gets max points, others scale by ratio
 
+Sensitive metrics (hide raw values):
+- Set `sensitive: true` on any `MetricSpec` to hide its raw baseline/final values in member detail outputs.
+- The engine still computes the improvement and awards points normally; UI will show improvement and points only (baseline/final will appear as —).
+- Good candidates: body fat %, body fat lb, muscle mass lb, body weight, waist/arm circumference.
+
 Baselines and finals:
 - Baseline window = first valid value in `{ baselineWindow }`.
 - Final selection depends on `performance.liveScoring`:
@@ -102,7 +107,7 @@ performance: {
   liveScoring: { mode: 'latest_to_date', lockAfterEnd: true },
   metrics: [
     { key: 'inbody_muscle_mass_lb', label: 'Muscle Mass (lb)', kind: 'absolute_delta',
-      scoring: absolutePerUnit(0.1, 1), sanityMax: 300 },
+      scoring: absolutePerUnit(0.1, 1), sanityMax: 300, sensitive: true },
     { key: 'back_squat_1rm', label: 'Back Squat 1RM', kind: 'percent_gain',
       scoring: absoluteScaledLinear(15, 1), sanityMax: 1000 },
   ],

@@ -1,5 +1,5 @@
 import type { ChallengeConfig, SubmissionRow } from "./types";
-import { absolutePerUnit, absoluteScaledLinear } from "./scoring";
+import { absoluteLinear, absolutePerUnit } from "./scoring";
 import { parseToZonedISOString } from "./date";
 
 // Helper to build a Google Sheets gviz CSV URL for a given sheet name.
@@ -48,8 +48,8 @@ export const flex2025: ChallengeConfig = {
       {
         key: 'inbody_scan',
         label: 'InBody Scan',
-        points: 1,
-        limits: [{ window: 'week', maxPoints: 1, weekStartsOn: 'mon' }]
+        points: 5,
+        limits: [{ window: 'week', maxPoints: 5, weekStartsOn: 'mon' }]
       },
       { key: "daily_submission", label: "Submitted daily", points: 1 },
     ],
@@ -63,44 +63,75 @@ export const flex2025: ChallengeConfig = {
       {
         key: "inbody_muscle_mass_lb",
         label: "Muscle Mass (lb)",
-        kind: "absolute_delta",
-        scoring: absolutePerUnit(0.1, 1),
+        direction: "up",
+        kind: "percent_gain",
+        scoring: absolutePerUnit(0.01, 100),
         sanityMax: 300,
+        sensitive: true,
       },
       {
         key: "front_squat_3rm",
         label: "Front Squat 3RM",
+        direction: "up",
         kind: "percent_gain",
-        scoring: absoluteScaledLinear(15, 1), // full points at +100%
+        scoring: absolutePerUnit(0.01, 10),
         sanityMax: 1000,
       },
       {
         key: "bench_press_3rm",
         label: "Bench Press 3RM",
+        direction: "up",
         kind: "percent_gain",
-        scoring: absoluteScaledLinear(15, 1), // full points at +100%
+        scoring: absolutePerUnit(0.01, 10),
         sanityMax: 700,
       },
       {
         key: "sandbag_hold_sec",
         label: "Sandbag Hold (sec)",
+        direction: "up",
         kind: "absolute_delta",
-        scoring: absoluteScaledLinear(10, 60), // +60s → full scale
+        scoring: absolutePerUnit(1, 10),
         sanityMax: 600,
       },
       {
-        key: "max_pullups_reps",
-        label: "Max Pull-ups (reps)",
+        key: "plank_hold_sec",
+        label: "Plank Hold (sec)",
+        direction: "up",
         kind: "absolute_delta",
-        scoring: absoluteScaledLinear(10, 10), // +10 reps → full scale
-        sanityMax: 100,
+        scoring: absolutePerUnit(1, 10),
+        sanityMax: 1200,
+      },
+      {
+        key: "grip_strength_best",
+        label: "Grip Strength (best)",
+        direction: "up",
+        kind: "absolute_delta",
+        scoring: absolutePerUnit(1, 10),
+        sanityMax: 500,
       },
       {
         key: "max_pushups_reps",
         label: "Max Push-ups (reps)",
+        direction: "up",
+        kind: "percent_gain",
+        scoring: absolutePerUnit(0.01, 10),
+        sanityMax: 200,
+      },
+      {
+        key: "max_pullups_reps",
+        label: "Max Pull-ups (reps)",
+        direction: "up",
         kind: "absolute_delta",
-        scoring: absoluteScaledLinear(10, 10), // +10 reps → full scale
+        scoring: absolutePerUnit(1, 10),
         sanityMax: 100,
+      },
+      {
+        key: "bicep_circumference_in",
+        label: "Arm Circumference (in)",
+        direction: "up",
+        kind: "percent_gain",
+        scoring: absolutePerUnit(0.01, 10),
+        sanityMax: 300,
       },
     ],
   },
@@ -145,24 +176,55 @@ export const flex2025: ChallengeConfig = {
     };
 
     function toNum(v?: string) {
+      if (v === "") return undefined;
+      if (v === undefined) return undefined;
       const n = Number((v || "").toString().replace(/[^0-9.\-]/g, ""));
+      return isFinite(n) ? n : undefined;
+    }
+
+    function timeToSeconds(v?: string) {
+      const s = (v ?? "").trim();
+      if (!s) return undefined;
+      // Support mm:ss or hh:mm:ss or plain seconds
+      const mm = s.match(/^(\d+):(\d{2})(?::(\d{2}))?$/);
+      if (mm) {
+        const h = mm[3] ? Number(mm[1]) : 0;
+        const m = mm[3] ? Number(mm[2]) : Number(mm[1]);
+        const sec = mm[3] ? Number(mm[3]) : Number(mm[2]);
+        return (h * 3600) + (m * 60) + sec;
+      }
+      const n = Number(s.replace(/[^0-9.\-]/g, ""));
       return isFinite(n) ? n : undefined;
     }
 
     const metrics: Record<string, number> = {};
     const m = (k: string) => toNum(row[k]) ?? toNum(row[k?.replaceAll?.("_", " ") as string]);
-    const mm = m("inbody_muscle_mass_lb") ?? m("InBody Muscle Mass (lb)");
+
+    // Muscle/arms (sensitive)
+    const mm = m("inbody_muscle_mass_lb") ?? toNum(row["Muscle Mass (Skeletal Muscle Mass - SMM on InBody)"]) ?? toNum(row["Muscle Mass (lb)"]); // tolerate variants
     if (mm !== undefined) metrics["inbody_muscle_mass_lb"] = mm;
-    const bc = m("bicep_circumference_in") ?? m("Bicep Circumference (in)");
+    const bc = m("bicep_circumference_in") ?? toNum(row["Arm Circumference"]) ?? toNum(row["Bicep Circumference (in)"]);
     if (bc !== undefined) metrics["bicep_circumference_in"] = bc;
-    const bs = m("front_squat_3rm") ?? m("Front Squat 3RM");
-    if (bs !== undefined) metrics["front_squat_3rm"] = bs;
-    const bp = m("bench_press_3rm") ?? m("Bench Press 3RM");
+
+    // Lifts
+    const fs = m("front_squat_3rm") ?? toNum(row["Front Squat 3RM"]) ?? toNum(row["Front Squat 3 Rep Max"]);
+    if (fs !== undefined) metrics["front_squat_3rm"] = fs;
+    const bp = m("bench_press_3rm") ?? toNum(row["Bench Press 3RM"]) ?? toNum(row["Bench Press 3 Rep Max"]);
     if (bp !== undefined) metrics["bench_press_3rm"] = bp;
-    const sb = m("sandbag_hold_sec") ?? m("Sandbag Hold (sec)");
+
+    // Time holds
+    const sb = timeToSeconds(row["sandbag_hold_sec"]) ?? timeToSeconds(row["Sandbag Hold (sec)"]) ?? timeToSeconds(row["Sand Bag Hold Time"]) ?? m("sandbag_hold_sec");
     if (sb !== undefined) metrics["sandbag_hold_sec"] = sb;
-    const pu = m("max_pullups_reps") ?? m("Max Pull-ups (reps)");
-    if (pu !== undefined) metrics["max_pullups_reps"] = pu;
+    const plank = timeToSeconds(row["Plank Hold Time"]) ?? timeToSeconds(row["plank_hold_sec"]);
+    if (plank !== undefined) metrics["plank_hold_sec"] = plank;
+
+    // Others
+    const grip = m("grip_strength_best") ?? toNum(row["Grip Strength (Best score)"]);
+    if (grip !== undefined) metrics["grip_strength_best"] = grip;
+    const push = m("max_pushups_reps") ?? toNum(row["Max Push ups"]) ?? toNum(row["Max Push-ups (reps)"]);
+    if (push !== undefined) metrics["max_pushups_reps"] = push;
+    const pull = m("max_pullups_reps") ?? toNum(row["Max Pull ups"]) ?? toNum(row["Max Pull-ups (reps)"]);
+    if (pull !== undefined) metrics["max_pullups_reps"] = pull;
 
     const iso = parseToZonedISOString(ts, "America/Los_Angeles") || new Date(ts).toISOString();
     return {
@@ -181,7 +243,8 @@ export const flex2025: ChallengeConfig = {
 // https://docs.google.com/spreadsheets/d/12paFULTx_tdDddzzUPDmZ9jVHA8f16sKLniygv9fDk4/edit?usp=sharing
 // We will use gviz CSV for the sheet named "Form Responses 1" by default. Adjust sheetName if needed.
 const SUMMER_SHRED_SHEET_ID = "12paFULTx_tdDddzzUPDmZ9jVHA8f16sKLniygv9fDk4";
-const SUMMER_SHRED_SHEET_NAME = "Form Responses 1"; // Change if your tab name differs
+// Participant results are on the "Participant lookup" tab; use gid to avoid name mismatch
+const SUMMER_SHRED_GID = "167548205";
 
 export const summerShred2025: ChallengeConfig = {
   id: "summer-shred-challenge-2025",
@@ -232,22 +295,43 @@ export const summerShred2025: ChallengeConfig = {
     baselineWindow: { start: "2025-04-06", end: "2025-05-18" },
     finalWindow: { start: "2025-04-06", end: "2025-05-18" },
     metrics: [
-      // For weight loss challenges you might include body weight delta, waist, etc.
+      // Track baseline/final values from Participant lookup; only body fat % contributes to score per spec
       {
         key: "body_weight_lb",
         label: "Body Weight (lb)",
         kind: "absolute_delta",
         direction: "down",
-        // Negative improvements (weight loss) should count positively.
-        scoring: absolutePerUnit(1, 1), // points per 1 lb change
-        sanityMax: 500,
+        scoring: absolutePerUnit(1, 0), // tracked, not scored
+        sanityMax: 600,
+        sensitive: true,
       },
       {
-        key: "waist_circumference_in",
-        label: "Waist Circumference (in)",
+        key: "inbody_muscle_mass_lb",
+        label: "Muscle Mass (lb)",
         kind: "absolute_delta",
-        scoring: absolutePerUnit(0.5, 1),
-        sanityMax: 80,
+        direction: "up",
+        scoring: absolutePerUnit(1, 0), // tracked, not scored
+        sanityMax: 350,
+        sensitive: true,
+      },
+      {
+        key: "inbody_fat_mass_lb",
+        label: "Body Fat Mass (lb)",
+        kind: "absolute_delta",
+        direction: "down",
+        scoring: absolutePerUnit(1, 0), // tracked, not scored
+        sanityMax: 300,
+        sensitive: true,
+      },
+      {
+        key: "inbody_body_fat_pct",
+        label: "Body Fat Percentage (%)",
+        kind: "absolute_delta",
+        direction: "down",
+        scoring: absoluteLinear(80), // 80 points per 1% body fat lost (awards partial points)
+        sanityMax: 100,
+        roundDisplayTo: 1,
+        sensitive: true,
       },
     ],
   },
@@ -255,55 +339,167 @@ export const summerShred2025: ChallengeConfig = {
   tieBreakers: [{ type: "performance" }, { type: "habits" }, { type: "stable_member_hash" }],
   dataSource: {
     type: "csv",
-    url: gvizCsvUrl(SUMMER_SHRED_SHEET_ID, SUMMER_SHRED_SHEET_NAME),
+    // Use direct export URL for the specific tab by gid to avoid name mismatch issues
+    url: `https://docs.google.com/spreadsheets/d/${SUMMER_SHRED_SHEET_ID}/export?format=csv&gid=${SUMMER_SHRED_GID}`,
   },
   mapCsvRow: (row) => {
-    // Map Summer Shred CSV (headers observed via gviz CSV):
-    // "Timestamp","Email","Protein","Carbs","Sleep","Fiber","Fasting","Group class","Body Building","Social media","InBody Scan"
-    const ts = row["Timestamp"] || row["timestamp"];
-    const id = row["Email"] || row["Email Address"] || row["member_id"];
-    // Derive a display name from email if no name column is present
-    const rawName = row["Name"] || row["Full Name"] || row["member_name"] || "";
+    // Participant lookup is a summary sheet with before/after metrics per member.
+    // We synthesize two submissions per row: one at baseline start, one at final end.
+    const id = row["Email"] || row["Email Address"] || row["Member Email"] || row["member_id"];
+    const rawName = row["Name"] || row["Full Name"] || row["Member"] || row["member_name"] || "";
     const name = rawName || (id ? (id.split("@")[0] || id) : undefined);
-    if (!ts || !id || !name) return undefined;
+    if (!id || !name) return undefined;
 
-    // Treat any non-empty cell as true (these columns contain descriptive text when completed)
-    const truthy = (v?: string) => (v ?? "").toString().trim().length > 0 && !/^no$/i.test((v ?? "").trim());
-    // Generic number parser (not used for this sheet but kept for future metrics)
     const num = (v?: string) => {
       const n = Number((v || "").toString().replace(/[^0-9.\-]/g, ""));
       return isFinite(n) ? n : undefined;
     };
-
-    const checkins: Record<string, boolean> = {
-      protein: truthy(row["Protein"]),
-      carbs: truthy(row["Carbs"]),
-      sleep: truthy(row["Sleep"]),
-      fiber: truthy(row["Fiber"]),
-      fasting: truthy(row["Fasting"]),
-      group_class: truthy(row["Group class"]),
-      bodybuilding: truthy(row["Body Building"]),
-      social_media: truthy(row["Social media"]),
-      inbody_scan: truthy(row["InBody Scan"]),
-      daily_submission: true,
+    const pick = (...keys: string[]) => {
+      for (const k of keys) {
+        const v = row[k];
+        if (v != null && String(v).trim() !== "") {
+          const n = num(String(v));
+          if (n != null) return n;
+        }
+      }
+      return undefined;
     };
 
-    const metrics: Record<string, number> = {};
-    // If future Summer Shred tabs include measurements, map them here (e.g., Body Weight, Waist)
-    const bw = num(row["Body Weight (lb)"] || row["body_weight_lb"]);
-    if (bw !== undefined) metrics["body_weight_lb"] = bw;
-    const waist = num(row["Waist (in)"] || row["waist_circumference_in"]);
-    if (waist !== undefined) metrics["waist_circumference_in"] = waist;
+    // Tolerant header variants
+    const bodyWeightBefore = pick(
+      "Body Weight - Before",
+      "Bodyweight - Before",
+      "Body Weight Before",
+      "Beginning Weight",
+      "Start Weight",
+      "BW Before",
+      "body_weight_before",
+    );
+    const bodyWeightAfter = pick(
+      "Body Weight - After",
+      "Bodyweight - After",
+      "Body Weight After",
+      "Ending Weight",
+      "Final Weight",
+      "BW After",
+      "body_weight_after",
+    );
 
-    const iso = parseToZonedISOString(ts, "America/Los_Angeles") || new Date(ts).toISOString();
-    return {
-      timestamp: iso,
+    const waistBefore = pick(
+      "Waist - Before",
+      "Waist Circumference - Before",
+      "Waist Before",
+      "Beginning Waist",
+      "Start Waist",
+      "waist_circumference_before",
+    );
+    const waistAfter = pick(
+      "Waist - After",
+      "Waist Circumference - After",
+      "Waist After",
+      "Ending Waist",
+      "Final Waist",
+      "waist_circumference_after",
+    );
+
+    // Muscle mass (SMM) in lb
+    const muscleBefore = pick(
+      "Muscle Mass - Before",
+      "Skeletal Muscle Mass - Before",
+      "SMM - Before",
+      "Muscle - Before",
+      "Skeletal Muscle Mass (lb) - Before",
+      "Muscle Mass (lb) - Before",
+      "Muscle Mass Before",
+      "inbody_muscle_mass_lb_before",
+    );
+    const muscleAfter = pick(
+      "Muscle Mass - After",
+      "Skeletal Muscle Mass - After",
+      "SMM - After",
+      "Muscle - After",
+      "Skeletal Muscle Mass (lb) - After",
+      "Muscle Mass (lb) - After",
+      "Muscle Mass After",
+      "inbody_muscle_mass_lb_after",
+    );
+
+    // Body fat mass in lb
+    const fatMassBefore = pick(
+      "Body Fat Mass - Before",
+      "Fat Mass - Before",
+      "BFM - Before",
+      "Body Fat (lb) - Before",
+      "Body Fat Mass Before",
+      "inbody_fat_mass_lb_before",
+    );
+    const fatMassAfter = pick(
+      "Body Fat Mass - After",
+      "Fat Mass - After",
+      "BFM - After",
+      "Body Fat (lb) - After",
+      "Body Fat Mass After",
+      "inbody_fat_mass_lb_after",
+    );
+
+    // Body fat percentage
+    const bodyFatPctBefore = pick(
+      "Body Fat % - Before",
+      "% Body Fat - Before",
+      "Bodyfat % - Before",
+      "Body Fat Percentage - Before",
+      "PBF - Before",
+      "Body Fat % Before",
+      "inbody_body_fat_pct_before",
+    );
+    const bodyFatPctAfter = pick(
+      "Body Fat % - After",
+      "% Body Fat - After",
+      "Bodyfat % - After",
+      "Body Fat Percentage - After",
+      "PBF - After",
+      "Body Fat % After",
+      "inbody_body_fat_pct_after",
+    );
+
+    const baselineMetrics: Record<string, number> = {};
+    const finalMetrics: Record<string, number> = {};
+    if (bodyWeightBefore != null) baselineMetrics["body_weight_lb"] = bodyWeightBefore;
+    if (bodyWeightAfter != null) finalMetrics["body_weight_lb"] = bodyWeightAfter;
+    if (waistBefore != null) baselineMetrics["waist_circumference_in"] = waistBefore;
+    if (waistAfter != null) finalMetrics["waist_circumference_in"] = waistAfter;
+    if (muscleBefore != null) baselineMetrics["inbody_muscle_mass_lb"] = muscleBefore;
+    if (muscleAfter != null) finalMetrics["inbody_muscle_mass_lb"] = muscleAfter;
+    if (fatMassBefore != null) baselineMetrics["inbody_fat_mass_lb"] = fatMassBefore;
+    if (fatMassAfter != null) finalMetrics["inbody_fat_mass_lb"] = fatMassAfter;
+    if (bodyFatPctBefore != null) baselineMetrics["inbody_body_fat_pct"] = bodyFatPctBefore;
+    if (bodyFatPctAfter != null) finalMetrics["inbody_body_fat_pct"] = bodyFatPctAfter;
+
+    // If no metric data, skip row
+    if (Object.keys(baselineMetrics).length === 0 && Object.keys(finalMetrics).length === 0) return undefined;
+
+    const baselineDate = `${(summerShred2025.performance.baselineWindow.start)} 20:00`;
+    const finalDate = `${(summerShred2025.performance.finalWindow.end)} 20:00`;
+    const baselineTs = parseToZonedISOString(baselineDate, summerShred2025.timezone)!;
+    const finalTs = parseToZonedISOString(finalDate, summerShred2025.timezone)!;
+
+    const base: SubmissionRow = {
+      timestamp: baselineTs,
       member_id: id,
       member_name: name,
       division: "open",
-      checkins,
-      metrics,
+      checkins: {},
+      metrics: baselineMetrics,
     };
+    const fin: SubmissionRow = {
+      timestamp: finalTs,
+      member_id: id,
+      member_name: name,
+      division: "open",
+      checkins: {},
+      metrics: finalMetrics,
+    };
+    return [base, fin];
   },
 };
 
