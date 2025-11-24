@@ -31,7 +31,7 @@
     "@sanity/uuid": "^3.0.2",
     "@sanity/vision": "^4.15.0",
     "friendlier-words": "^1.1.3",
-    "lucide-react": "^0.548.0",
+    "lucide-react": "^0.553.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "sanity": "^4.15.0",
