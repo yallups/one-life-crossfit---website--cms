@@ -12,6 +12,12 @@ export const blogIndex = defineType({
   description:
     "This is the main page that shows all your blog posts. You can customize how your blog listing page looks, what title it has, and which blog post you want to highlight at the top.",
   groups: GROUPS,
+  options: {
+    canvasApp: {
+      purpose:
+        "Customize the blog listing page with title, description, and featured blog configuration",
+    },
+  },
   fields: [
     defineField({
       name: "title",

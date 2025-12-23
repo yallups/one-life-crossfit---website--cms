@@ -14,11 +14,11 @@ export const subscribeNewsletter = defineType({
       title: "Title",
       type: "string",
     }),
-    customRichText(["block"], {
+    customRichText(["block", "image"], {
       name: "subTitle",
       title: "SubTitle",
     }),
-    customRichText(["block"], {
+    customRichText(["block", "image"], {
       name: "helperText",
       title: "Helper Text",
     }),

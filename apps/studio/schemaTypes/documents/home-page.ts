@@ -14,6 +14,12 @@ export const homePage = defineType({
   description:
     "This is where you create the main page visitors see when they first come to your website. Think of it like the front door to your online home - you can add a welcoming title, a short description, and build the page with different sections like pictures, text, and buttons.",
   groups: GROUPS,
+  options: {
+    canvasApp: {
+      purpose:
+        "Design the main landing page with compelling hero sections, features, and calls-to-action to welcome visitors",
+    },
+  },
   fields: [
     defineField({
       name: "title",

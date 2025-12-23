@@ -33,6 +33,11 @@ export const redirect = defineType({
   title: "Redirect",
   type: "document",
   description: "Redirect for next.config.js",
+  options: {
+    canvasApp: {
+      exclude: true, // Technical redirects should not be editable via Canvas
+    },
+  },
   fields: [
     defineField({
       name: "status",

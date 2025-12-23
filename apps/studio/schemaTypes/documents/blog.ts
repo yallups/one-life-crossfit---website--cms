@@ -19,8 +19,14 @@ export const blog = defineType({
   orderings: [orderRankOrdering],
   description:
     "A blog post that will be published on the website. Add a title, description, author, and content to create a new article for readers.",
+  options: {
+    canvasApp: {
+      purpose:
+        "Create engaging blog posts with title, description, main content, author attribution, and SEO metadata for the website",
+    },
+  },
   fields: [
-    orderRankField({ type: "blog" }),
+    orderRankField({ type: "blog", options: { canvasApp: { exclude: true } } }),
     defineField({
       name: "title",
       type: "string",

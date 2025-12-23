@@ -40,7 +40,7 @@ export const layout = defineType({
       },
       initialValue: "imageRight",
     }),
-    customRichText(["block"]),
+    customRichText(["block", "image"]),
     defineField({
       name: "media",
       type: "array",

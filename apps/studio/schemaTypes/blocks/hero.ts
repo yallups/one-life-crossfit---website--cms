@@ -40,7 +40,7 @@ export const hero = defineType({
       },
       initialValue: "imageRight",
     }),
-    customRichText(["block"]),
+    customRichText(["block", "image"]),
     defineField({
       name: "media",
       type: "array",

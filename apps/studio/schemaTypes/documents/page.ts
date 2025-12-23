@@ -14,6 +14,12 @@ export const page = defineType({
   description:
     "Create a new page for your website, like an 'About Us' or 'Contact' page. Each page has its own web address and content that you can customize.",
   groups: GROUPS,
+  options: {
+    canvasApp: {
+      purpose:
+        "Create website pages with customizable content using page builder blocks, including hero sections, features, CTAs, and more",
+    },
+  },
   fields: [
     defineField({
       name: "title",

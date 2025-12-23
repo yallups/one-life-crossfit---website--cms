@@ -52,6 +52,11 @@ export const settings = defineType({
   title: "Settings",
   description: "Global settings and configuration for your website",
   icon: CogIcon,
+  options: {
+    canvasApp: {
+      exclude: true, // Settings should not be editable via Canvas
+    },
+  },
   fields: [
     defineField({
       name: "label",

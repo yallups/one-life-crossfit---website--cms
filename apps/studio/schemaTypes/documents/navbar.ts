@@ -139,6 +139,11 @@ export const navbar = defineType({
   type: "document",
   icon: PanelTop,
   description: "Configure the main navigation structure for your site",
+  options: {
+    canvasApp: {
+      exclude: true, // Navigation structure should not be editable via Canvas
+    },
+  },
   fields: [
     defineField({
       name: "label",

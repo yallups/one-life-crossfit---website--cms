@@ -21,7 +21,7 @@ export const logos = defineType({
       type: "string",
       description: "The large text that is the primary focus of the block",
     }),
-    customRichText(["block"]),
+    customRichText(["block", "image"]),
     defineField({
       name: "images",
       title: "Logos",

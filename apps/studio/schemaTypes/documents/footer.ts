@@ -78,6 +78,11 @@ export const footer = defineType({
   type: "document",
   title: "Footer",
   description: "Footer content for your website",
+  options: {
+    canvasApp: {
+      exclude: true, // Footer structure should not be editable via Canvas
+    },
+  },
   fields: [
     defineField({
       name: "label",

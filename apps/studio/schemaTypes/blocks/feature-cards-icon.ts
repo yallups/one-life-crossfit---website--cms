@@ -21,7 +21,7 @@ const featureCardIcon = defineField({
       type: "string",
       description: "The heading text for this feature card",
     }),
-    customRichText(["block"]),
+    customRichText(["block", "image"]),
   ],
   preview: {
     select: {
@@ -52,7 +52,7 @@ export const featureCardsIcon = defineType({
       type: "string",
       description: "The main heading for this feature section",
     }),
-    customRichText(["block"]),
+    customRichText(["block", "image"]),
     defineField({
       name: "cards",
       type: "array",

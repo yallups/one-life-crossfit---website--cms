@@ -6,6 +6,11 @@ export const author = defineType({
   title: "Author",
   type: "document",
   icon: UserIcon,
+  options: {
+    canvasApp: {
+      purpose: "Create author profiles with name, position, photo, and bio",
+    },
+  },
   fields: [
     defineField({
       name: "name",

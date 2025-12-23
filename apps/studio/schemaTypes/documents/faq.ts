@@ -11,6 +11,12 @@ export const faq = defineType({
   description:
     "A simple question and answer pair that helps visitors find information quickly. Think of it like writing down the questions customers often ask, along with clear answers.",
   icon: MessageCircle,
+  options: {
+    canvasApp: {
+      purpose:
+        "Create helpful FAQ entries with clear questions and detailed answers to assist website visitors",
+    },
+  },
   fields: [
     defineField({
       name: "title",
@@ -20,7 +26,7 @@ export const faq = defineType({
         "Write the question exactly as someone might ask it. For example: 'How do I reset my password?'",
       validation: (Rule) => Rule.required(),
     }),
-    customRichText(["block"], {
+    customRichText(["block", "image"], {
       title: "Answer",
       description:
         "Write a friendly, clear answer that directly addresses the question. Keep it simple enough that anyone can understand it.",

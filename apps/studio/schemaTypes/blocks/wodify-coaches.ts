@@ -20,7 +20,7 @@ export const wodifyCoaches = defineType({
       type: "string",
       validation: (Rule) => Rule.required(),
     }),
-    customRichText(["block"]),
+    customRichText(["block", "image"]),
     defineField({
       name: "filters",
       title: "Filters",

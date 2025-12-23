@@ -21,7 +21,7 @@ export const googleReviews = defineType({
       description: "The main heading for this cards section",
       validation: (Rule) => Rule.required(),
     }),
-    customRichText(["block"]),
+    customRichText(["block", "image"]),
     defineField({
       name: "reviewsNumber",
       type: "number",
