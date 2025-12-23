@@ -16,6 +16,7 @@ import { getNavigationData } from "@/lib/navigation";
 import { SanityLive } from "@/lib/sanity/live";
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { GoogleAnalytics } from "@next/third-parties/google"
+import { Analytics } from "@vercel/analytics/next";
 
 const fontSans = Geist({
   subsets: ["latin"],
@@ -49,6 +50,7 @@ export default async function RootLayout({
       <SanityLive />
       <CombinedJsonLd includeOrganization includeWebsite />
       <SpeedInsights />
+      <Analytics />
       {gaId ? <GoogleAnalytics gaId={gaId} /> : null}
       {(await draftMode()).isEnabled && (
         <>
