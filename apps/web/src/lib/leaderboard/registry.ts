@@ -90,7 +90,7 @@ export const flex2025: ChallengeConfig = {
         label: "Sandbag Hold (sec)",
         direction: "up",
         kind: "absolute_delta",
-        scoring: absolutePerUnit(1, 10),
+        scoring: absolutePerUnit(10, 10),
         sanityMax: 600,
       },
       {
@@ -98,7 +98,7 @@ export const flex2025: ChallengeConfig = {
         label: "Plank Hold (sec)",
         direction: "up",
         kind: "absolute_delta",
-        scoring: absolutePerUnit(1, 10),
+        scoring: absolutePerUnit(10, 10),
         sanityMax: 1200,
       },
       {
