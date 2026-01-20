@@ -31,7 +31,7 @@ type SanityListItem = ListItemBuilder | ReturnType<StructureBuilder["divider"]>;
 // Helper function to fetch documents with error handling
 const fetchDocuments = async (
   client: SanityClient,
-  schemaType: string
+  schemaType: string,
 ): Promise<DocumentData[]> => {
   try {
     const documents = await client.fetch(`
@@ -50,7 +50,7 @@ const fetchDocuments = async (
   } catch (error) {
     // console.error(`Failed to fetch ${schemaType} documents:`, error);
     throw new Error(
-      `Unable to load ${schemaType} documents. Please try again. ${error instanceof Error ? error.message : "Unknown error"}`
+      `Unable to load ${schemaType} documents. Please try again. ${error instanceof Error ? error.message : "Unknown error"}`,
     );
   }
 };
@@ -80,7 +80,7 @@ const deduplicateDocuments = (documents: DocumentData[]): DocumentData[] => {
 // Helper function to process a single document into the folder structure
 const processDocumentIntoStructure = (
   doc: DocumentData,
-  folderStructure: Record<string, FolderNode>
+  folderStructure: Record<string, FolderNode>,
 ): void => {
   if (!doc.slug) {
     return;
@@ -148,7 +148,7 @@ const processDocumentIntoStructure = (
 
 // Helper function to build folder structure from documents
 const buildFolderStructure = (
-  documents: DocumentData[]
+  documents: DocumentData[],
 ): Record<string, FolderNode> => {
   const folderStructure: Record<string, FolderNode> = {};
 
@@ -164,7 +164,7 @@ const createUniqueId = (
   type: "folder" | "doc" | "main" | "single",
   parentPath: string,
   key: string,
-  depth: number
+  depth: number,
 ): string => `${type}-${parentPath}${key}-${depth}`;
 
 // Helper function to create document list items
@@ -172,14 +172,14 @@ const createDocumentListItems = (
   S: StructureBuilder,
   documents: DocumentData[],
   schemaType: string,
-  uniqueId: string
+  uniqueId: string,
 ): ListItemBuilder[] =>
   documents.map((doc, docIndex) =>
     S.listItem()
       .id(`doc-${uniqueId}-${docIndex}`)
       .title(doc.title || "Untitled")
       .icon(DocumentIcon)
-      .child(S.document().documentId(doc._id).schemaType(schemaType))
+      .child(S.document().documentId(doc._id).schemaType(schemaType)),
   );
 
 // Helper function to create main page list item
@@ -187,7 +187,7 @@ const createMainPageListItem = (
   S: StructureBuilder,
   mainPageDoc: DocumentData,
   schemaType: string,
-  uniqueId: string
+  uniqueId: string,
 ): ListItemBuilder =>
   S.listItem()
     .id(`main-${uniqueId}`)
@@ -200,7 +200,7 @@ const createFolderListItem = (
   S: StructureBuilder,
   folder: FolderNode,
   uniqueId: string,
-  listItems: SanityListItem[]
+  listItems: SanityListItem[],
 ): ListItemBuilder => {
   const pageSlug = friendlyWords();
   const pageTitle = getTitleCase(pageSlug);
@@ -227,7 +227,7 @@ const createFolderListItem = (
               ],
             },
           },
-        ])
+        ]),
     );
 };
 
@@ -235,7 +235,7 @@ const createFolderListItem = (
 const createSingleDocumentListItem = (
   S: StructureBuilder,
   doc: DocumentData,
-  schemaType: string
+  schemaType: string,
 ): ListItemBuilder =>
   S.listItem()
     .id(`single-${doc._id}`)
@@ -253,7 +253,7 @@ type FolderProcessConfig = {
   schemaType: string;
   createListItemsFromStructure: (
     structure: Record<string, FolderNode>,
-    options?: StructureOptions
+    options?: StructureOptions,
   ) => SanityListItem[];
 };
 
@@ -285,13 +285,13 @@ const processFolderItem = (config: FolderProcessConfig): ListItemBuilder => {
   // Find the main page for this folder (exact path match)
   const mainPageDoc = folder.documents.find((doc) => doc.slug === folder.path);
   const otherDocs = folder.documents.filter(
-    (doc) => doc._id !== mainPageDoc?._id
+    (doc) => doc._id !== mainPageDoc?._id,
   );
 
   // 1. Add child documents first
   if (otherDocs.length > 0) {
     listItems.push(
-      ...createDocumentListItems(S, otherDocs, schemaType, uniqueId)
+      ...createDocumentListItems(S, otherDocs, schemaType, uniqueId),
     );
   }
 
@@ -311,7 +311,7 @@ const processFolderItem = (config: FolderProcessConfig): ListItemBuilder => {
       listItems.push(S.divider());
     }
     listItems.push(
-      createMainPageListItem(S, mainPageDoc, schemaType, uniqueId)
+      createMainPageListItem(S, mainPageDoc, schemaType, uniqueId),
     );
   }
 
@@ -322,7 +322,7 @@ const processFolderItem = (config: FolderProcessConfig): ListItemBuilder => {
 const combineItemsWithDividers = (
   S: StructureBuilder,
   folders: ListItemBuilder[],
-  files: ListItemBuilder[]
+  files: ListItemBuilder[],
 ): SanityListItem[] => {
   const result: SanityListItem[] = [];
 
@@ -346,7 +346,7 @@ const combineItemsWithDividers = (
  */
 export const createSlugBasedStructure = (
   S: StructureBuilder,
-  schemaType: string
+  schemaType: string,
 ) => {
   if (!schemaType || typeof schemaType !== "string") {
     throw new Error("Schema type is required and must be a string");
@@ -372,7 +372,7 @@ export const createSlugBasedStructure = (
         // 4. Convert the folder structure to list items recursively
         const createListItemsFromStructure = (
           structure: Record<string, FolderNode>,
-          options: StructureOptions = {}
+          options: StructureOptions = {},
         ): SanityListItem[] => {
           const { depth = 0, parentPath = "" } = options;
           const folders: ListItemBuilder[] = [];
@@ -396,7 +396,7 @@ export const createSlugBasedStructure = (
                   parentPath,
                   schemaType,
                   createListItemsFromStructure,
-                })
+                }),
               );
             }
             // If it's a single document with no children, it's a file

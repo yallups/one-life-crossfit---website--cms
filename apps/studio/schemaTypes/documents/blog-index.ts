@@ -72,7 +72,7 @@ export const blogIndex = defineType({
     }),
     pageBuilderField,
     ...seoFields.filter(
-      (field) => !["seoNoIndex", "seoHideFromLists"].includes(field.name)
+      (field) => !["seoNoIndex", "seoHideFromLists"].includes(field.name),
     ),
     ...ogFields,
   ],

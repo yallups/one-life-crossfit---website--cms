@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from "next/server";
 import { revalidatePath, revalidateTag } from "next/cache";
+import { type NextRequest, NextResponse } from "next/server";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic"; // avoid caching this route
@@ -11,11 +11,12 @@ function bad(status = 400, message = "Bad request") {
 export async function POST(req: NextRequest) {
   const secret = process.env.SANITY_REVALIDATE_SECRET;
   const url = new URL(req.url);
-  const token = url.searchParams.get("secret") || req.headers.get("x-sanity-secret");
+  const token =
+    url.searchParams.get("secret") || req.headers.get("x-sanity-secret");
 
   if (!secret || token !== secret) return bad(401, "Invalid secret");
 
-  let body: any;
+  let body: unknown;
   try {
     body = await req.json();
   } catch {
@@ -23,10 +24,23 @@ export async function POST(req: NextRequest) {
   }
 
   // Sanity webhooks can send either {document:{...}} or the document directly
-  const doc = body?.document ?? body ?? {};
-  const type: string | undefined = doc?._type;
-  const id: string | undefined = doc?._id;
-  const slug: string | undefined = doc?.slug?.current;
+  const payload =
+    typeof body === "object" && body !== null
+      ? (body as Record<string, unknown>)
+      : {};
+  const docCandidate =
+    ("document" in payload ? payload.document : payload) ?? {};
+  const doc =
+    typeof docCandidate === "object" && docCandidate !== null
+      ? (docCandidate as Record<string, unknown>)
+      : {};
+  const type =
+    typeof doc._type === "string" ? (doc._type as string) : undefined;
+  const id = typeof doc._id === "string" ? (doc._id as string) : undefined;
+  const slug =
+    typeof (doc.slug as { current?: unknown } | undefined)?.current === "string"
+      ? ((doc.slug as { current?: string }).current as string)
+      : undefined;
 
   // Build tag set
   const tags = new Set<string>();

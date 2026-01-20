@@ -8,7 +8,7 @@ export type NormalizedMedia = {
 
 // Build a Sanity CDN file URL from an asset reference like: file-<id>-<ext>
 function buildSanityFileUrlFromRef(
-  ref: string | undefined | null
+  ref: string | undefined | null,
 ): string | null {
   if (!ref || typeof ref !== "string") return null;
   // expected pattern: file-<hash>-<ext>
@@ -21,9 +21,7 @@ function buildSanityFileUrlFromRef(
 /**
  * Normalize Sanity media from a media[] array (image or file/video) and optional legacy image fallback
  */
-export function normalizeMedia(
-  rawMedia: any[] | undefined,
-): NormalizedMedia {
+export function normalizeMedia(rawMedia: any[] | undefined): NormalizedMedia {
   const images: SanityImageProps[] = [];
   const videos: { url: string; mimeType?: string }[] = [];
 
@@ -51,7 +49,7 @@ export function normalizeMedia(
         // If we only have a reference, build URL from _ref like: file-<id>-<ext>
         const ref: string | undefined = asset?._ref;
         const built = buildSanityFileUrlFromRef(
-          ref ?? (typeof m?._ref === "string" ? m._ref : undefined)
+          ref ?? (typeof m?._ref === "string" ? m._ref : undefined),
         );
         if (built) {
           // If mimeType not provided, best-effort detect from extension

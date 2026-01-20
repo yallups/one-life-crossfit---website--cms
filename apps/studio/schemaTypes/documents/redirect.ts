@@ -17,13 +17,13 @@ async function validateRedirectLoop(
   }: {
     _id: string;
     slug: string;
-  }
+  },
 ) {
   const id = getPublishedId(_id);
   const draftId = getDraftId(_id);
   const existingRedirect = await client.fetch(
     `*[_type == "redirect" && !(_id in $ids) && (source.current == $slug ||  destination.current == $slug)]`,
-    { slug, ids: [id, draftId] }
+    { slug, ids: [id, draftId] },
   );
   return existingRedirect.length !== 0;
 }

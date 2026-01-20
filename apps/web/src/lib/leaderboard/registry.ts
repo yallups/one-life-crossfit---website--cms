@@ -1,6 +1,6 @@
-import type { ChallengeConfig, SubmissionRow } from "./types";
-import { absoluteLinear, absolutePerUnit } from "./scoring";
 import { parseToZonedISOString } from "./date";
+import { absoluteLinear, absolutePerUnit } from "./scoring";
+import type { ChallengeConfig, SubmissionRow } from "./types";
 
 // Helper to build a Google Sheets gviz CSV URL for a given sheet name.
 function gvizCsvUrl(sheetId: string, sheetName: string) {
@@ -9,7 +9,8 @@ function gvizCsvUrl(sheetId: string, sheetName: string) {
 }
 
 // FLEX THE HALLS 2025 CONFIG (example)
-const FLEX_THE_HALLS_25_SHEET_ID = "1ogKeHd3C-SRxU1vQI32050-2G4qmgFAytQTjQDJOqlE";
+const FLEX_THE_HALLS_25_SHEET_ID =
+  "1ogKeHd3C-SRxU1vQI32050-2G4qmgFAytQTjQDJOqlE";
 // Prefer using the specific tab via gid to avoid name mismatches
 const FLEX_THE_HALLS_25_GID = "1706604796";
 export const flex2025: ChallengeConfig = {
@@ -23,8 +24,10 @@ export const flex2025: ChallengeConfig = {
   theme: {
     // backgroundColor: "#0B0F1A",
     // imageBackgroundColor: "#0B0F1A",
-    backgroundImageUrl: "https://cdn.sanity.io/images/kuaamikv/production/bc7332e2ac09e514a961497c1485954d3b6cd016-1295x864.png", // optional
-    logoUrl: "https://cdn.sanity.io/images/kuaamikv/production/0cfb9bec9cc7340810a4e6eb94ce451920cdcb33-581x407.png", // optional
+    backgroundImageUrl:
+      "https://cdn.sanity.io/images/kuaamikv/production/bc7332e2ac09e514a961497c1485954d3b6cd016-1295x864.png", // optional
+    logoUrl:
+      "https://cdn.sanity.io/images/kuaamikv/production/0cfb9bec9cc7340810a4e6eb94ce451920cdcb33-581x407.png", // optional
   },
   divisions: {
     keys: ["open"],
@@ -34,22 +37,30 @@ export const flex2025: ChallengeConfig = {
       { key: "protein", label: "Hit protein target", points: 1 },
       { key: "water", label: "Hydration target", points: 1 },
       { key: "creatine", label: "Creatine", points: 1 },
-      { key: "protein_powder_max1_scoop", label: "Protein powder ≤1 scoop", points: 1 },
       {
-        key: "group_class", label: "Group Class participation", points: 1,
-        limits: [{ window: 'week', maxPoints: 5, weekStartsOn: 'mon' }]
+        key: "protein_powder_max1_scoop",
+        label: "Protein powder ≤1 scoop",
+        points: 1,
       },
       {
-        key: "daily_program_done", label: "Daily program done", points: 1,
-        limits: [{ window: 'week', maxPoints: 5, weekStartsOn: 'mon' }]
+        key: "group_class",
+        label: "Group Class participation",
+        points: 1,
+        limits: [{ window: "week", maxPoints: 5, weekStartsOn: "mon" }],
+      },
+      {
+        key: "daily_program_done",
+        label: "Daily program done",
+        points: 1,
+        limits: [{ window: "week", maxPoints: 5, weekStartsOn: "mon" }],
       },
       { key: "sleep_8h", label: "8h sleep", points: 1 },
       { key: "social_post", label: "Social post", points: 1 },
       {
-        key: 'inbody_scan',
-        label: 'InBody Scan',
+        key: "inbody_scan",
+        label: "InBody Scan",
         points: 5,
-        limits: [{ window: 'week', maxPoints: 5, weekStartsOn: 'mon' }]
+        limits: [{ window: "week", maxPoints: 5, weekStartsOn: "mon" }],
       },
       { key: "daily_submission", label: "Submitted daily", points: 1 },
     ],
@@ -148,11 +159,21 @@ export const flex2025: ChallengeConfig = {
   },
   mapCsvRow: (row) => {
     // Be tolerant of varied headers in Google Forms/Sheets
-    const ts = row["timestamp"] || row["Timestamp"] || row["Time"] || row["Date"];
-    const id = row["member_id"] || row["Email"] || row["Email Address"] || row["Member ID"] || row["User"];
+    const ts =
+      row["timestamp"] || row["Timestamp"] || row["Time"] || row["Date"];
+    const id =
+      row["member_id"] ||
+      row["Email"] ||
+      row["Email Address"] ||
+      row["Member ID"] ||
+      row["User"];
     const rawName = row["member_name"] || row["Name"] || row["Full Name"] || "";
-    const name = rawName || (id ? (id.split("@")[0] || id) : undefined);
-    const division = (row["division"] || row["Division"] || "open").toLowerCase();
+    const name = rawName || (id ? id.split("@")[0] || id : undefined);
+    const division = (
+      row["division"] ||
+      row["Division"] ||
+      "open"
+    ).toLowerCase();
     if (!ts || !id || !name) return undefined;
 
     // Map checkins: treat any non-empty cell as true (some forms store descriptive text)
@@ -166,11 +187,30 @@ export const flex2025: ChallengeConfig = {
       protein: truthy(row["protein"]) || truthy(row["Protein"]),
       water: truthy(row["water"]) || truthy(row["Water"]),
       creatine: truthy(row["creatine"]) || truthy(row["Creatine Supplement"]),
-      protein_powder_max1_scoop: truthy(row["protein_powder_max1_scoop"]) || truthy(row["Protein powder max1 scoop"]) || truthy(row["Protein Supplement"]) || truthy(row["Protein Supplement (<=1 scoop)"]),
-      group_class: truthy(row["group_class"]) || truthy(row["Group class"]) || truthy(row["Group Class"]),
-      daily_program_done: truthy(row["daily_program_done"]) || truthy(row["Body Building"]) || truthy(row["Program Done"]) || truthy(row["Daily program done"]),
-      sleep_8h: truthy(row["sleep_8h"]) || truthy(row["Sleep"]) || truthy(row["Slept 8h"]) || truthy(row["8h sleep"]),
-      social_post: truthy(row["social_post"]) || truthy(row["Social media"]) || truthy(row["Social Post"]) || truthy(row["Social post"]),
+      protein_powder_max1_scoop:
+        truthy(row["protein_powder_max1_scoop"]) ||
+        truthy(row["Protein powder max1 scoop"]) ||
+        truthy(row["Protein Supplement"]) ||
+        truthy(row["Protein Supplement (<=1 scoop)"]),
+      group_class:
+        truthy(row["group_class"]) ||
+        truthy(row["Group class"]) ||
+        truthy(row["Group Class"]),
+      daily_program_done:
+        truthy(row["daily_program_done"]) ||
+        truthy(row["Body Building"]) ||
+        truthy(row["Program Done"]) ||
+        truthy(row["Daily program done"]),
+      sleep_8h:
+        truthy(row["sleep_8h"]) ||
+        truthy(row["Sleep"]) ||
+        truthy(row["Slept 8h"]) ||
+        truthy(row["8h sleep"]),
+      social_post:
+        truthy(row["social_post"]) ||
+        truthy(row["Social media"]) ||
+        truthy(row["Social Post"]) ||
+        truthy(row["Social post"]),
       inbody_scan: truthy(row["inbody_scan"]) || truthy(row["InBody Scan"]),
       daily_submission: true,
     };
@@ -178,7 +218,7 @@ export const flex2025: ChallengeConfig = {
     function toNum(v?: string) {
       if (v === "") return undefined;
       if (v === undefined) return undefined;
-      const n = Number((v || "").toString().replace(/[^0-9.\-]/g, ""));
+      const n = Number((v || "").toString().replace(/[^0-9.-]/g, ""));
       return isFinite(n) ? n : undefined;
     }
 
@@ -191,42 +231,70 @@ export const flex2025: ChallengeConfig = {
         const h = mm[3] ? Number(mm[1]) : 0;
         const m = mm[3] ? Number(mm[2]) : Number(mm[1]);
         const sec = mm[3] ? Number(mm[3]) : Number(mm[2]);
-        return (h * 3600) + (m * 60) + sec;
+        return h * 3600 + m * 60 + sec;
       }
-      const n = Number(s.replace(/[^0-9.\-]/g, ""));
+      const n = Number(s.replace(/[^0-9.-]/g, ""));
       return isFinite(n) ? n : undefined;
     }
 
     const metrics: Record<string, number> = {};
-    const m = (k: string) => toNum(row[k]) ?? toNum(row[k?.replaceAll?.("_", " ") as string]);
+    const m = (k: string) =>
+      toNum(row[k]) ?? toNum(row[k?.replaceAll?.("_", " ") as string]);
 
     // Muscle/arms (sensitive)
-    const mm = m("inbody_muscle_mass_lb") ?? toNum(row["Muscle Mass (Skeletal Muscle Mass - SMM on InBody)"]) ?? toNum(row["Muscle Mass (lb)"]); // tolerate variants
+    const mm =
+      m("inbody_muscle_mass_lb") ??
+      toNum(row["Muscle Mass (Skeletal Muscle Mass - SMM on InBody)"]) ??
+      toNum(row["Muscle Mass (lb)"]); // tolerate variants
     if (mm !== undefined) metrics["inbody_muscle_mass_lb"] = mm;
-    const bc = m("bicep_circumference_in") ?? toNum(row["Arm Circumference"]) ?? toNum(row["Bicep Circumference (in)"]);
+    const bc =
+      m("bicep_circumference_in") ??
+      toNum(row["Arm Circumference"]) ??
+      toNum(row["Bicep Circumference (in)"]);
     if (bc !== undefined) metrics["bicep_circumference_in"] = bc;
 
     // Lifts
-    const fs = m("front_squat_3rm") ?? toNum(row["Front Squat 3RM"]) ?? toNum(row["Front Squat 3 Rep Max"]);
+    const fs =
+      m("front_squat_3rm") ??
+      toNum(row["Front Squat 3RM"]) ??
+      toNum(row["Front Squat 3 Rep Max"]);
     if (fs !== undefined) metrics["front_squat_3rm"] = fs;
-    const bp = m("bench_press_3rm") ?? toNum(row["Bench Press 3RM"]) ?? toNum(row["Bench Press 3 Rep Max"]);
+    const bp =
+      m("bench_press_3rm") ??
+      toNum(row["Bench Press 3RM"]) ??
+      toNum(row["Bench Press 3 Rep Max"]);
     if (bp !== undefined) metrics["bench_press_3rm"] = bp;
 
     // Time holds
-    const sb = timeToSeconds(row["sandbag_hold_sec"]) ?? timeToSeconds(row["Sandbag Hold (sec)"]) ?? timeToSeconds(row["Sand Bag Hold Time"]) ?? m("sandbag_hold_sec");
+    const sb =
+      timeToSeconds(row["sandbag_hold_sec"]) ??
+      timeToSeconds(row["Sandbag Hold (sec)"]) ??
+      timeToSeconds(row["Sand Bag Hold Time"]) ??
+      m("sandbag_hold_sec");
     if (sb !== undefined) metrics["sandbag_hold_sec"] = sb;
-    const plank = timeToSeconds(row["Plank Hold Time"]) ?? timeToSeconds(row["plank_hold_sec"]);
+    const plank =
+      timeToSeconds(row["Plank Hold Time"]) ??
+      timeToSeconds(row["plank_hold_sec"]);
     if (plank !== undefined) metrics["plank_hold_sec"] = plank;
 
     // Others
-    const grip = m("grip_strength_best") ?? toNum(row["Grip Strength (Best score)"]);
+    const grip =
+      m("grip_strength_best") ?? toNum(row["Grip Strength (Best score)"]);
     if (grip !== undefined) metrics["grip_strength_best"] = grip;
-    const push = m("max_pushups_reps") ?? toNum(row["Max Push ups"]) ?? toNum(row["Max Push-ups (reps)"]);
+    const push =
+      m("max_pushups_reps") ??
+      toNum(row["Max Push ups"]) ??
+      toNum(row["Max Push-ups (reps)"]);
     if (push !== undefined) metrics["max_pushups_reps"] = push;
-    const pull = m("max_pullups_reps") ?? toNum(row["Max Pull ups"]) ?? toNum(row["Max Pull-ups (reps)"]);
+    const pull =
+      m("max_pullups_reps") ??
+      toNum(row["Max Pull ups"]) ??
+      toNum(row["Max Pull-ups (reps)"]);
     if (pull !== undefined) metrics["max_pullups_reps"] = pull;
 
-    const iso = parseToZonedISOString(ts, "America/Los_Angeles") || new Date(ts).toISOString();
+    const iso =
+      parseToZonedISOString(ts, "America/Los_Angeles") ||
+      new Date(ts).toISOString();
     return {
       timestamp: iso,
       member_id: id,
@@ -272,18 +340,22 @@ export const summerShred2025: ChallengeConfig = {
       { key: "fiber", label: "30g Fiber", points: 1 },
       { key: "fasting", label: "Time-restricted eating window", points: 1 },
       { key: "group_class", label: "Attended Group Class", points: 1 },
-      { key: "bodybuilding", label: "Completed Bodybuilding session", points: 1 },
+      {
+        key: "bodybuilding",
+        label: "Completed Bodybuilding session",
+        points: 1,
+      },
       {
         key: "social_media",
         label: "Posted on social media w/ tag & hashtag",
         points: 1,
-        limits: [{ window: "week", maxPoints: 5, weekStartsOn: "sun" }]
+        limits: [{ window: "week", maxPoints: 5, weekStartsOn: "sun" }],
       },
       {
         key: "inbody_scan",
         label: "Sent InBody Scan",
         points: 2,
-        limits: [{ window: "week", maxPoints: 2, weekStartsOn: "sun" }]
+        limits: [{ window: "week", maxPoints: 2, weekStartsOn: "sun" }],
       },
       { key: "daily_submission", label: "Submitted daily", points: 1 },
     ],
@@ -336,7 +408,11 @@ export const summerShred2025: ChallengeConfig = {
     ],
   },
   weights: { habits: 1, performance: 1 },
-  tieBreakers: [{ type: "performance" }, { type: "habits" }, { type: "stable_member_hash" }],
+  tieBreakers: [
+    { type: "performance" },
+    { type: "habits" },
+    { type: "stable_member_hash" },
+  ],
   dataSource: {
     type: "csv",
     // Use direct export URL for the specific tab by gid to avoid name mismatch issues
@@ -345,13 +421,22 @@ export const summerShred2025: ChallengeConfig = {
   mapCsvRow: (row) => {
     // Participant lookup is a summary sheet with before/after metrics per member.
     // We synthesize two submissions per row: one at baseline start, one at final end.
-    const id = row["Email"] || row["Email Address"] || row["Member Email"] || row["member_id"];
-    const rawName = row["Name"] || row["Full Name"] || row["Member"] || row["member_name"] || "";
-    const name = rawName || (id ? (id.split("@")[0] || id) : undefined);
+    const id =
+      row["Email"] ||
+      row["Email Address"] ||
+      row["Member Email"] ||
+      row["member_id"];
+    const rawName =
+      row["Name"] ||
+      row["Full Name"] ||
+      row["Member"] ||
+      row["member_name"] ||
+      "";
+    const name = rawName || (id ? id.split("@")[0] || id : undefined);
     if (!id || !name) return undefined;
 
     const num = (v?: string) => {
-      const n = Number((v || "").toString().replace(/[^0-9.\-]/g, ""));
+      const n = Number((v || "").toString().replace(/[^0-9.-]/g, ""));
       return isFinite(n) ? n : undefined;
     };
     const pick = (...keys: string[]) => {
@@ -464,23 +549,38 @@ export const summerShred2025: ChallengeConfig = {
 
     const baselineMetrics: Record<string, number> = {};
     const finalMetrics: Record<string, number> = {};
-    if (bodyWeightBefore != null) baselineMetrics["body_weight_lb"] = bodyWeightBefore;
-    if (bodyWeightAfter != null) finalMetrics["body_weight_lb"] = bodyWeightAfter;
-    if (waistBefore != null) baselineMetrics["waist_circumference_in"] = waistBefore;
+    if (bodyWeightBefore != null)
+      baselineMetrics["body_weight_lb"] = bodyWeightBefore;
+    if (bodyWeightAfter != null)
+      finalMetrics["body_weight_lb"] = bodyWeightAfter;
+    if (waistBefore != null)
+      baselineMetrics["waist_circumference_in"] = waistBefore;
     if (waistAfter != null) finalMetrics["waist_circumference_in"] = waistAfter;
-    if (muscleBefore != null) baselineMetrics["inbody_muscle_mass_lb"] = muscleBefore;
-    if (muscleAfter != null) finalMetrics["inbody_muscle_mass_lb"] = muscleAfter;
-    if (fatMassBefore != null) baselineMetrics["inbody_fat_mass_lb"] = fatMassBefore;
+    if (muscleBefore != null)
+      baselineMetrics["inbody_muscle_mass_lb"] = muscleBefore;
+    if (muscleAfter != null)
+      finalMetrics["inbody_muscle_mass_lb"] = muscleAfter;
+    if (fatMassBefore != null)
+      baselineMetrics["inbody_fat_mass_lb"] = fatMassBefore;
     if (fatMassAfter != null) finalMetrics["inbody_fat_mass_lb"] = fatMassAfter;
-    if (bodyFatPctBefore != null) baselineMetrics["inbody_body_fat_pct"] = bodyFatPctBefore;
-    if (bodyFatPctAfter != null) finalMetrics["inbody_body_fat_pct"] = bodyFatPctAfter;
+    if (bodyFatPctBefore != null)
+      baselineMetrics["inbody_body_fat_pct"] = bodyFatPctBefore;
+    if (bodyFatPctAfter != null)
+      finalMetrics["inbody_body_fat_pct"] = bodyFatPctAfter;
 
     // If no metric data, skip row
-    if (Object.keys(baselineMetrics).length === 0 && Object.keys(finalMetrics).length === 0) return undefined;
+    if (
+      Object.keys(baselineMetrics).length === 0 &&
+      Object.keys(finalMetrics).length === 0
+    )
+      return undefined;
 
-    const baselineDate = `${(summerShred2025.performance.baselineWindow.start)} 20:00`;
-    const finalDate = `${(summerShred2025.performance.finalWindow.end)} 20:00`;
-    const baselineTs = parseToZonedISOString(baselineDate, summerShred2025.timezone)!;
+    const baselineDate = `${summerShred2025.performance.baselineWindow.start} 20:00`;
+    const finalDate = `${summerShred2025.performance.finalWindow.end} 20:00`;
+    const baselineTs = parseToZonedISOString(
+      baselineDate,
+      summerShred2025.timezone,
+    )!;
     const finalTs = parseToZonedISOString(finalDate, summerShred2025.timezone)!;
 
     const base: SubmissionRow = {
@@ -505,6 +605,9 @@ export const summerShred2025: ChallengeConfig = {
 
 export const registry: ChallengeConfig[] = [flex2025, summerShred2025];
 
-export function getChallengeConfig(slug: string, year: number): ChallengeConfig | undefined {
+export function getChallengeConfig(
+  slug: string,
+  year: number,
+): ChallengeConfig | undefined {
   return registry.find((c) => c.slug === slug && c.year === year);
 }

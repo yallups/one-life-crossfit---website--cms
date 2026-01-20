@@ -11,21 +11,46 @@ export function splitCSV(value?: string | null): string[] {
     .filter(Boolean);
 }
 
-export function getCoachLinks(coach?: Pick<WodifyCoach, "link_1" | "link_2" | "link_3" | "link_4" | "link_5"> | null): string[] {
+export function getCoachLinks(
+  coach?: Pick<
+    WodifyCoach,
+    "link_1" | "link_2" | "link_3" | "link_4" | "link_5"
+  > | null,
+): string[] {
   if (!coach) return [];
-  return [coach.link_1, coach.link_2, coach.link_3, coach.link_4, coach.link_5].filter(Boolean) as string[];
+  return [
+    coach.link_1,
+    coach.link_2,
+    coach.link_3,
+    coach.link_4,
+    coach.link_5,
+  ].filter(Boolean) as string[];
 }
 
-export function CoachMetaBadges({ programs = [], services = [] }: { programs?: string[]; services?: string[] }) {
+export function CoachMetaBadges({
+  programs = [],
+  services = [],
+}: {
+  programs?: string[];
+  services?: string[];
+}) {
   return (
     <div className="mt-2 flex flex-wrap gap-2">
       {programs.map((p) => (
-        <Badge key={"prog-" + p} variant="secondary" className="bg-muted text-xs">
+        <Badge
+          key={"prog-" + p}
+          variant="secondary"
+          className="bg-muted text-xs"
+        >
           {p}
         </Badge>
       ))}
       {services.map((s) => (
-        <Badge key={"svc-" + s} variant="secondary" className="bg-muted text-xs">
+        <Badge
+          key={"svc-" + s}
+          variant="secondary"
+          className="bg-muted text-xs"
+        >
           {s}
         </Badge>
       ))}

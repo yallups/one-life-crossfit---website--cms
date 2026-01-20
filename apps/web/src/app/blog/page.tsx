@@ -1,53 +1,48 @@
+import type { Metadata } from "next";
+import { draftMode } from "next/headers";
 import { notFound } from "next/navigation";
-
+import { stegaClean } from "next-sanity";
+import type { ReactElement } from "react";
 import { BlogCard, BlogHeader, FeaturedBlogCard } from "@/components/blog-card";
 import { PageBuilder } from "@/components/pagebuilder";
+import { prefetchPageBuilderData } from "@/lib/block-prefetch";
 import { sanityFetch } from "@/lib/sanity/live";
 import { queryBlogIndexPageData } from "@/lib/sanity/query";
 import type { QueryBlogIndexPageDataResult } from "@/lib/sanity/sanity.types";
 import { getSEOMetadata } from "@/lib/seo";
 import { handleErrors } from "@/utils";
-import { prefetchPageBuilderData } from "@/lib/block-prefetch";
-import { draftMode } from "next/headers";
-import { stegaClean } from "next-sanity";
-import { Metadata } from "next";
 
 type Blog = NonNullable<QueryBlogIndexPageDataResult>["blogs"][number];
 
 async function fetchBlogPosts() {
-  return await handleErrors(sanityFetch({
-    query: queryBlogIndexPageData, tags: [
-      'sanity:type:blogIndex',
-      'sanity:type:blog',
-      'sanity:route:/blog',
-    ]
-  }));
+  return await handleErrors(
+    sanityFetch({
+      query: queryBlogIndexPageData,
+      tags: ["sanity:type:blogIndex", "sanity:type:blog", "sanity:route:/blog"],
+    }),
+  );
 }
 
 export async function generateMetadata(): Promise<Metadata> {
   const { data: result } = await sanityFetch({
     query: queryBlogIndexPageData,
     stega: false,
-    tags: [
-      'sanity:type:blogIndex',
-      'sanity:type:blog',
-      'sanity:route:/blog',
-    ],
+    tags: ["sanity:type:blogIndex", "sanity:type:blog", "sanity:route:/blog"],
   });
   return getSEOMetadata(
     result
       ? {
-        title: result?.title ?? result?.seoTitle ?? "",
-        description: result?.description ?? result?.seoDescription ?? "",
-        slug: result?.slug,
-        contentId: result?._id,
-        contentType: result?._type,
-      }
-      : {}
+          title: result?.title ?? result?.seoTitle ?? "",
+          description: result?.description ?? result?.seoDescription ?? "",
+          slug: result?.slug,
+          contentId: result?._id,
+          contentType: result?._type,
+        }
+      : {},
   );
 }
 
-export default async function BlogIndexPage() {
+export default async function BlogIndexPage(): Promise<ReactElement> {
   const [res, err] = await fetchBlogPosts();
   if (err || !res?.data) {
     notFound();
@@ -65,7 +60,9 @@ export default async function BlogIndexPage() {
   } = stegaClean(res.data);
 
   const { isEnabled: preview } = await draftMode();
-  const preloadedData = await prefetchPageBuilderData(pageBuilder ?? [], { preview });
+  const preloadedData = await prefetchPageBuilderData(pageBuilder ?? [], {
+    preview,
+  });
 
   const validFeaturedBlogsCount = featuredBlogsCount
     ? Number.parseInt(featuredBlogsCount, 10)
@@ -81,7 +78,12 @@ export default async function BlogIndexPage() {
           </p>
         </div>
         {pageBuilder && pageBuilder.length > 0 && (
-          <PageBuilder id={_id} pageBuilder={pageBuilder} type={_type} preloadedData={preloadedData} />
+          <PageBuilder
+            id={_id}
+            pageBuilder={pageBuilder}
+            type={_type}
+            preloadedData={preloadedData}
+          />
         )}
       </main>
     );

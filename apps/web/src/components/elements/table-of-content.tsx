@@ -103,7 +103,7 @@ function isValidTextChild(child: unknown): child is SanityTextChild {
 }
 
 function hasValidTextChildren(
-  children: unknown
+  children: unknown,
 ): children is readonly SanityTextChild[] {
   return (
     Array.isArray(children) &&
@@ -184,7 +184,7 @@ function extractHeadingBlocks(richText: SanityRichTextProps): HeadingBlock[] {
 
 function createProcessedHeading(
   block: HeadingBlock,
-  index: number
+  index: number,
 ): ProcessedHeading | null {
   try {
     const text = extractTextFromChildren(block.children);
@@ -214,7 +214,7 @@ function createProcessedHeading(
 
 function buildHeadingHierarchy(
   flatHeadings: ProcessedHeading[],
-  maxDepth: number = DEFAULT_MAX_DEPTH
+  maxDepth: number = DEFAULT_MAX_DEPTH,
 ): ProcessedHeading[] {
   if (flatHeadings.length === 0) {
     return [];
@@ -233,7 +233,7 @@ function buildHeadingHierarchy(
         flatHeadings,
         index,
         processed,
-        maxDepth
+        maxDepth,
       );
 
       result.push({
@@ -255,7 +255,7 @@ function collectChildHeadings(
   headings: ProcessedHeading[],
   parentIndex: number,
   processed: Set<number>,
-  maxDepth: number
+  maxDepth: number,
 ): ProcessedHeading[] {
   const parentHeading = headings[parentIndex];
 
@@ -283,7 +283,7 @@ function collectChildHeadings(
       headings,
       i,
       processed,
-      maxDepth
+      maxDepth,
     );
 
     children.push({
@@ -298,7 +298,7 @@ function collectChildHeadings(
 
 function processHeadingBlocks(
   headingBlocks: HeadingBlock[],
-  maxDepth: number = DEFAULT_MAX_DEPTH
+  maxDepth: number = DEFAULT_MAX_DEPTH,
 ): ProcessedHeading[] {
   if (!Array.isArray(headingBlocks) || headingBlocks.length === 0) {
     return [];
@@ -321,7 +321,7 @@ function processHeadingBlocks(
 
 function useTableOfContentState(
   richText?: SanityRichTextProps,
-  maxDepth: number = DEFAULT_MAX_DEPTH
+  maxDepth: number = DEFAULT_MAX_DEPTH,
 ): TableOfContentState {
   return useMemo(() => {
     try {
@@ -371,7 +371,7 @@ const TableOfContentAnchor: FC<AnchorProps> = ({
   const shouldRenderChildren = useCallback(
     () =>
       Array.isArray(children) && children.length > 0 && currentDepth < maxDepth,
-    [children, currentDepth, maxDepth]
+    [children, currentDepth, maxDepth],
   );
 
   // Don't render if we're at max depth and this is a child
@@ -391,7 +391,7 @@ const TableOfContentAnchor: FC<AnchorProps> = ({
       className={cn(
         "my-2 list-inside transition-all duration-200",
         // paddingClass,
-        isChild && "ml-1.5"
+        isChild && "ml-1.5",
       )}
     >
       <div className="flex items-center gap-2">
@@ -401,7 +401,7 @@ const TableOfContentAnchor: FC<AnchorProps> = ({
             "size-1.5 min-h-1.5 min-w-1.5 transition-colors duration-200",
             isChild
               ? "fill-zinc-600 dark:fill-zinc-400"
-              : "fill-zinc-900 dark:fill-zinc-100"
+              : "fill-zinc-900 dark:fill-zinc-100",
           )}
         />
         <Link
@@ -409,7 +409,7 @@ const TableOfContentAnchor: FC<AnchorProps> = ({
           className={cn(
             "line-clamp-1 hover:text-blue-500 hover:underline",
             "transition-colors duration-200 focus:outline-none",
-            "rounded-sm px-1 py-0.5"
+            "rounded-sm px-1 py-0.5",
           )}
           href={href}
         >
@@ -443,7 +443,7 @@ export const TableOfContent: FC<TableOfContentProps> = ({
 }) => {
   const { shouldShow, headings, error } = useTableOfContentState(
     richText,
-    maxDepth
+    maxDepth,
   );
 
   // Early return for error state
@@ -465,7 +465,7 @@ export const TableOfContent: FC<TableOfContentProps> = ({
         "dark:from-zinc-800 dark:to-zinc-900",
         "rounded-lg border border-zinc-300 shadow-sm dark:border-zinc-700",
         "transition-all duration-200",
-        className
+        className,
       )}
       //   role="complementary"
     >
@@ -476,7 +476,7 @@ export const TableOfContent: FC<TableOfContentProps> = ({
             "font-semibold text-lg text-zinc-800 dark:text-zinc-200",
             "hover:text-blue-600 dark:hover:text-blue-400",
             "transition-colors duration-200 focus:outline-none",
-            "rounded-sm p-1"
+            "rounded-sm p-1",
           )}
           id="toc-heading"
         >
@@ -485,7 +485,7 @@ export const TableOfContent: FC<TableOfContentProps> = ({
             aria-hidden="true"
             className={cn(
               "h-5 w-5 transform transition-transform duration-200",
-              "group-open:rotate-180"
+              "group-open:rotate-180",
             )}
           />
         </summary>

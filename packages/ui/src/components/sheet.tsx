@@ -35,7 +35,7 @@ function SheetOverlay({
     <SheetPrimitive.Overlay
       className={cn(
         "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50 data-[state=closed]:animate-out data-[state=open]:animate-in",
-        className
+        className,
       )}
       data-slot="sheet-overlay"
       {...props}
@@ -67,7 +67,7 @@ function SheetContent({
             "data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom inset-x-0 bottom-0 h-auto border-t",
           side === "center" &&
             "left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[95vw] max-w-2xl max-h-[85vh] overflow-auto rounded-xl border p-0",
-          className
+          className,
         )}
         data-slot="sheet-content"
         {...props}

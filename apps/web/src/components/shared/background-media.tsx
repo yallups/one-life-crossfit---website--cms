@@ -29,7 +29,7 @@ export function BackgroundMedia({
         wrapperPosition,
         "-z-10 pointer-events-none brightness-50",
         fill && "olc-bg-slick",
-        className
+        className,
       )}
     >
       <MediaDisplay

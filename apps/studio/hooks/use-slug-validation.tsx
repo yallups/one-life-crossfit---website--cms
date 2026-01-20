@@ -11,7 +11,7 @@ import {
 // Helper function to extract Sanity validation errors
 function extractSanityValidationErrors(
   validation: ReturnType<typeof useValidationStatus>["validation"],
-  includeSanityValidation: boolean
+  includeSanityValidation: boolean,
 ): string[] {
   if (!includeSanityValidation) {
     return [];
@@ -20,7 +20,7 @@ function extractSanityValidationErrors(
   return validation
     .filter(
       (v) =>
-        (v?.path.includes("current") || v?.path.includes("slug")) && v.message
+        (v?.path.includes("current") || v?.path.includes("slug")) && v.message,
     )
     .map((v) => v.message);
 }
@@ -109,7 +109,7 @@ export type UseSlugValidationResult = {
  * Single source of truth for all slug validation logic
  */
 export function useSlugValidation(
-  options: UseSlugValidationOptions
+  options: UseSlugValidationOptions,
 ): UseSlugValidationResult {
   const {
     slug,
@@ -124,18 +124,19 @@ export function useSlugValidation(
   // Get document type configuration (single source of truth)
   const documentConfig = useMemo(
     () => (documentType ? getDocumentTypeConfig(documentType) : {}),
-    [documentType]
+    [documentType],
   );
 
   // Get Sanity validation status
   const publishedId = useMemo(
     () => (document?._id ? getPublishedId(document._id) : ""),
-    [document?._id]
+    [document?._id],
   );
 
   const sanityValidation = useValidationStatus(
     publishedId || "",
-    document?._type
+    document?._type ?? "",
+    true,
   );
 
   // Extract Sanity slug validation errors
@@ -143,9 +144,9 @@ export function useSlugValidation(
     () =>
       extractSanityValidationErrors(
         sanityValidation.validation,
-        includeSanityValidation
+        includeSanityValidation,
       ),
-    [sanityValidation.validation, includeSanityValidation]
+    [sanityValidation.validation, includeSanityValidation],
   );
 
   // Unified validation using config-driven approach
@@ -164,7 +165,7 @@ export function useSlugValidation(
   // Individual segment validations for detailed error reporting
   const segmentValidations = useMemo(
     () => validateSegments(segments),
-    [segments]
+    [segments],
   );
 
   // Combine all validation results
@@ -182,7 +183,7 @@ export function useSlugValidation(
     // Deduplicate
     const errorSet = new Set(allErrors);
     const uniqueWarnings = Array.from(new Set(allWarnings)).filter(
-      (warning) => !errorSet.has(warning)
+      (warning) => !errorSet.has(warning),
     );
 
     return {
@@ -199,7 +200,7 @@ export function useSlugValidation(
         combinedValidation.warnings.length > 0,
       hasCriticalErrors: combinedValidation.errors.length > 0,
     }),
-    [combinedValidation]
+    [combinedValidation],
   );
 
   return {

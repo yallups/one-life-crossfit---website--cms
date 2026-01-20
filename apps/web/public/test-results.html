@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wodify Integration Tests</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        h1 { color: #333; margin-top: 0; }
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .stat-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #007bff;
+        }
+        .stat-card.passed { border-left-color: #28a745; }
+        .stat-card.failed { border-left-color: #dc3545; }
+        .stat-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #333;
+        }
+        .stat-label {
+            color: #666;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+        .diagnosis {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        .diagnosis ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        .test-result {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+            border-left: 4px solid #007bff;
+        }
+        .test-result.passed { border-left-color: #28a745; background: #d4edda; }
+        .test-result.failed { border-left-color: #dc3545; background: #f8d7da; }
+        .test-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .test-name {
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+        .test-badge {
+            background: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+        .test-details {
+            font-size: 0.9em;
+            color: #666;
+        }
+        .error-msg {
+            color: #721c24;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        .sample-data {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.85em;
+            max-height: 200px;
+            overflow: auto;
+            margin-top: 10px;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 10px 10px 0;
+        }
+        button:hover { background: #0056b3; }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #007bff;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Wodify API Integration Tests</h1>
+        <p>Comprehensive tests of all Wodify endpoints with various parameters.</p>
+
+        <button onclick="runTests()" id="runBtn">▶️ Run Tests</button>
+        <button onclick="window.location.href='/wodify-ids.html'">View IDs</button>
+
+        <div id="content">
+            <div class="loading">
+                <p>Click "Run Tests" to start testing all endpoints.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function runTests() {
+            const content = document.getElementById('content');
+            const runBtn = document.getElementById('runBtn');
+
+            runBtn.disabled = true;
+            content.innerHTML = '<div class="loading"><div class="spinner"></div><p>Running tests... This may take 10-20 seconds.</p></div>';
+
+            try {
+                const response = await fetch('/api/test-wodify');
+                const data = await response.json();
+
+                displayResults(data);
+            } catch (error) {
+                content.innerHTML = `<div class="diagnosis"><strong>❌ Error:</strong> ${error.message}</div>`;
+            } finally {
+                runBtn.disabled = false;
+            }
+        }
+
+        function displayResults(data) {
+            const content = document.getElementById('content');
+            let html = '';
+
+            // Summary
+            html += '<h2>📊 Summary</h2>';
+            html += '<div class="summary">';
+            html += `<div class="stat-card">
+                <div class="stat-value">${data.summary.total}</div>
+                <div class="stat-label">Total Tests</div>
+            </div>`;
+            html += `<div class="stat-card passed">
+                <div class="stat-value">${data.summary.passed}</div>
+                <div class="stat-label">Passed ✅</div>
+            </div>`;
+            html += `<div class="stat-card failed">
+                <div class="stat-value">${data.summary.failed}</div>
+                <div class="stat-label">Failed ❌</div>
+            </div>`;
+            html += `<div class="stat-card">
+                <div class="stat-value">${data.summary.passRate}</div>
+                <div class="stat-label">Pass Rate</div>
+            </div>`;
+            html += '</div>';
+
+            // Diagnosis
+            if (data.diagnosis && data.diagnosis.length > 0) {
+                html += '<div class="diagnosis">';
+                html += '<strong>🔍 Diagnosis:</strong>';
+                html += '<ul>';
+                data.diagnosis.forEach(d => {
+                    html += `<li>${d}</li>`;
+                });
+                html += '</ul>';
+                html += '</div>';
+            }
+
+            // Test Results
+            html += '<h2>📋 Test Results</h2>';
+            data.results.forEach(result => {
+                const statusClass = result.passed ? 'passed' : 'failed';
+                const icon = result.passed ? '✅' : '❌';
+
+                html += `<div class="test-result ${statusClass}">`;
+                html += '<div class="test-header">';
+                html += `<div class="test-name">${icon} ${result.name}</div>`;
+                html += `<div class="test-badge">Items: ${result.itemCount || 0}</div>`;
+                html += '</div>';
+
+                if (result.error) {
+                    html += `<div class="error-msg">Error: ${result.error}</div>`;
+                }
+
+                if (result.sampleItem) {
+                    html += '<details style="margin-top: 10px;">';
+                    html += '<summary style="cursor: pointer;">View Sample Item</summary>';
+                    html += `<div class="sample-data">${JSON.stringify(result.sampleItem, null, 2)}</div>`;
+                    html += '</details>';
+                }
+
+                html += '</div>';
+            });
+
+            html += `<p style="text-align: center; color: #666; margin-top: 30px;">Tests completed at ${new Date(data.timestamp).toLocaleString()}</p>`;
+
+            content.innerHTML = html;
+        }
+
+        // Auto-run on load
+        // window.addEventListener('load', runTests);
+    </script>
+</body>
+</html>

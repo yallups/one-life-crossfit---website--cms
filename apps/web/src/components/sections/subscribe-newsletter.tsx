@@ -46,11 +46,9 @@ export function SubscribeNewsletter({
 }: SubscribeNewsletterProps) {
   return (
     <section className="px-4 py-8 sm:py-12 md:py-16" id="subscribe">
-      <div
-        className="container relative mx-auto overflow-hidden rounded-3xl bg-card px-4 py-8 sm:py-16 md:px-8 md:py-24 lg:py-32 dark:bg-zinc-900">
+      <div className="container relative mx-auto overflow-hidden rounded-3xl bg-card px-4 py-8 sm:py-16 md:px-8 md:py-24 lg:py-32 dark:bg-zinc-900">
         <div className="relative z-10 mx-auto text-center">
-          <h2
-            className="mb-4 text-balance font-semibold text-card-foreground text-xl sm:text-3xl md:text-5xl dark:text-neutral-300">
+          <h2 className="mb-4 text-balance font-semibold text-card-foreground text-xl sm:text-3xl md:text-5xl dark:text-neutral-300">
             {title}
           </h2>
           {subTitle && (
@@ -66,8 +64,7 @@ export function SubscribeNewsletter({
               // custom submit logic
             }}
           >
-            <div
-              className="flex items-center justify-between rounded-xl border bg-white p-2 pl-4 drop-shadow-lg md:w-96 dark:bg-zinc-200">
+            <div className="flex items-center justify-between rounded-xl border bg-white p-2 pl-4 drop-shadow-lg md:w-96 dark:bg-zinc-200">
               <input
                 className="w-full rounded-e-none border-e-0 bg-transparent outline-none focus-visible:ring-0 dark:text-zinc-900 dark:placeholder:text-zinc-900"
                 name="email"

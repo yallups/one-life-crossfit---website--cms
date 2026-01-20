@@ -1,14 +1,14 @@
 import { kebabCase } from "change-case";
+import { CommonTextComponent } from "@/components/shared/commom-text-sction";
 import type { PagebuilderType } from "@/types";
 import { BackgroundMedia } from "../shared/background-media";
 import { MediaDisplay } from "../shared/media-display";
 import { normalizeMedia } from "../shared/media-utils";
-import { CommonTextComponent } from "@/components/shared/commom-text-sction";
 
 export type SharedSectionProps = (
   | PagebuilderType<"hero">
   | PagebuilderType<"layout">
-  ) & {
+) & {
   heading: "h1" | "h2";
   backgroundFill: boolean; // true for Hero (full screen), false for Layout (media dictates height)
   outerSectionClassName: string;
@@ -35,8 +35,14 @@ export function SectionShared(props: SharedSectionProps) {
   const gridCols = isCentered ? "" : "lg:grid-cols-2";
 
   const TextContent = (
-    <CommonTextComponent isCentered={isCentered} heading={heading} badge={badge} title={title} richText={richText}
-                         buttons={buttons} />
+    <CommonTextComponent
+      isCentered={isCentered}
+      heading={heading}
+      badge={badge}
+      title={title}
+      richText={richText}
+      buttons={buttons}
+    />
   );
 
   if (isBackground) {

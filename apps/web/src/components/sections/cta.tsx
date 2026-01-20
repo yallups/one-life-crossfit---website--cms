@@ -13,13 +13,7 @@ export function CTABlock({ richText, title, eyebrow, buttons }: CTABlockProps) {
       <div className="container mx-auto px-4 md:px-8">
         <div className="rounded-3xl bg-muted px-4 py-16">
           <div className="mx-auto max-w-3xl space-y-8 text-center">
-            {eyebrow && (
-              <Badge
-                variant="default"
-              >
-                {eyebrow}
-              </Badge>
-            )}
+            {eyebrow && <Badge variant="default">{eyebrow}</Badge>}
             <h2 className="text-balance font-semibold text-3xl md:text-5xl">
               {title}
             </h2>

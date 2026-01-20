@@ -28,7 +28,7 @@ const ErrorStateItem = memo(function ErrorStateItemComponent({
       badgeTone: isErrorType ? ("critical" as const) : ("caution" as const),
       ariaLabel: isErrorType ? "Error" : "Warning",
     }),
-    [isErrorType]
+    [isErrorType],
   );
 
   return (

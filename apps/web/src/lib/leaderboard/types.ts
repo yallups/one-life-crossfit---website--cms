@@ -41,14 +41,12 @@ export interface MetricSpec {
   label: string;
   kind: MetricKind;
   direction?: "up" | "down"; // default: "up"; "down" means lower is better
-  scoring: (
-    args: {
-      improvement: number; // already clamped >= 0
-      baseline: number | undefined;
-      final: number | undefined;
-      topImprovementInDivision?: number; // for relative method
-    }
-  ) => number;
+  scoring: (args: {
+    improvement: number; // already clamped >= 0
+    baseline: number | undefined;
+    final: number | undefined;
+    topImprovementInDivision?: number; // for relative method
+  }) => number;
   sanityMax?: number; // guard-rail upper bound for value ingestion
   roundDisplayTo?: number;
   // If true, baseline and final raw values are hidden from UI/detail exports while still scoring on improvement
@@ -114,7 +112,9 @@ export interface ChallengeConfig {
 
   // Challenge-specific mapping from raw CSV row (header:value) to normalized SubmissionRow(s)
   // Allow returning multiple synthetic submissions from a single CSV row (e.g., baseline and final)
-  mapCsvRow: (row: Record<string, string>) => SubmissionRow | SubmissionRow[] | undefined;
+  mapCsvRow: (
+    row: Record<string, string>,
+  ) => SubmissionRow | SubmissionRow[] | undefined;
 }
 
 export interface DailyScore {

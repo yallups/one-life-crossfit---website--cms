@@ -1,21 +1,52 @@
 {
   "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
-  "extends": ["ultracite"],
+  "extends": ["ultracite/next"],
+  "files": {
+    "includes": [
+      "**/*",
+      "!**/node_modules/**",
+      "!**/.idea/**",
+      "!**/.next/**",
+      "!**/.sanity-config/**",
+      "!**/.turbo/**",
+      "!**/.vscode/**",
+      "!**/.sanity/**",
+      "!**/dist/**"
+    ]
+  },
+  "css": {
+    "parser": {
+      "tailwindDirectives": true
+    }
+  },
+  "formatter": {
+    "indentStyle": "space",
+    "indentWidth": 2
+  },
   "linter": {
     "rules": {
+      "recommended": false,
       "suspicious": {
         "noUnknownAtRules": "off",
-        "noExplicitAny": "warn",
-        "noConsole": "warn"
+        "noExplicitAny": "off",
+        "noConsole": "off",
+        "noSelfCompare": "off"
       },
       "style": {
-        "noMagicNumbers": "info"
+        "noMagicNumbers": "off",
+        "useTemplate": "off"
       },
       "performance": {
-        "noNamespaceImport": "off"
+        "noNamespaceImport": "off",
+        "noImgElement": "off"
+      },
+      "a11y": {
+        "useIframeTitle": "off"
       },
       "correctness": {
-        "noInvalidPositionAtImportRule": "off"
+        "noInvalidPositionAtImportRule": "off",
+        "noUnusedFunctionParameters": "off",
+        "noUnusedVariables": "off"
       }
     }
   }

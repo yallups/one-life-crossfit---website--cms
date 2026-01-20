@@ -1,5 +1,7 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-
+import type { ReactElement } from "react";
+import BlogMeta from "@/components/blog-meta";
 import { RichText } from "@/components/elements/rich-text";
 import { SanityImage } from "@/components/elements/sanity-image";
 import { TableOfContent } from "@/components/elements/table-of-content";
@@ -8,18 +10,13 @@ import { client } from "@/lib/sanity/client";
 import { sanityFetch } from "@/lib/sanity/live";
 import { queryBlogPaths, queryBlogSlugPageData } from "@/lib/sanity/query";
 import { getSEOMetadata } from "@/lib/seo";
-import BlogMeta from "@/components/blog-meta";
-import { Metadata } from "next";
 
 async function fetchBlogSlugPageData(slug: string, stega = true) {
   return await sanityFetch({
     query: queryBlogSlugPageData,
     params: { slug: `/blog/${slug}` },
     stega,
-    tags: [
-      'sanity:type:blog',
-      `sanity:route:/blog/${slug}`,
-    ],
+    tags: ["sanity:type:blog", `sanity:route:/blog/${slug}`],
   });
 }
 
@@ -60,15 +57,17 @@ export async function generateMetadata({
   return getSEOMetadata(
     data
       ? {
-        title: data?.title ?? data?.seoTitle ?? "",
-        description: data?.description ?? data?.seoDescription ?? "",
-        slug: data?.slug,
-        contentId: data?._id,
-        contentType: data?._type,
-        pageType: "article",
-        authors: data?.authors?.name ? [{ name: data.authors.name }] : undefined,
-      }
-      : {}
+          title: data?.title ?? data?.seoTitle ?? "",
+          description: data?.description ?? data?.seoDescription ?? "",
+          slug: data?.slug,
+          contentId: data?._id,
+          contentType: data?._type,
+          pageType: "article",
+          authors: data?.authors?.name
+            ? [{ name: data.authors.name }]
+            : undefined,
+        }
+      : {},
   );
 }
 
@@ -84,13 +83,14 @@ export default async function BlogSlugPage({
   params,
 }: {
   params: Promise<{ slug: string }>;
-}) {
+}): Promise<ReactElement> {
   const { slug } = await params;
   const { data } = await fetchBlogSlugPageData(slug);
   if (!data) {
     return notFound();
   }
-  const { title, description, image, richText, authors, publishedAt } = data ?? {};
+  const { title, description, image, richText, authors, publishedAt } =
+    data ?? {};
 
   return (
     <div className="container mx-auto my-16 px-4 md:px-6">

@@ -22,7 +22,7 @@ export const getTitleCase = (name: string) => {
 
 export const createRadioListLayout = (
   items: Array<string | { title: string; value: string }>,
-  options?: StringOptions
+  options?: StringOptions,
 ): StringOptions => {
   const list = items.map((item) => {
     if (typeof item === "string") {
@@ -42,7 +42,7 @@ export const createRadioListLayout = (
 
 export const parseRichTextToString = (
   value: unknown,
-  maxWords: number | undefined
+  maxWords: number | undefined,
 ) => {
   if (!Array.isArray(value)) {
     return "No Content";
@@ -81,7 +81,7 @@ export type RetryOptions = {
 
 export async function retryPromise<T>(
   promiseFn: Promise<T>,
-  options: RetryOptions = {}
+  options: RetryOptions = {},
 ): Promise<T> {
   const {
     maxRetries = 3,
@@ -175,7 +175,7 @@ export const getPresentationUrl = () => {
   const presentationUrl = process.env.SANITY_STUDIO_PRESENTATION_URL;
   if (!presentationUrl) {
     throw new Error(
-      "SANITY_STUDIO_PRESENTATION_URL must be set in production environment"
+      "SANITY_STUDIO_PRESENTATION_URL must be set in production environment",
     );
   }
 

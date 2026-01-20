@@ -1,7 +1,19 @@
 import { fetchCsvText, parseCsv } from "./csv";
-import { isWithinYmdRange, monthKeyFromYmd, scoringDate, todayYmd, weekKeyFromYmd } from "./date";
-import type { ChallengeConfig, DivisionKey, LeaderboardResponse, MemberScores, SubmissionRow, } from "./types";
+import {
+  isWithinYmdRange,
+  monthKeyFromYmd,
+  scoringDate,
+  todayYmd,
+  weekKeyFromYmd,
+} from "./date";
 import { roundTo } from "./scoring";
+import type {
+  ChallengeConfig,
+  DivisionKey,
+  LeaderboardResponse,
+  MemberScores,
+  SubmissionRow,
+} from "./types";
 
 function stableHash(str: string): number {
   let h = 2166136261 >>> 0;
@@ -12,7 +24,9 @@ function stableHash(str: string): number {
   return h >>> 0;
 }
 
-export async function loadSubmissions(config: ChallengeConfig): Promise<SubmissionRow[]> {
+export async function loadSubmissions(
+  config: ChallengeConfig,
+): Promise<SubmissionRow[]> {
   if (config.dataSource.type !== "csv" || !config.dataSource.url) return [];
   const text = await fetchCsvText(config.dataSource.url);
   const rows = parseCsv(text);
@@ -37,11 +51,25 @@ export type DailyAggregate = {
   timestamp: string; // latest per bucket
 };
 
-export function latestByBucket(subs: SubmissionRow[], cfg: ChallengeConfig): DailyAggregate[] {
+export function latestByBucket(
+  subs: SubmissionRow[],
+  cfg: ChallengeConfig,
+): DailyAggregate[] {
   const latest = new Map<string, DailyAggregate>();
   for (const s of subs) {
-    const date = scoringDate(s.timestamp, cfg.timezone, cfg.checkinWindow.startHour);
-    if (!isWithinYmdRange(date, cfg.challengeWindow.start, cfg.challengeWindow.end)) continue;
+    const date = scoringDate(
+      s.timestamp,
+      cfg.timezone,
+      cfg.checkinWindow.startHour,
+    );
+    if (
+      !isWithinYmdRange(
+        date,
+        cfg.challengeWindow.start,
+        cfg.challengeWindow.end,
+      )
+    )
+      continue;
     const division: DivisionKey = s.division || "open";
     const key = `${s.member_id}|${date}`;
     const rec: DailyAggregate = {
@@ -63,23 +91,41 @@ export function latestByBucket(subs: SubmissionRow[], cfg: ChallengeConfig): Dai
 }
 
 export function scoreHabits(dailies: DailyAggregate[], cfg: ChallengeConfig) {
-  const pointsByKey = new Map(cfg.checkins.items.map((i) => [i.key, i.points] as const));
-  const limitsByKey = new Map(cfg.checkins.items.map((i) => [i.key, i.limits || []] as const));
+  const pointsByKey = new Map(
+    cfg.checkins.items.map((i) => [i.key, i.points] as const),
+  );
+  const limitsByKey = new Map(
+    cfg.checkins.items.map((i) => [i.key, i.limits || []] as const),
+  );
   const cap = cfg.checkins.maxDailyPoints ?? null;
   const totalByMember = new Map<string, number>();
   // Track per-member awarded points per habit per window key to enforce limits
-  const awardedByMemberHabitWindow = new Map<string, Map<string, Map<string, number>>>(); // member -> habit -> windowKey -> points
+  const awardedByMemberHabitWindow = new Map<
+    string,
+    Map<string, Map<string, number>>
+  >(); // member -> habit -> windowKey -> points
 
   function windowKeysFor(habitKey: string, dateYmd: string) {
     const limits = limitsByKey.get(habitKey) || [];
     const keys: Array<{ key: string; max: number }> = [];
     for (const lim of limits) {
-      if (lim.window === "day") keys.push({ key: `day:${dateYmd}`, max: lim.maxPoints });
+      if (lim.window === "day")
+        keys.push({ key: `day:${dateYmd}`, max: lim.maxPoints });
       else if (lim.window === "week")
-        keys.push({ key: `week:${weekKeyFromYmd(dateYmd, lim.weekStartsOn || "sun")}`, max: lim.maxPoints });
-      else if (lim.window === "month") keys.push({ key: `month:${monthKeyFromYmd(dateYmd)}`, max: lim.maxPoints });
+        keys.push({
+          key: `week:${weekKeyFromYmd(dateYmd, lim.weekStartsOn || "sun")}`,
+          max: lim.maxPoints,
+        });
+      else if (lim.window === "month")
+        keys.push({
+          key: `month:${monthKeyFromYmd(dateYmd)}`,
+          max: lim.maxPoints,
+        });
       else if (lim.window === "challenge")
-        keys.push({ key: `challenge:${cfg.challengeWindow.start}-${cfg.challengeWindow.end}`, max: lim.maxPoints });
+        keys.push({
+          key: `challenge:${cfg.challengeWindow.start}-${cfg.challengeWindow.end}`,
+          max: lim.maxPoints,
+        });
     }
     return keys;
   }
@@ -93,9 +139,10 @@ export function scoreHabits(dailies: DailyAggregate[], cfg: ChallengeConfig) {
       const windowKeys = windowKeysFor(key, d.date);
       let allowed = base;
       for (const wk of windowKeys) {
-        const m = (awardedByMemberHabitWindow.get(d.member_id) || new Map());
-        if (!awardedByMemberHabitWindow.has(d.member_id)) awardedByMemberHabitWindow.set(d.member_id, m);
-        const hmap = (m.get(key) || new Map());
+        const m = awardedByMemberHabitWindow.get(d.member_id) || new Map();
+        if (!awardedByMemberHabitWindow.has(d.member_id))
+          awardedByMemberHabitWindow.set(d.member_id, m);
+        const hmap = m.get(key) || new Map();
         if (!m.has(key)) m.set(key, hmap);
         const used = hmap.get(wk.key) ?? 0;
         const remaining = Math.max(0, wk.max - used);
@@ -112,7 +159,10 @@ export function scoreHabits(dailies: DailyAggregate[], cfg: ChallengeConfig) {
       }
     }
     if (cap != null) dayAward = Math.min(dayAward, cap);
-    totalByMember.set(d.member_id, (totalByMember.get(d.member_id) ?? 0) + dayAward);
+    totalByMember.set(
+      d.member_id,
+      (totalByMember.get(d.member_id) ?? 0) + dayAward,
+    );
   }
   return totalByMember; // member_id -> habit points
 }
@@ -122,17 +172,23 @@ export type MetricWindows = {
   final: Record<string, number | undefined>;
 };
 
-export function extractMetricWindows(dailies: DailyAggregate[], cfg: ChallengeConfig) {
+export function extractMetricWindows(
+  dailies: DailyAggregate[],
+  cfg: ChallengeConfig,
+) {
   // Determine live scoring mode
   const live = cfg.performance.liveScoring?.mode === "latest_to_date";
   const lockAfterEnd = !!cfg.performance.liveScoring?.lockAfterEnd;
   const today = todayYmd(cfg.timezone);
   const challengeEnd = cfg.challengeWindow.end;
   // In live mode before end (or if not locking after end), allow any date up to cutoff
-  const liveCutoff = today < challengeEnd || !lockAfterEnd ? today : challengeEnd;
+  const liveCutoff =
+    today < challengeEnd || !lockAfterEnd ? today : challengeEnd;
 
   // Sort by timestamp asc so that later overwrites win for finals
-  const sorted = [...dailies].sort((a, b) => a.timestamp.localeCompare(b.timestamp));
+  const sorted = [...dailies].sort((a, b) =>
+    a.timestamp.localeCompare(b.timestamp),
+  );
 
   // For each member, find per-metric baseline (first in baseline window) and final
   // Final selection:
@@ -141,7 +197,13 @@ export function extractMetricWindows(dailies: DailyAggregate[], cfg: ChallengeCo
   const byMember = new Map<string, MetricWindows>();
   for (const d of sorted) {
     // baseline
-    if (isWithinYmdRange(d.date, cfg.performance.baselineWindow.start, cfg.performance.baselineWindow.end)) {
+    if (
+      isWithinYmdRange(
+        d.date,
+        cfg.performance.baselineWindow.start,
+        cfg.performance.baselineWindow.end,
+      )
+    ) {
       let mw = byMember.get(d.member_id);
       if (!mw) {
         mw = { baseline: {}, final: {} };
@@ -156,8 +218,16 @@ export function extractMetricWindows(dailies: DailyAggregate[], cfg: ChallengeCo
 
     // final
     const eligibleFinal = live
-      ? (isWithinYmdRange(d.date, cfg.challengeWindow.start, cfg.challengeWindow.end) && d.date <= liveCutoff)
-      : isWithinYmdRange(d.date, cfg.performance.finalWindow.start, cfg.performance.finalWindow.end);
+      ? isWithinYmdRange(
+          d.date,
+          cfg.challengeWindow.start,
+          cfg.challengeWindow.end,
+        ) && d.date <= liveCutoff
+      : isWithinYmdRange(
+          d.date,
+          cfg.performance.finalWindow.start,
+          cfg.performance.finalWindow.end,
+        );
 
     if (eligibleFinal) {
       let mw = byMember.get(d.member_id);
@@ -175,7 +245,12 @@ export function extractMetricWindows(dailies: DailyAggregate[], cfg: ChallengeCo
   return byMember;
 }
 
-function improvementForMetric(kind: string, baseline?: number, final?: number, direction: "up" | "down" = "up") {
+function improvementForMetric(
+  kind: string,
+  baseline?: number,
+  final?: number,
+  direction: "up" | "down" = "up",
+) {
   if (baseline == null || final == null) return 0;
   if (!isFinite(baseline) || !isFinite(final)) return 0;
   if (kind === "percent_gain") {
@@ -192,7 +267,7 @@ function improvementForMetric(kind: string, baseline?: number, final?: number, d
 export function scorePerformance(
   dailies: DailyAggregate[],
   cfg: ChallengeConfig,
-  memberDivision: Map<string, DivisionKey>
+  memberDivision: Map<string, DivisionKey>,
 ) {
   const windowsByMember = extractMetricWindows(dailies, cfg);
 
@@ -208,7 +283,8 @@ export function scorePerformance(
       const baseline = windows.baseline[spec.key];
       const final = windows.final[spec.key];
       // Direction support: encoded by scoring function? We'll add a convention: if label contains "(down)", treat as down
-      const direction: "up" | "down" = (spec as any).direction === "down" ? "down" : "up";
+      const direction: "up" | "down" =
+        (spec as any).direction === "down" ? "down" : "up";
       const imp = improvementForMetric(spec.kind, baseline, final, direction);
       if (!improvements.has(member)) improvements.set(member, new Map());
       improvements.get(member)!.set(spec.key, imp);
@@ -235,7 +311,7 @@ export function scorePerformance(
         improvement: imp,
         baseline: undefined,
         final: undefined,
-        topImprovementInDivision: top
+        topImprovementInDivision: top,
       });
       pts += val;
     }
@@ -285,29 +361,67 @@ export interface MemberDetailResponse {
   total: number;
   dailyLogs: MemberDailyLog[]; // kept for backward-compat
   dailyWindows?: DailyWindowAudit[]; // enhanced audit data for UI annotations
-  improvements: Record<string, { improvement: number; points: number; baseline?: number; final?: number }>;
+  improvements: Record<
+    string,
+    { improvement: number; points: number; baseline?: number; final?: number }
+  >;
   updatedAt: string;
 }
 
-export async function computeMemberDetail(cfg: ChallengeConfig, memberId: string): Promise<MemberDetailResponse | undefined> {
+export async function computeMemberDetail(
+  cfg: ChallengeConfig,
+  memberId: string,
+): Promise<MemberDetailResponse | undefined> {
   const submissions = await loadSubmissions(cfg);
 
   // 1) Build per-day ALL submissions for this member (not just latest), within challenge window buckets
-  type RawSub = { timestamp: string; date: string; checkins: Record<string, boolean>; metrics: Record<string, number> };
+  type RawSub = {
+    timestamp: string;
+    date: string;
+    checkins: Record<string, boolean>;
+    metrics: Record<string, number>;
+  };
   const rawMine: RawSub[] = [];
   for (const s of submissions) {
     if (s.member_id !== memberId) continue;
-    const date = scoringDate(s.timestamp, cfg.timezone, cfg.checkinWindow.startHour);
-    if (!isWithinYmdRange(date, cfg.challengeWindow.start, cfg.challengeWindow.end)) continue;
-    rawMine.push({ timestamp: s.timestamp, date, checkins: s.checkins ?? {}, metrics: s.metrics ?? {} });
+    const date = scoringDate(
+      s.timestamp,
+      cfg.timezone,
+      cfg.checkinWindow.startHour,
+    );
+    if (
+      !isWithinYmdRange(
+        date,
+        cfg.challengeWindow.start,
+        cfg.challengeWindow.end,
+      )
+    )
+      continue;
+    rawMine.push({
+      timestamp: s.timestamp,
+      date,
+      checkins: s.checkins ?? {},
+      metrics: s.metrics ?? {},
+    });
   }
   if (rawMine.length === 0) return undefined;
 
   // Determine member name/division from any latestByBucket entry (fallback to first submission)
-  const allLatest = latestByBucket(submissions, cfg).filter((d) => d.member_id === memberId).sort((a, b) => a.date.localeCompare(b.date));
-  const idMeta = allLatest.length ? allLatest[allLatest.length - 1]! : undefined;
-  const member_name = idMeta?.member_name || submissions.find((s) => s.member_id === memberId)?.member_name || memberId;
-  const division = idMeta?.division || (submissions.find((s) => s.member_id === memberId)?.division as DivisionKey) || "open";
+  const allLatest = latestByBucket(submissions, cfg)
+    .filter((d) => d.member_id === memberId)
+    .sort((a, b) => a.date.localeCompare(b.date));
+  const idMeta = allLatest.length
+    ? allLatest[allLatest.length - 1]!
+    : undefined;
+  const member_name =
+    idMeta?.member_name ||
+    submissions.find((s) => s.member_id === memberId)?.member_name ||
+    memberId;
+  const division =
+    idMeta?.division ||
+    (submissions.find((s) => s.member_id === memberId)
+      ?.division as DivisionKey) ||
+    "open";
 
   // 2) Build daily windows with submissions and compute per-habit awards with reasons
   const byDate = new Map<string, RawSub[]>();
@@ -317,33 +431,41 @@ export async function computeMemberDetail(cfg: ChallengeConfig, memberId: string
     byDate.set(r.date, list);
   }
   // track per-habit awarded points usage across windows for this member to enforce limits
-  const limitsByKey = new Map(cfg.checkins.items.map((i) => [i.key, i.limits || []] as const));
-  const pointsByKey = new Map(cfg.checkins.items.map((i) => [i.key, i.points] as const));
+  const limitsByKey = new Map(
+    cfg.checkins.items.map((i) => [i.key, i.limits || []] as const),
+  );
+  const pointsByKey = new Map(
+    cfg.checkins.items.map((i) => [i.key, i.points] as const),
+  );
   const awardedByHabitWindow = new Map<string, Map<string, number>>(); // habit -> windowKey -> points
   function windowKeysFor(habitKey: string, dateYmd: string) {
     const limits = limitsByKey.get(habitKey) || [];
     const keys: Array<{ key: string; max: number; label: string }> = [];
     for (const lim of limits) {
-      if (lim.window === "day") keys.push({
-        key: `day:${dateYmd}`,
-        max: lim.maxPoints,
-        label: `Daily cap (${lim.maxPoints})`
-      });
-      else if (lim.window === "week") keys.push({
-        key: `week:${weekKeyFromYmd(dateYmd, lim.weekStartsOn || "sun")}`,
-        max: lim.maxPoints,
-        label: `Weekly cap (${lim.maxPoints})`
-      });
-      else if (lim.window === "month") keys.push({
-        key: `month:${monthKeyFromYmd(dateYmd)}`,
-        max: lim.maxPoints,
-        label: `Monthly cap (${lim.maxPoints})`
-      });
-      else if (lim.window === "challenge") keys.push({
-        key: `challenge:${cfg.challengeWindow.start}-${cfg.challengeWindow.end}`,
-        max: lim.maxPoints,
-        label: `Challenge cap (${lim.maxPoints})`
-      });
+      if (lim.window === "day")
+        keys.push({
+          key: `day:${dateYmd}`,
+          max: lim.maxPoints,
+          label: `Daily cap (${lim.maxPoints})`,
+        });
+      else if (lim.window === "week")
+        keys.push({
+          key: `week:${weekKeyFromYmd(dateYmd, lim.weekStartsOn || "sun")}`,
+          max: lim.maxPoints,
+          label: `Weekly cap (${lim.maxPoints})`,
+        });
+      else if (lim.window === "month")
+        keys.push({
+          key: `month:${monthKeyFromYmd(dateYmd)}`,
+          max: lim.maxPoints,
+          label: `Monthly cap (${lim.maxPoints})`,
+        });
+      else if (lim.window === "challenge")
+        keys.push({
+          key: `challenge:${cfg.challengeWindow.start}-${cfg.challengeWindow.end}`,
+          max: lim.maxPoints,
+          label: `Challenge cap (${lim.maxPoints})`,
+        });
     }
     return keys;
   }
@@ -352,7 +474,9 @@ export async function computeMemberDetail(cfg: ChallengeConfig, memberId: string
   const windows: DailyWindowAudit[] = [];
   const datesSorted = Array.from(byDate.keys()).sort();
   for (const date of datesSorted) {
-    const subs = (byDate.get(date) || []).sort((a, b) => a.timestamp.localeCompare(b.timestamp));
+    const subs = (byDate.get(date) || []).sort((a, b) =>
+      a.timestamp.localeCompare(b.timestamp),
+    );
     if (subs.length === 0) {
       // Nothing submitted for this window; skip
       continue;
@@ -364,20 +488,30 @@ export async function computeMemberDetail(cfg: ChallengeConfig, memberId: string
       continue;
     }
     const submissionsAudit: DailySubmissionAudit[] = subs.map((s, idx) => {
-      const dayOfChallenge = Math.round((new Date(s.date).getTime() - new Date(cfg.challengeWindow.start).getTime()) / (1000 * 60 * 60 * 24)) + 1;
-      return ({
+      const dayOfChallenge =
+        Math.round(
+          (new Date(s.date).getTime() -
+            new Date(cfg.challengeWindow.start).getTime()) /
+            (1000 * 60 * 60 * 24),
+        ) + 1;
+      return {
         // calculate the day of the challenge base on challengeWindow + checkinWindow
         dayOfChallenge,
         timestamp: s.timestamp,
         checkins: s.checkins,
         metrics: s.metrics,
         isLatestForWindow: idx === countedIndex,
-        notCountedReason: idx === countedIndex ? undefined : `Superseded by later submission at ${new Date(latest.timestamp).toLocaleTimeString("en-US", {
-          timeZone: cfg.timezone,
-          hour: "numeric",
-          minute: "2-digit"
-        })}`,
-      })
+        notCountedReason:
+          idx === countedIndex
+            ? undefined
+            : `Superseded by later submission at ${new Date(
+                latest.timestamp,
+              ).toLocaleTimeString("en-US", {
+                timeZone: cfg.timezone,
+                hour: "numeric",
+                minute: "2-digit",
+              })}`,
+      };
     });
 
     const counted = latest;
@@ -390,8 +524,10 @@ export async function computeMemberDetail(cfg: ChallengeConfig, memberId: string
       if (attempted && basePoints > 0) {
         let allow = basePoints;
         for (const wk of windowKeysFor(key, date)) {
-          const hmap = awardedByHabitWindow.get(key) || new Map<string, number>();
-          if (!awardedByHabitWindow.has(key)) awardedByHabitWindow.set(key, hmap);
+          const hmap =
+            awardedByHabitWindow.get(key) || new Map<string, number>();
+          if (!awardedByHabitWindow.has(key))
+            awardedByHabitWindow.set(key, hmap);
           const used = hmap.get(wk.key) ?? 0;
           const remaining = Math.max(0, wk.max - used);
           if (remaining <= 0) {
@@ -416,7 +552,9 @@ export async function computeMemberDetail(cfg: ChallengeConfig, memberId: string
     }
 
     let dailyPointsAwarded = dailyBeforeCap;
-    let dailyCapApplied: { cap: number; before: number; after: number } | undefined;
+    let dailyCapApplied:
+      | { cap: number; before: number; after: number }
+      | undefined;
     if (cap != null && dailyBeforeCap > cap) {
       dailyCapApplied = { cap, before: dailyBeforeCap, after: cap };
       dailyPointsAwarded = cap;
@@ -428,7 +566,7 @@ export async function computeMemberDetail(cfg: ChallengeConfig, memberId: string
       countedIndex,
       perHabitAwards,
       dailyPointsAwarded,
-      dailyCapApplied
+      dailyCapApplied,
     });
   }
 
@@ -455,7 +593,10 @@ export async function computeMemberDetail(cfg: ChallengeConfig, memberId: string
 
   const windowsByMember = extractMetricWindows(dailiesForPerf, cfg);
   const w = windowsByMember.get(memberId) || { baseline: {}, final: {} };
-  const improvements: Record<string, { improvement: number; points: number; baseline?: number; final?: number }> = {};
+  const improvements: Record<
+    string,
+    { improvement: number; points: number; baseline?: number; final?: number }
+  > = {};
   let perfTotal = 0;
   for (const spec of cfg.performance.metrics) {
     const baseline = w.baseline[spec.key];
@@ -482,12 +623,13 @@ export async function computeMemberDetail(cfg: ChallengeConfig, memberId: string
         date: w.date,
         dailyPoints: w.dailyPointsAwarded,
         checkins: sub.checkins,
-        metrics: sub.metrics
+        metrics: sub.metrics,
       } as MemberDailyLog;
     })
     .filter((x): x is MemberDailyLog => !!x);
 
-  const total = habitTotal * cfg.weights.habits + perfTotal * cfg.weights.performance;
+  const total =
+    habitTotal * cfg.weights.habits + perfTotal * cfg.weights.performance;
   return {
     member_id: memberId,
     member_name,
@@ -502,10 +644,15 @@ export async function computeMemberDetail(cfg: ChallengeConfig, memberId: string
   };
 }
 
-export async function computeLeaderboard(cfg: ChallengeConfig, division?: DivisionKey) {
+export async function computeLeaderboard(
+  cfg: ChallengeConfig,
+  division?: DivisionKey,
+) {
   const submissions = await loadSubmissions(cfg);
   // Latest per (member, date) within challenge window
-  const dailies = latestByBucket(submissions, cfg).sort((a, b) => a.timestamp.localeCompare(b.timestamp));
+  const dailies = latestByBucket(submissions, cfg).sort((a, b) =>
+    a.timestamp.localeCompare(b.timestamp),
+  );
 
   // Track last known name and division per member
   const memberName = new Map<string, string>();
@@ -518,10 +665,20 @@ export async function computeLeaderboard(cfg: ChallengeConfig, division?: Divisi
   const habitByMember = scoreHabits(dailies, cfg);
   const perfByMember = scorePerformance(dailies, cfg, memberDivision);
 
-  const divisions = new Set<DivisionKey>(cfg.divisions.keys.length ? cfg.divisions.keys : Array.from(new Set(Array.from(memberDivision.values()))));
+  const divisions = new Set<DivisionKey>(
+    cfg.divisions.keys.length
+      ? cfg.divisions.keys
+      : Array.from(new Set(Array.from(memberDivision.values()))),
+  );
 
   function buildDivision(div: DivisionKey) {
-    const members = Array.from(new Set(Array.from(memberDivision.entries()).filter(([m, d]) => d === div).map(([m]) => m)));
+    const members = Array.from(
+      new Set(
+        Array.from(memberDivision.entries())
+          .filter(([m, d]) => d === div)
+          .map(([m]) => m),
+      ),
+    );
     const rows: MemberScores[] = members.map((m) => {
       const habit = habitByMember.get(m) ?? 0;
       const perf = perfByMember.get(m) ?? 0;
@@ -539,10 +696,13 @@ export async function computeLeaderboard(cfg: ChallengeConfig, division?: Divisi
     // sort and apply tie-breakers
     rows.sort((a, b) => {
       if (b.total !== a.total) return b.total - a.total;
-      if (b.performancePoints !== a.performancePoints) return b.performancePoints - a.performancePoints;
+      if (b.performancePoints !== a.performancePoints)
+        return b.performancePoints - a.performancePoints;
       if (b.habitPoints !== a.habitPoints) return b.habitPoints - a.habitPoints;
       // stable hash fallback
-      return (stableHash(a.member_id) % 1000) - (stableHash(b.member_id) % 1000);
+      return (
+        (stableHash(a.member_id) % 1000) - (stableHash(b.member_id) % 1000)
+      );
     });
     rows.forEach((r, i) => (r.rank = i + 1));
     return rows;

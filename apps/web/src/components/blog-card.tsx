@@ -77,10 +77,10 @@ function BlogMeta({ publishedAt }: { publishedAt: string | null }) {
       <time className="text-muted-foreground" dateTime={publishedAt ?? ""}>
         {publishedAt
           ? new Date(publishedAt).toLocaleDateString("en-US", {
-            year: "numeric",
-            month: "short",
-            day: "numeric",
-          })
+              year: "numeric",
+              month: "short",
+              day: "numeric",
+            })
           : ""}
       </time>
     </div>

@@ -1,6 +1,9 @@
 "use client";
 import { memo } from "react";
-import { SanityImage as BaseSanityImage, type WrapperProps, } from "sanity-image";
+import {
+  SanityImage as BaseSanityImage,
+  type WrapperProps,
+} from "sanity-image";
 
 import { dataset, projectId } from "@/config";
 import type { SanityImageProps as SanityImageData } from "@/types";
@@ -107,7 +110,7 @@ function processImageData(image: SanityImageData): ProcessedImageData | null {
 
 // Image wrapper component
 const ImageWrapper = <T extends React.ElementType = "img">(
-  props: WrapperProps<T>
+  props: WrapperProps<T>,
 ) => <BaseSanityImage baseUrl={SANITY_BASE_URL} {...props} />;
 
 // Main component

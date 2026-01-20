@@ -22,7 +22,8 @@ export const contactUs = defineType({
       name: "richText",
       type: "richText",
       title: "Intro",
-      description: "Optional intro rich text displayed above the contact details",
+      description:
+        "Optional intro rich text displayed above the contact details",
     }),
     defineField({
       name: "email",
@@ -85,8 +86,16 @@ export const contactUs = defineType({
               title: "Closed",
               initialValue: false,
             }),
-            defineField({ name: "open", type: "string", title: "Opens (e.g. 5:30 AM)" }),
-            defineField({ name: "close", type: "string", title: "Closes (e.g. 8:00 PM)" }),
+            defineField({
+              name: "open",
+              type: "string",
+              title: "Opens (e.g. 5:30 AM)",
+            }),
+            defineField({
+              name: "close",
+              type: "string",
+              title: "Closes (e.g. 8:00 PM)",
+            }),
           ],
         }),
       ],

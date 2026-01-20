@@ -1,7 +1,11 @@
 "use client";
 import { cn } from "@workspace/ui/lib/utils";
 import Link from "next/link";
-import { PortableText, type PortableTextBlock, type PortableTextReactComponents, } from "next-sanity";
+import {
+  PortableText,
+  type PortableTextBlock,
+  type PortableTextReactComponents,
+} from "next-sanity";
 
 import { parseChildrenToSlug } from "@/utils";
 
@@ -10,11 +14,7 @@ import { SanityImage } from "./sanity-image";
 const components: Partial<PortableTextReactComponents> = {
   block: {
     normal: ({ children, value }) => {
-      return (
-        <p className={'my-3'}>
-          {children}
-        </p>
-      )
+      return <p className={"my-3"}>{children}</p>;
     },
     h2: ({ children, value }) => {
       const slug = parseChildrenToSlug(value.children);
@@ -87,19 +87,11 @@ const components: Partial<PortableTextReactComponents> = {
       );
     },
   },
-  list: props => {
-    return (
-      <ul className={'list-disc list-inside my-4'}>
-        {props.children}
-      </ul>
-    )
+  list: (props) => {
+    return <ul className={"list-disc list-inside my-4"}>{props.children}</ul>;
   },
-  listItem: props => {
-    return (
-      <li>
-        {props.children}
-      </li>
-    )
+  listItem: (props) => {
+    return <li>{props.children}</li>;
   },
   types: {
     image: ({ value }) => {
@@ -141,7 +133,7 @@ export function RichText<T>({
     <div
       className={cn(
         "prose prose-zinc dark:prose-invert max-w-none prose-headings:scroll-m-24 prose-h2:border-b prose-h2:pb-2 prose-h2:font-semibold prose-h2:text-3xl prose-headings:text-opacity-90 prose-ol:text-opacity-80 prose-p:text-opacity-80 prose-ul:text-opacity-80 prose-a:decoration-dotted prose-h2:first:mt-0",
-        className
+        className,
       )}
     >
       <PortableText

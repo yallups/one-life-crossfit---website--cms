@@ -81,11 +81,11 @@ export const customRichText = (
     group?: string[] | string;
     description?: string;
     hidden?: ConditionalProperty;
-  }
+  },
 ) => {
   const { name, description, hidden } = options ?? {};
   const customMembers = richTextMembers.filter(
-    (member) => member.name && type.includes(member.name)
+    (member) => member.name && type.includes(member.name),
   );
   return defineField({
     ...options,

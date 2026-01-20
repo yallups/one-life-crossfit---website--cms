@@ -1,10 +1,10 @@
-import {Badge} from "@workspace/ui/components/badge";
+import { Badge } from "@workspace/ui/components/badge";
 import Link from "next/link";
+import type { ComponentProps } from "react";
 import Slider from "react-infinite-logo-slider";
-import {SanityImage} from "@/components/elements/sanity-image";
-import type {PagebuilderType} from "@/types";
-import {RichText} from "../elements/rich-text";
-import {ComponentProps} from "react";
+import { SanityImage } from "@/components/elements/sanity-image";
+import type { PagebuilderType } from "@/types";
+import { RichText } from "../elements/rich-text";
 
 export type LogosBlockProps = PagebuilderType<"logos">;
 
@@ -33,7 +33,7 @@ export function Logos({
               {title}
             </h2>
             <div className="text-lg text-muted-foreground">
-              <RichText className="text-balance" richText={richText}/>
+              <RichText className="text-balance" richText={richText} />
             </div>
             <div className="flex justify-center">
               <Slider
@@ -46,7 +46,13 @@ export function Logos({
                 {images.map((logo) => (
                   <Slider.Slide>
                     <Link href={logo.url ?? "#"} target={"_blank"}>
-                      <SanityImage image={logo.image as ComponentProps<typeof SanityImage>['image']}/>
+                      <SanityImage
+                        image={
+                          logo.image as ComponentProps<
+                            typeof SanityImage
+                          >["image"]
+                        }
+                      />
                     </Link>
                   </Slider.Slide>
                 ))}

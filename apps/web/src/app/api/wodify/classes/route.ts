@@ -1,35 +1,67 @@
-import 'server-only'
+import "server-only";
 
-import { NextRequest, NextResponse } from 'next/server'
-import { getWodifyClasses } from '@/lib/wodify'
+import { type NextRequest, NextResponse } from "next/server";
+import { getSecondsUntilPtMidnight } from "@/lib/schedule-utils";
+import { getWodifyClasses } from "@/lib/wodify";
 
-export const runtime = 'nodejs'
+export const runtime = "nodejs";
 
 // GET /api/wodify/classes
 export async function GET(req: NextRequest) {
   // Collect query params as-is
-  const params: Record<string, string> = {}
+  const params: Record<string, string> = {};
   req.nextUrl.searchParams.forEach((value, key) => {
-    params[key] = value
-  })
+    params[key] = value;
+  });
+  const wantsFresh = params.fresh === "1";
+  if ("fresh" in params) {
+    delete params.fresh;
+  }
 
   try {
-    const { items, pagination } = await getWodifyClasses(params)
+    const { items, pagination } = await getWodifyClasses(
+      params,
+      wantsFresh ? { cache: "no-store" } : undefined,
+    );
+    const maxAgeSeconds = getSecondsUntilPtMidnight();
     return new NextResponse(
-      JSON.stringify({ items, pagination, _meta: { source: 'wodify' } }),
+      JSON.stringify({
+        items,
+        pagination,
+        _meta: {
+          source: "wodify",
+          params,
+          count: items.length,
+        },
+      }),
       {
         status: 200,
         headers: {
-          'Content-Type': 'application/json',
-          'Cache-Control': 'public, s-maxage=120, stale-while-revalidate=86400',
+          "Content-Type": "application/json",
+          "Cache-Control": wantsFresh
+            ? "no-store"
+            : `public, s-maxage=${maxAgeSeconds}, stale-while-revalidate=0`,
         },
       },
-    )
-  } catch (err: any) {
-    // Graceful fallback: empty list without exposing details
+    );
+  } catch (err: unknown) {
     return new NextResponse(
-      JSON.stringify({ items: [], pagination: { page: 1, page_size: 0, has_more: false }, _meta: { source: 'sanity-fallback', error: 'unavailable' } }),
-      { status: 200, headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' } }
-    )
+      JSON.stringify({
+        items: [],
+        pagination: { page: 1, page_size: 0, has_more: false },
+        _meta: {
+          source: "error",
+          error: err instanceof Error ? err.message : "Unknown error",
+          params,
+        },
+      }),
+      {
+        status: 200,
+        headers: {
+          "Content-Type": "application/json",
+          "Cache-Control": "no-store",
+        },
+      },
+    );
   }
 }

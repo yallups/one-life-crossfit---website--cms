@@ -2,9 +2,13 @@ import "@workspace/ui/globals.css";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
+import { GoogleAnalytics } from "@next/third-parties/google";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { draftMode } from "next/headers";
-import { VisualEditing } from 'next-sanity/visual-editing'
+import { VisualEditing } from "next-sanity/visual-editing";
+import type { ReactElement, ReactNode } from "react";
 import { Suspense } from "react";
 import { preconnect } from "react-dom";
 import { FooterServer, FooterSkeleton } from "@/components/footer";
@@ -14,9 +18,6 @@ import { PreviewBar } from "@/components/preview-bar";
 import { Providers } from "@/components/providers";
 import { getNavigationData } from "@/lib/navigation";
 import { SanityLive } from "@/lib/sanity/live";
-import { SpeedInsights } from "@vercel/speed-insights/next"
-import { GoogleAnalytics } from "@next/third-parties/google"
-import { Analytics } from "@vercel/analytics/next";
 
 const fontSans = Geist({
   subsets: ["latin"],
@@ -31,35 +32,35 @@ const fontMono = Geist_Mono({
 export default async function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
-}>) {
+  children: ReactNode;
+}>): Promise<ReactElement> {
   preconnect("https://cdn.sanity.io");
   const nav = await getNavigationData();
   const gaId = process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID;
   return (
     <html lang="en" suppressHydrationWarning>
-    <body
-      className={`${fontSans.variable} ${fontMono.variable} font-sans antialiased`}
-    >
-    <Providers>
-      <Navbar navbarData={nav.navbarData} settingsData={nav.settingsData} />
-      {children}
-      <Suspense fallback={<FooterSkeleton />}>
-        <FooterServer />
-      </Suspense>
-      <SanityLive />
-      <CombinedJsonLd includeOrganization includeWebsite />
-      <SpeedInsights />
-      <Analytics />
-      {gaId ? <GoogleAnalytics gaId={gaId} /> : null}
-      {(await draftMode()).isEnabled && (
-        <>
-          <PreviewBar />
-          <VisualEditing />
-        </>
-      )}
-    </Providers>
-    </body>
+      <body
+        className={`${fontSans.variable} ${fontMono.variable} font-sans antialiased`}
+      >
+        <Providers>
+          <Navbar navbarData={nav.navbarData} settingsData={nav.settingsData} />
+          {children}
+          <Suspense fallback={<FooterSkeleton />}>
+            <FooterServer />
+          </Suspense>
+          <SanityLive />
+          <CombinedJsonLd includeOrganization includeWebsite />
+          <SpeedInsights />
+          <Analytics />
+          {gaId ? <GoogleAnalytics gaId={gaId} /> : null}
+          {(await draftMode()).isEnabled && (
+            <>
+              <PreviewBar />
+              <VisualEditing />
+            </>
+          )}
+        </Providers>
+      </body>
     </html>
   );
 }

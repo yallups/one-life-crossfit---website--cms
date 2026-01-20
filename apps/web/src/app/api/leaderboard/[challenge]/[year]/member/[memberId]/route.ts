@@ -1,13 +1,15 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-import { getChallengeConfig } from "@/lib/leaderboard/registry";
 import { computeMemberDetail } from "@/lib/leaderboard/engine";
+import { getChallengeConfig } from "@/lib/leaderboard/registry";
 
 export const dynamic = "force-dynamic";
 
 export async function GET(
-  req: NextRequest,
-  context: { params: Promise<{ challenge: string; year: string; memberId: string }> }
+  _req: NextRequest,
+  context: {
+    params: Promise<{ challenge: string; year: string; memberId: string }>;
+  },
 ) {
   const params = await context.params;
   const yearNum = Number(params.year);
@@ -15,7 +17,7 @@ export async function GET(
   if (!cfg) {
     return NextResponse.json(
       { error: `Unknown challenge ${params.challenge}/${params.year}` },
-      { status: 404, headers: { "Cache-Control": "no-store" } }
+      { status: 404, headers: { "Cache-Control": "no-store" } },
     );
   }
 
@@ -24,20 +26,23 @@ export async function GET(
     if (!detail) {
       return NextResponse.json(
         { error: "Member not found for this challenge" },
-        { status: 404, headers: { "Cache-Control": "no-store" } }
+        { status: 404, headers: { "Cache-Control": "no-store" } },
       );
     }
     return NextResponse.json(detail, {
       headers: {
-        "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0",
+        "Cache-Control":
+          "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0",
         Pragma: "no-cache",
         Expires: "0",
       },
     });
-  } catch (e: any) {
+  } catch (e: unknown) {
     return NextResponse.json(
-      { error: e?.message || "Failed to load member detail" },
-      { status: 500, headers: { "Cache-Control": "no-store" } }
+      {
+        error: e instanceof Error ? e.message : "Failed to load member detail",
+      },
+      { status: 500, headers: { "Cache-Control": "no-store" } },
     );
   }
 }

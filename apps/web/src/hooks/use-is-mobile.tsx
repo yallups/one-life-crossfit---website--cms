@@ -4,11 +4,11 @@ type MediaQueryResult = {
   matches: boolean;
   addEventListener: (
     type: string,
-    listener: (event: MediaQueryListEvent) => void
+    listener: (event: MediaQueryListEvent) => void,
   ) => void;
   removeEventListener: (
     type: string,
-    listener: (event: MediaQueryListEvent) => void
+    listener: (event: MediaQueryListEvent) => void,
   ) => void;
   addListener?: (listener: (event: MediaQueryListEvent) => void) => void;
   removeListener?: (listener: (event: MediaQueryListEvent) => void) => void;
@@ -38,7 +38,7 @@ export function useIsMobile(mobileScreenSize = 768) {
     }
 
     const mediaListener: MediaQueryResult = window.matchMedia(
-      `(max-width: ${mobileScreenSize}px)`
+      `(max-width: ${mobileScreenSize}px)`,
     );
 
     const attachListener = () => {

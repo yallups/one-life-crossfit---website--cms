@@ -12,10 +12,12 @@ export function getZonedParts(date: Date, timeZone: string) {
     second: "2-digit",
     hour12: false,
   });
-  const parts = fmt.formatToParts(date).reduce<Record<string, string>>((acc, p) => {
-    if (p.type !== "literal") acc[p.type] = p.value;
-    return acc;
-  }, {});
+  const parts = fmt
+    .formatToParts(date)
+    .reduce<Record<string, string>>((acc, p) => {
+      if (p.type !== "literal") acc[p.type] = p.value;
+      return acc;
+    }, {});
   return {
     year: Number(parts.year),
     month: Number(parts.month),
@@ -43,7 +45,10 @@ export function addDaysUTC(date: Date, days: number) {
  * and return an ISO string for the correct UTC instant. This prevents environment-dependent
  * parsing (UTC vs local) from shifting the date bucket on Vercel.
  */
-export function parseToZonedISOString(tsRaw: string, timeZone: string): string | undefined {
+export function parseToZonedISOString(
+  tsRaw: string,
+  timeZone: string,
+): string | undefined {
   if (!tsRaw) return undefined;
   const s = String(tsRaw).trim();
   // If the string already contains an explicit timezone (Z or ±hh:mm), trust it.
@@ -54,7 +59,9 @@ export function parseToZonedISOString(tsRaw: string, timeZone: string): string |
 
   // Try common formats from Google Sheets/Forms
   // 1) M/D/YYYY HH:MM(:SS)? (AM/PM optional)
-  let m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})[ ,T]+(\d{1,2}):(\d{2})(?::(\d{2}))?\s*(AM|PM|am|pm)?$/);
+  let m = s.match(
+    /^(\d{1,2})\/(\d{1,2})\/(\d{4})[ ,T]+(\d{1,2}):(\d{2})(?::(\d{2}))?\s*(AM|PM|am|pm)?$/,
+  );
   if (m) {
     const mon = Number(m[1]);
     const day = Number(m[2]);
@@ -67,7 +74,10 @@ export function parseToZonedISOString(tsRaw: string, timeZone: string): string |
       if (ampm === "pm" && hour < 12) hour += 12;
       if (ampm === "am" && hour === 12) hour = 0;
     }
-    return wallTimeToInstantISO({ year, month: mon, day, hour, minute, second }, timeZone);
+    return wallTimeToInstantISO(
+      { year, month: mon, day, hour, minute, second },
+      timeZone,
+    );
   }
 
   // 2) YYYY-MM-DD[ T]HH:MM(:SS)? (no timezone)
@@ -79,7 +89,10 @@ export function parseToZonedISOString(tsRaw: string, timeZone: string): string |
     const hour = Number(m[4]);
     const minute = Number(m[5]);
     const second = m[6] ? Number(m[6]) : 0;
-    return wallTimeToInstantISO({ year, month, day, hour, minute, second }, timeZone);
+    return wallTimeToInstantISO(
+      { year, month, day, hour, minute, second },
+      timeZone,
+    );
   }
 
   // Fallback: attempt native parse. This may be environment dependent, but it's last resort.
@@ -89,12 +102,28 @@ export function parseToZonedISOString(tsRaw: string, timeZone: string): string |
 }
 
 function wallTimeToInstantISO(
-  wall: { year: number; month: number; day: number; hour: number; minute: number; second?: number },
-  timeZone: string
+  wall: {
+    year: number;
+    month: number;
+    day: number;
+    hour: number;
+    minute: number;
+    second?: number;
+  },
+  timeZone: string,
 ): string | undefined {
   const second = wall.second ?? 0;
   // Start with the wall components treated as UTC, then adjust by the difference
-  const seed = new Date(Date.UTC(wall.year, Math.max(0, wall.month - 1), wall.day, wall.hour, wall.minute, second));
+  const seed = new Date(
+    Date.UTC(
+      wall.year,
+      Math.max(0, wall.month - 1),
+      wall.day,
+      wall.hour,
+      wall.minute,
+      second,
+    ),
+  );
   const zp = getZonedParts(seed, timeZone);
 
   // Compute day difference between intended wall date and the current zoned date of the seed
@@ -111,7 +140,13 @@ function wallTimeToInstantISO(
 
   // Verify; if still off by an hour due to DST rounding quirks, do a second correction
   const zp2 = getZonedParts(adjusted, timeZone);
-  if (zp2.year !== wall.year || zp2.month !== wall.month || zp2.day !== wall.day || zp2.hour !== wall.hour || zp2.minute !== wall.minute) {
+  if (
+    zp2.year !== wall.year ||
+    zp2.month !== wall.month ||
+    zp2.day !== wall.day ||
+    zp2.hour !== wall.hour ||
+    zp2.minute !== wall.minute
+  ) {
     const totalZonedMin2 = zp2.hour * 60 + zp2.minute;
     const timeMinDiff2 = totalWallMin - totalZonedMin2;
     const adjusted2 = new Date(adjusted.getTime() + timeMinDiff2 * 60_000);
@@ -135,12 +170,20 @@ export function scoringDate(tsIso: string, timeZone: string, startHour = 19) {
     const utc = new Date(ts.toISOString());
     const prev = addDaysUTC(utc, -1);
     const prevParts = getZonedParts(prev, timeZone);
-    bucketDate = { year: prevParts.year, month: prevParts.month, day: prevParts.day };
+    bucketDate = {
+      year: prevParts.year,
+      month: prevParts.month,
+      day: prevParts.day,
+    };
   }
   return formatYMD(bucketDate);
 }
 
-export function isWithinYmdRange(ymd: string, startYmd: string, endYmd: string) {
+export function isWithinYmdRange(
+  ymd: string,
+  startYmd: string,
+  endYmd: string,
+) {
   return ymd >= startYmd && ymd <= endYmd;
 }
 
@@ -149,7 +192,10 @@ export function todayYmd(timeZone: string) {
   return formatYMD({ year: parts.year, month: parts.month, day: parts.day });
 }
 
-export function weekKeyFromYmd(ymd: string, weekStartsOn: "sun" | "mon" = "sun") {
+export function weekKeyFromYmd(
+  ymd: string,
+  weekStartsOn: "sun" | "mon" = "sun",
+) {
   // Compute a simple week key using the week start date (YYYY-MM-DD) as the key.
   const parts = ymd.split("-");
   const y = Number(parts[0] ?? 1970);

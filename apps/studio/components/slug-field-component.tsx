@@ -98,7 +98,7 @@ function SlugInputField({
     (e: ChangeEvent<HTMLInputElement>) => {
       onChange(e.target.value);
     },
-    [onChange]
+    [onChange],
   );
 
   return (
@@ -187,7 +187,7 @@ export function PathnameFieldComponent(props: ObjectFieldProps<SlugValue>) {
 
   const fullUrl = useMemo(
     () => `${presentationOriginUrl ?? ""}${localizedPathname}`,
-    [localizedPathname]
+    [localizedPathname],
   );
 
   // Event handlers with error handling
@@ -207,7 +207,7 @@ export function PathnameFieldComponent(props: ObjectFieldProps<SlugValue>) {
         // Silently handle errors - validation will show user-friendly messages
       }
     },
-    [onChange]
+    [onChange],
   );
 
   const handleSlugChange = useCallback(
@@ -215,7 +215,7 @@ export function PathnameFieldComponent(props: ObjectFieldProps<SlugValue>) {
       // Allow users to type anything - don't clean while typing
       handleChange(rawValue);
     },
-    [handleChange]
+    [handleChange],
   );
 
   const handleGenerate = useCallback(() => {
@@ -231,7 +231,7 @@ export function PathnameFieldComponent(props: ObjectFieldProps<SlugValue>) {
       const generatedSlug = generateSlugFromTitle(
         documentTitle,
         documentType,
-        currentSlug
+        currentSlug,
       );
 
       if (generatedSlug) {

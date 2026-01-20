@@ -1,12 +1,13 @@
-import type { PagebuilderType } from "@/types";
-
 import { Badge } from "@workspace/ui/components/badge";
 import { useTheme } from "next-themes";
+import { lazy, Suspense } from "react";
 import type { NameDisplay } from "react-google-reviews/dist/cjs/types/types/review";
 import { RichText } from "@/components/elements/rich-text";
-import { lazy, Suspense } from "react";
+import type { PagebuilderType } from "@/types";
 
-const GoogleReviewsComponent = lazy(() => import("@/components/shared/google-reviews"))
+const GoogleReviewsComponent = lazy(
+  () => import("@/components/shared/google-reviews"),
+);
 
 type GoogleReviewsProps = PagebuilderType<"googleReviews">;
 

@@ -7,7 +7,10 @@ import Link from "next/link";
 import { useState } from "react";
 import useSWR from "swr";
 
-import type { QueryGlobalSeoSettingsResult, QueryNavbarDataResult, } from "@/lib/sanity/sanity.types";
+import type {
+  QueryGlobalSeoSettingsResult,
+  QueryNavbarDataResult,
+} from "@/lib/sanity/sanity.types";
 
 import { SanityButtons } from "./elements/sanity-buttons";
 import { SanityIcon } from "./elements/sanity-icon";
@@ -25,8 +28,8 @@ type NavColumn = NonNullable<
 >[number];
 
 type ColumnLink = Extract<NavColumn, { type: "column" }>["links"] extends Array<
-    infer T
-  >
+  infer T
+>
   ? T
   : never;
 
@@ -173,8 +176,7 @@ function MobileMenu({ navbarData, settingsData }: NavigationData) {
       {/* Mobile menu overlay */}
       {isOpen && (
         <div className="fixed inset-0 top-16 z-50 bg-background/80 backdrop-blur-sm md:hidden">
-          <div
-            className="fixed top-0 left-0 h-[calc(100vh-4rem)] w-full overflow-auto border-r bg-background p-6 shadow-lg">
+          <div className="fixed top-0 left-0 h-[calc(100vh-4rem)] w-full overflow-auto border-r bg-background p-6 shadow-lg">
             <div className="grid gap-6">
               {/* Logo for mobile */}
               {/*{logo && (*/}
@@ -217,7 +219,7 @@ function MobileMenu({ navbarData, settingsData }: NavigationData) {
                           <ChevronDown
                             className={cn(
                               "size-3 transition-transform",
-                              isDropdownOpen && "rotate-180"
+                              isDropdownOpen && "rotate-180",
                             )}
                           />
                         </button>
@@ -317,7 +319,7 @@ export function Navbar({
       refreshInterval: 30_000,
       errorRetryCount: 3,
       errorRetryInterval: 5000,
-    }
+    },
   );
 
   const navigationData = data || {

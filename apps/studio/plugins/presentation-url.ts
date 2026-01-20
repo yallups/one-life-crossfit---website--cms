@@ -19,7 +19,7 @@ export const presentationUrl = definePlugin(() => ({
       {
         name: "open-in-presentation",
         useAction: ({ documentId }: PresentationUrlAction) => {
-          const getFormValue = useGetFormValue();
+          const getFormValue = useGetFormValue() as (path: string[]) => unknown;
           const router = useRouter();
           const toast = useToast();
 

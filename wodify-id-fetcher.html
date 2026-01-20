@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wodify ID Fetcher</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        h1 { color: #333; margin-top: 0; }
+        .input-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        button:hover { background: #0056b3; }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .results {
+            margin-top: 30px;
+        }
+        .result-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 4px;
+            border-left: 4px solid #007bff;
+        }
+        .result-section h3 {
+            margin-top: 0;
+            color: #333;
+        }
+        pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-size: 13px;
+        }
+        .error {
+            background: #fee;
+            border-left-color: #d00;
+            color: #c00;
+        }
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #007bff;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .note {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        .success {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+            color: #155724;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏋️ Wodify ID Fetcher</h1>
+        <p>Enter your Wodify API key to fetch all available identifiers (programs, coaches, locations, etc.)</p>
+
+        <div class="note">
+            <strong>💡 Using ReadMe Proxy:</strong> This tool uses the ReadMe.io proxy to bypass browser CORS restrictions, just like the official Wodify documentation does.
+        </div>
+
+        <div class="input-group">
+            <label for="apiKey">Wodify API Key:</label>
+            <input
+                type="text"
+                id="apiKey"
+                placeholder="Enter your Wodify API key (X-Api-Key header)"
+                autocomplete="off"
+                value="s7Ieoho3oUh312DJqOxdS4dfa"
+            >
+        </div>
+
+        <button onclick="fetchAllIds()" id="fetchBtn">Fetch All IDs</button>
+
+        <div id="results" class="results"></div>
+    </div>
+
+    <script>
+        async function fetchWodify(endpoint, apiKey) {
+            // Use the ReadMe proxy like the official docs do
+            const proxyUrl = `https://try.readme.io/https://api.wodify.com${endpoint}`;
+
+            const response = await fetch(proxyUrl, {
+                method: 'GET',
+                headers: {
+                    'accept': 'application/json',
+                    'x-api-key': apiKey,
+                    'x-readme-api-explorer': '5.560.0'
+                },
+                mode: 'cors',
+                credentials: 'omit'
+            });
+
+            if (!response.ok) {
+                const text = await response.text();
+                throw new Error(`HTTP ${response.status}: ${response.statusText} - ${text}`);
+            }
+
+            return await response.json();
+        }
+
+        async function fetchAllIds() {
+            const apiKey = document.getElementById('apiKey').value.trim();
+            const resultsDiv = document.getElementById('results');
+            const fetchBtn = document.getElementById('fetchBtn');
+
+            if (!apiKey) {
+                alert('Please enter your Wodify API key');
+                return;
+            }
+
+            fetchBtn.disabled = true;
+            resultsDiv.innerHTML = '<div class="loading"><div class="spinner"></div>Fetching data from Wodify...</div>';
+
+            const results = {
+                locations: null,
+                programs: null,
+                coaches: null,
+                classes: null
+            };
+
+            // Fetch Locations
+            try {
+                console.log('Fetching locations...');
+                results.locations = await fetchWodify('/v1/customers/locations', apiKey);
+            } catch (e) {
+                console.error('Locations error:', e);
+                results.locations = { error: e.message };
+            }
+
+            // Fetch Programs
+            try {
+                console.log('Fetching programs...');
+                results.programs = await fetchWodify('/v1/programs', apiKey);
+            } catch (e) {
+                console.error('Programs error:', e);
+                results.programs = { error: e.message };
+            }
+
+            // Fetch Coaches
+            try {
+                console.log('Fetching coaches...');
+                results.coaches = await fetchWodify('/v1/customers/coaches', apiKey);
+            } catch (e) {
+                console.error('Coaches error:', e);
+                results.coaches = { error: e.message };
+            }
+
+            // Fetch Classes (to see programs in action)
+            try {
+                console.log('Fetching classes...');
+                const today = new Date().toISOString().split('T')[0];
+                const nextMonth = new Date();
+                nextMonth.setDate(nextMonth.getDate() + 30);
+                const endDate = nextMonth.toISOString().split('T')[0];
+
+                results.classes = await fetchWodify(
+                    `/v1/classes?startDate=${today}&endDate=${endDate}&page_size=50`,
+                    apiKey
+                );
+            } catch (e) {
+                console.error('Classes error:', e);
+                results.classes = { error: e.message };
+            }
+
+            displayResults(results);
+            fetchBtn.disabled = false;
+        }
+
+        function displayResults(results) {
+            const resultsDiv = document.getElementById('results');
+            let html = '';
+
+            // Success message
+            let hasData = false;
+            if (results.locations && !results.locations.error) hasData = true;
+            if (results.programs && !results.programs.error) hasData = true;
+            if (results.coaches && !results.coaches.error) hasData = true;
+
+            if (hasData) {
+                html += '<div class="success">';
+                html += '<strong>✅ Success!</strong> Data fetched successfully. Copy the IDs you need below.';
+                html += '</div>';
+            }
+
+            // Locations
+            html += '<div class="result-section' + (results.locations.error ? ' error' : '') + '">';
+            html += '<h3>📍 Locations</h3>';
+            if (results.locations.error) {
+                html += `<p><strong>Error:</strong> ${results.locations.error}</p>`;
+            } else {
+                const locations = results.locations.locations || results.locations.data || [];
+                if (locations.length === 0) {
+                    html += '<p>No locations found</p>';
+                } else {
+                    html += '<p><strong>Found ' + locations.length + ' location(s):</strong></p>';
+                    html += '<pre>' + JSON.stringify(locations, null, 2) + '</pre>';
+                }
+            }
+            html += '</div>';
+
+            // Programs
+            html += '<div class="result-section' + (results.programs.error ? ' error' : '') + '">';
+            html += '<h3>📚 Programs</h3>';
+            if (results.programs.error) {
+                html += `<p><strong>Error:</strong> ${results.programs.error}</p>`;
+                html += '<p><em>Falling back to extracting programs from classes...</em></p>';
+            }
+
+            // Always show programs from classes as fallback
+            const classes = results.classes?.classes || [];
+            const programsMap = new Map();
+            classes.forEach(c => {
+                if (c.program_id && c.program_name) {
+                    programsMap.set(c.program_id, c.program_name);
+                }
+            });
+
+            if (programsMap.size > 0) {
+                const programsList = Array.from(programsMap, ([id, name]) => ({ id, name }));
+                html += '<p><strong>Found ' + programsList.length + ' program(s) from classes:</strong></p>';
+                html += '<pre>' + JSON.stringify(programsList, null, 2) + '</pre>';
+            } else if (!results.programs.error) {
+                const programs = results.programs.programs || results.programs.data || [];
+                if (programs.length > 0) {
+                    html += '<p><strong>Found ' + programs.length + ' program(s):</strong></p>';
+                    html += '<pre>' + JSON.stringify(programs, null, 2) + '</pre>';
+                } else {
+                    html += '<p>No programs found</p>';
+                }
+            } else {
+                html += '<p>No programs found</p>';
+            }
+            html += '</div>';
+
+            // Coaches
+            html += '<div class="result-section' + (results.coaches.error ? ' error' : '') + '">';
+            html += '<h3>👥 Coaches</h3>';
+            if (results.coaches.error) {
+                html += `<p><strong>Error:</strong> ${results.coaches.error}</p>`;
+            } else {
+                const coaches = results.coaches.coaches || results.coaches.Coaches || results.coaches.data || [];
+                if (coaches.length === 0) {
+                    html += '<p>No coaches found</p>';
+                } else {
+                    html += '<p><strong>Found ' + coaches.length + ' coach(es):</strong></p>';
+                    html += '<pre>' + JSON.stringify(coaches, null, 2) + '</pre>';
+                }
+            }
+            html += '</div>';
+
+            // Sample Classes (just a few for reference)
+            if (!results.classes.error) {
+                const sampleClasses = (results.classes.classes || []).slice(0, 3);
+                if (sampleClasses.length > 0) {
+                    html += '<div class="result-section">';
+                    html += '<h3>📅 Sample Classes (showing first 3)</h3>';
+                    html += '<p><em>This shows the structure of class data, including program_id and program_name fields.</em></p>';
+                    html += '<pre>' + JSON.stringify(sampleClasses, null, 2) + '</pre>';
+                    html += '</div>';
+                }
+            }
+
+            resultsDiv.innerHTML = html;
+        }
+    </script>
+</body>
+</html>

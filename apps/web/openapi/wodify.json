@@ -153,56 +153,174 @@
         "type": "object",
         "additionalProperties": true,
         "properties": {
-          "id": { "type": "integer", "example": 9721 },
-          "name": { "type": "string", "example": "One Life CrossFit" },
-          "street_address_1": { "type": "string", "example": "2627 Skyway Drive" },
-          "street_address_2": { "type": "string", "example": "Unit B" },
-          "city": { "type": "string", "example": "Santa Maria" },
-          "state_id": { "type": "integer", "example": 21 },
-          "state": { "type": "string", "example": "California" },
-          "zip_code": { "type": "string", "example": "93455-1405" },
-          "country_id": { "type": "integer", "example": 57 },
-          "country": { "type": "string", "example": "United States of America" },
-          "province": { "type": "string", "example": "" },
-          "website": { "type": "string", "example": "onelifecrossfit.com" },
-          "phone_number": { "type": "string", "example": "8057140338" },
-          "email": { "type": "string", "format": "email", "example": "info@onelifecrossfit.com" },
-          "show_in_wodifind": { "type": "boolean", "example": true },
-          "wodifind_name": { "type": "string", "example": "One Life CrossFit" },
-          "wodifind_description": { "type": "string" },
-          "email_signature": { "type": "string" },
-          "enable_email_signature": { "type": "boolean", "example": true },
-          "email_from_label": { "type": "string", "example": "One Life CrossFit" },
-          "staff_signature": { "type": "string" },
-          "abn_number": { "type": "string" },
-          "gst_number": { "type": "string" },
-          "business_type_id": { "type": "integer", "example": 2 },
-          "customer_id": { "type": "integer", "example": 9621 },
-          "stripe_terminal_location_id": { "type": "string", "example": "" },
-          "time_zone_id": { "type": "integer", "example": 62 },
-          "time_zone": { "type": "string", "example": "(GMT-08:00) Pacific Time - Los Angeles" },
-          "time_zone_iana": { "type": "string", "example": "America/Los_Angeles" },
-          "formatted_address": { "type": "string", "example": "2627 Skyway Drive<br/>Unit B<br/>Santa Maria, CA 93455-1405" },
-          "lead_owner_id": { "type": "integer", "example": 0 },
-          "lead_owner": { "type": "string", "example": "" },
-          "client_owner_id": { "type": "integer", "example": 0 },
-          "client_owner": { "type": "string", "example": "" },
+          "id": {
+            "type": "integer",
+            "example": 9721
+          },
+          "name": {
+            "type": "string",
+            "example": "One Life CrossFit"
+          },
+          "street_address_1": {
+            "type": "string",
+            "example": "2627 Skyway Drive"
+          },
+          "street_address_2": {
+            "type": "string",
+            "example": "Unit B"
+          },
+          "city": {
+            "type": "string",
+            "example": "Santa Maria"
+          },
+          "state_id": {
+            "type": "integer",
+            "example": 21
+          },
+          "state": {
+            "type": "string",
+            "example": "California"
+          },
+          "zip_code": {
+            "type": "string",
+            "example": "93455-1405"
+          },
+          "country_id": {
+            "type": "integer",
+            "example": 57
+          },
+          "country": {
+            "type": "string",
+            "example": "United States of America"
+          },
+          "province": {
+            "type": "string",
+            "example": ""
+          },
+          "website": {
+            "type": "string",
+            "example": "onelifecrossfit.com"
+          },
+          "phone_number": {
+            "type": "string",
+            "example": "8057140338"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "info@onelifecrossfit.com"
+          },
+          "show_in_wodifind": {
+            "type": "boolean",
+            "example": true
+          },
+          "wodifind_name": {
+            "type": "string",
+            "example": "One Life CrossFit"
+          },
+          "wodifind_description": {
+            "type": "string"
+          },
+          "email_signature": {
+            "type": "string"
+          },
+          "enable_email_signature": {
+            "type": "boolean",
+            "example": true
+          },
+          "email_from_label": {
+            "type": "string",
+            "example": "One Life CrossFit"
+          },
+          "staff_signature": {
+            "type": "string"
+          },
+          "abn_number": {
+            "type": "string"
+          },
+          "gst_number": {
+            "type": "string"
+          },
+          "business_type_id": {
+            "type": "integer",
+            "example": 2
+          },
+          "customer_id": {
+            "type": "integer",
+            "example": 9621
+          },
+          "stripe_terminal_location_id": {
+            "type": "string",
+            "example": ""
+          },
+          "time_zone_id": {
+            "type": "integer",
+            "example": 62
+          },
+          "time_zone": {
+            "type": "string",
+            "example": "(GMT-08:00) Pacific Time - Los Angeles"
+          },
+          "time_zone_iana": {
+            "type": "string",
+            "example": "America/Los_Angeles"
+          },
+          "formatted_address": {
+            "type": "string",
+            "example": "2627 Skyway Drive<br/>Unit B<br/>Santa Maria, CA 93455-1405"
+          },
+          "lead_owner_id": {
+            "type": "integer",
+            "example": 0
+          },
+          "lead_owner": {
+            "type": "string",
+            "example": ""
+          },
+          "client_owner_id": {
+            "type": "integer",
+            "example": 0
+          },
+          "client_owner": {
+            "type": "string",
+            "example": ""
+          },
           "created": {
             "type": "object",
             "additionalProperties": true,
             "properties": {
-              "created_by_id": { "type": "integer", "example": 17597 },
-              "created_by": { "type": "string", "example": "System User" },
-              "created_on_datetime": { "type": "string", "format": "date-time", "example": "2022-03-10T12:51:51Z" }
+              "created_by_id": {
+                "type": "integer",
+                "example": 17597
+              },
+              "created_by": {
+                "type": "string",
+                "example": "System User"
+              },
+              "created_on_datetime": {
+                "type": "string",
+                "format": "date-time",
+                "example": "2022-03-10T12:51:51Z"
+              }
             }
           },
           "updated": {
             "type": "object",
             "additionalProperties": true,
             "properties": {
-              "updated_by_id": { "type": "integer", "example": 17597 },
-              "updated_by": { "type": "string", "example": "System User" },
-              "updated_on_datetime": { "type": "string", "format": "date-time", "example": "2025-10-02T16:53:41Z" }
+              "updated_by_id": {
+                "type": "integer",
+                "example": 17597
+              },
+              "updated_by": {
+                "type": "string",
+                "example": "System User"
+              },
+              "updated_on_datetime": {
+                "type": "string",
+                "format": "date-time",
+                "example": "2025-10-02T16:53:41Z"
+              }
             }
           }
         }
@@ -312,18 +430,32 @@
         "properties": {
           "classes": {
             "type": "array",
-            "items": { "$ref": "#/components/schemas/Class" }
+            "items": {
+              "$ref": "#/components/schemas/Class"
+            }
           },
           "pagination": {
             "type": "object",
             "additionalProperties": true,
             "properties": {
-              "page": { "type": "integer", "example": 1 },
-              "page_size": { "type": "integer", "example": 100 },
-              "has_more": { "type": "boolean", "example": true }
+              "page": {
+                "type": "integer",
+                "example": 1
+              },
+              "page_size": {
+                "type": "integer",
+                "example": 100
+              },
+              "has_more": {
+                "type": "boolean",
+                "example": true
+              }
             }
           },
-          "wodify_validation_result": { "type": "string", "example": "" }
+          "wodify_validation_result": {
+            "type": "string",
+            "example": ""
+          }
         }
       },
       "Paged_Locations": {
@@ -332,18 +464,32 @@
         "properties": {
           "locations": {
             "type": "array",
-            "items": { "$ref": "#/components/schemas/Location" }
+            "items": {
+              "$ref": "#/components/schemas/Location"
+            }
           },
           "pagination": {
             "type": "object",
             "additionalProperties": true,
             "properties": {
-              "page": { "type": "integer", "example": 1 },
-              "page_size": { "type": "integer", "example": 1 },
-              "has_more": { "type": "boolean", "example": false }
+              "page": {
+                "type": "integer",
+                "example": 1
+              },
+              "page_size": {
+                "type": "integer",
+                "example": 1
+              },
+              "has_more": {
+                "type": "boolean",
+                "example": false
+              }
             }
           },
-          "wodify_validation_result": { "type": "string", "example": "" }
+          "wodify_validation_result": {
+            "type": "string",
+            "example": ""
+          }
         }
       },
       "Paged_Workouts": {
@@ -398,9 +544,7 @@
   "paths": {
     "/v1/customers/locations": {
       "get": {
-        "tags": [
-          "Locations"
-        ],
+        "tags": ["Locations"],
         "summary": "List locations",
         "operationId": "listLocations",
         "parameters": [
@@ -437,9 +581,7 @@
     },
     "/v1/workouts": {
       "get": {
-        "tags": [
-          "Workouts"
-        ],
+        "tags": ["Workouts"],
         "summary": "List workouts",
         "operationId": "listWorkouts",
         "parameters": [
@@ -488,9 +630,7 @@
     },
     "/v1/workouts/{id}": {
       "get": {
-        "tags": [
-          "Workouts"
-        ],
+        "tags": ["Workouts"],
         "summary": "Get a workout",
         "operationId": "getWorkout",
         "parameters": [
@@ -524,9 +664,7 @@
     },
     "/v1/classes": {
       "get": {
-        "tags": [
-          "Classes"
-        ],
+        "tags": ["Classes"],
         "summary": "List classes (schedule)",
         "operationId": "listClasses",
         "description": "Retrieve classes within a date range and optional filters to build a schedule.",
@@ -592,9 +730,7 @@
     },
     "/v1/classes/{id}": {
       "get": {
-        "tags": [
-          "Classes"
-        ],
+        "tags": ["Classes"],
         "summary": "Get a class",
         "operationId": "getClass",
         "parameters": [

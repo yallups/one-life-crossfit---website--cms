@@ -1,13 +1,18 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import Image from "next/image";
-import { cn } from "@workspace/ui/lib/utils";
-import { RichText } from "@/components/elements/rich-text";
-import { PagebuilderType } from "@/types";
 import { Badge } from "@workspace/ui/components/badge";
+import { cn } from "@workspace/ui/lib/utils";
+import Image from "next/image";
+import { useEffect, useMemo, useState } from "react";
+import { RichText } from "@/components/elements/rich-text";
+import type { PagebuilderType } from "@/types";
 import { CoachModal } from "./coach-modal";
-import { CoachLinks, CoachMetaBadges, getCoachLinks, splitCSV } from "./coach-parts";
+import {
+  CoachLinks,
+  CoachMetaBadges,
+  getCoachLinks,
+  splitCSV,
+} from "./coach-parts";
 import type { WodifyCoach } from "./coach-types";
 
 export type WodifyCoachesBlockProps = PagebuilderType<"wodifyCoaches"> & {
@@ -29,8 +34,10 @@ function useCoaches(filters?: {
     const u = new URLSearchParams();
     if (filters?.locations?.length)
       u.set("locations", filters.locations.join(","));
-    if (filters?.programs?.length) u.set("programs", filters.programs.join(","));
-    if (filters?.services?.length) u.set("services", filters.services.join(","));
+    if (filters?.programs?.length)
+      u.set("programs", filters.programs.join(","));
+    if (filters?.services?.length)
+      u.set("services", filters.services.join(","));
     return u.toString();
   }, [filters]);
 
@@ -59,7 +66,8 @@ function useCoaches(filters?: {
           const cSvcs = splitCSV(c.services).map((s) => s.toLowerCase());
 
           const matchCategory = (selected: string[], candidate: string[]) =>
-            selected.length === 0 || selected.some((s) => candidate.includes(s));
+            selected.length === 0 ||
+            selected.some((s) => candidate.includes(s));
 
           return (
             matchCategory(locs, cLocs) &&
@@ -87,12 +95,18 @@ function useCoaches(filters?: {
   return { data, error, loading };
 }
 
-function CoachCard({ coach, showLinks, onReadMore }: {
+function CoachCard({
+  coach,
+  showLinks,
+  onReadMore,
+}: {
   coach: WodifyCoach;
   showLinks: boolean;
-  onReadMore?: (coach: WodifyCoach) => void
+  onReadMore?: (coach: WodifyCoach) => void;
 }) {
-  const fullName = [coach.first_name, coach.last_name].filter(Boolean).join(" ");
+  const fullName = [coach.first_name, coach.last_name]
+    .filter(Boolean)
+    .join(" ");
   const links = getCoachLinks(coach);
   const programs = splitCSV(coach.programs);
   const services = splitCSV(coach.services);
@@ -109,7 +123,13 @@ function CoachCard({ coach, showLinks, onReadMore }: {
       <div className="flex gap-4 p-5">
         <div className="relative aspect-square h-28 w-28 shrink-0 overflow-hidden rounded-xl bg-muted">
           {coach.picture_url ? (
-            <Image src={coach.picture_url} alt={fullName} fill sizes="112px" className="object-cover" />
+            <Image
+              src={coach.picture_url}
+              alt={fullName}
+              fill
+              sizes="112px"
+              className="object-cover"
+            />
           ) : (
             <div className="grid h-full w-full place-items-center text-muted-foreground">
               <span className="text-2xl">👤</span>
@@ -117,8 +137,12 @@ function CoachCard({ coach, showLinks, onReadMore }: {
           )}
         </div>
         <div className="min-w-0 flex-1">
-          <h3 className="truncate text-xl font-semibold leading-tight">{fullName}</h3>
-          {coach.title && <p className="text-muted-foreground">{coach.title}</p>}
+          <h3 className="truncate text-xl font-semibold leading-tight">
+            {fullName}
+          </h3>
+          {coach.title && (
+            <p className="text-muted-foreground">{coach.title}</p>
+          )}
           {/* Meta chips */}
           <CoachMetaBadges programs={programs} services={services} />
         </div>
@@ -127,8 +151,10 @@ function CoachCard({ coach, showLinks, onReadMore }: {
       {bio && (
         <div className="border-t p-5">
           {/*<RichText richText={displayBio} />*/}
-          <p className="text-sm leading-relaxed text-muted-foreground"
-             dangerouslySetInnerHTML={{ __html: displayBio }} />
+          <p
+            className="text-sm leading-relaxed text-muted-foreground"
+            dangerouslySetInnerHTML={{ __html: displayBio }}
+          />
           {isLong && (
             <button
               type="button"
@@ -162,9 +188,10 @@ export function WodifyCoaches({
   className,
   preloaded,
 }: WodifyCoachesBlockProps) {
-  const { data, error, loading } = preloaded !== undefined
-    ? { data: preloaded, error: null as string | null, loading: false }
-    : useCoaches(filters as any);
+  const { data, error, loading } =
+    preloaded !== undefined
+      ? { data: preloaded, error: null as string | null, loading: false }
+      : useCoaches(filters as any);
 
   const [selectedCoach, setSelectedCoach] = useState<WodifyCoach | null>(null);
   const [open, setOpen] = useState(false);
@@ -179,7 +206,6 @@ export function WodifyCoaches({
     setOpen(true);
   };
 
-
   return (
     <section className={cn("my-8 md:my-16", className)}>
       <div className="container mx-auto px-4 md:px-6">
@@ -190,7 +216,9 @@ export function WodifyCoaches({
             </Badge>
           )}
           {title && (
-            <h2 className="text-balance text-3xl font-semibold md:text-5xl">{title}</h2>
+            <h2 className="text-balance text-3xl font-semibold md:text-5xl">
+              {title}
+            </h2>
           )}
           {richText && (
             <div className="text-lg text-muted-foreground">
@@ -202,32 +230,44 @@ export function WodifyCoaches({
         {/* Content */}
         <div className="mt-8">
           {loading && (
-            <div className="text-center text-muted-foreground">Loading coaches…</div>
+            <div className="text-center text-muted-foreground">
+              Loading coaches…
+            </div>
           )}
-          {error && (
-            <div className="text-center text-destructive">{error}</div>
-          )}
+          {error && <div className="text-center text-destructive">{error}</div>}
           {!loading && !error && (!data || data.length === 0) && (
-            <div className="text-center text-muted-foreground">No coaches found.</div>
+            <div className="text-center text-muted-foreground">
+              No coaches found.
+            </div>
           )}
 
-          {!loading && !error && data && data.length > 0 && (
-            layout === "list" ? (
+          {!loading &&
+            !error &&
+            data &&
+            data.length > 0 &&
+            (layout === "list" ? (
               <div className="space-y-4">
                 {data.map((coach) => (
-                  <CoachCard key={String(coach.id)} coach={coach} showLinks={showLinks ?? false}
-                             onReadMore={handleReadMore} />
+                  <CoachCard
+                    key={String(coach.id)}
+                    coach={coach}
+                    showLinks={showLinks ?? false}
+                    onReadMore={handleReadMore}
+                  />
                 ))}
               </div>
             ) : (
               <div className={gridCols}>
                 {data.map((coach) => (
-                  <CoachCard key={String(coach.id)} coach={coach} showLinks={showLinks ?? false}
-                             onReadMore={handleReadMore} />
+                  <CoachCard
+                    key={String(coach.id)}
+                    coach={coach}
+                    showLinks={showLinks ?? false}
+                    onReadMore={handleReadMore}
+                  />
                 ))}
               </div>
-            )
-          )}
+            ))}
         </div>
       </div>
 

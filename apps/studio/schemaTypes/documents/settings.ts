@@ -94,7 +94,8 @@ export const settings = defineType({
       name: "siteIcon",
       type: "image",
       title: "Site Icon",
-      description: "Upload a square image used to generate favicons and the Apple touch icon.",
+      description:
+        "Upload a square image used to generate favicons and the Apple touch icon.",
       options: {
         hotspot: true,
       },
@@ -110,20 +111,23 @@ export const settings = defineType({
       name: "telephone",
       type: "string",
       title: "Telephone",
-      description: "Primary phone number shown on the site and used in SEO JSON-LD. If a Wodify API token is configured, the site's default phone will come from your primary Wodify location; this field overrides the Wodify value. Block-level settings can override both. E.g. +1-805-123-4567",
+      description:
+        "Primary phone number shown on the site and used in SEO JSON-LD. If a Wodify API token is configured, the site's default phone will come from your primary Wodify location; this field overrides the Wodify value. Block-level settings can override both. E.g. +1-805-123-4567",
       validation: (rule) => rule.min(7).warning("Provide a valid phone number"),
     }),
     defineField({
       name: "address",
       type: "object",
       title: "Address",
-      description: "Business address used on the site and in SEO JSON-LD. If a Wodify API token is configured, the site's default address will pull from your primary Wodify location; values set here override the Wodify address. Block-level settings can override both.",
+      description:
+        "Business address used on the site and in SEO JSON-LD. If a Wodify API token is configured, the site's default address will pull from your primary Wodify location; values set here override the Wodify address. Block-level settings can override both.",
       fields: [
         defineField({
           name: "street",
           type: "string",
           title: "Street Address",
-          validation: (rule) => rule.required().warning("Street is recommended"),
+          validation: (rule) =>
+            rule.required().warning("Street is recommended"),
         }),
         defineField({
           name: "city",
@@ -147,7 +151,8 @@ export const settings = defineType({
           name: "placeId",
           type: "string",
           title: "Google Place ID",
-          description: "Optional: Google Maps Place ID for precise map and directions",
+          description:
+            "Optional: Google Maps Place ID for precise map and directions",
         }),
       ],
     }),
@@ -155,7 +160,8 @@ export const settings = defineType({
       name: "hours",
       type: "array",
       title: "Hours of Operation",
-      description: "Weekly hours displayed in Contact Us and used across the site",
+      description:
+        "Weekly hours displayed in Contact Us and used across the site",
       of: [
         defineField({
           name: "dayHours",
@@ -180,9 +186,22 @@ export const settings = defineType({
               },
               validation: (Rule) => Rule.required(),
             }),
-            defineField({ name: "closed", type: "boolean", title: "Closed", initialValue: false }),
-            defineField({ name: "open", type: "string", title: "Opens (e.g. 5:30 AM)" }),
-            defineField({ name: "close", type: "string", title: "Closes (e.g. 8:00 PM)" }),
+            defineField({
+              name: "closed",
+              type: "boolean",
+              title: "Closed",
+              initialValue: false,
+            }),
+            defineField({
+              name: "open",
+              type: "string",
+              title: "Opens (e.g. 5:30 AM)",
+            }),
+            defineField({
+              name: "close",
+              type: "string",
+              title: "Closes (e.g. 8:00 PM)",
+            }),
           ],
         }),
       ],
@@ -199,7 +218,8 @@ export const settings = defineType({
       title: "Wodify API Token",
       description:
         "Sensitive: Token used by the website server to call the Wodify API. Do not expose this value publicly. It is only read server-side.",
-      validation: (rule) => rule.min(10).warning("Paste a valid Wodify API token"),
+      validation: (rule) =>
+        rule.min(10).warning("Paste a valid Wodify API token"),
       options: {
         // Studio-only hint to reduce accidental exposure
         // (Note: this does not enforce server-side security; keep dataset private if possible.)

@@ -16,7 +16,6 @@ function printSeedDataImportInstructions() {
    * Strips ANSI codes to calculate visible length.
    */
   function padLine(text = ""): string {
-    // biome-ignore lint/suspicious/noControlCharactersInRegex: control characters are used for styling
     const visibleLength = text.replace(/\x1b\[[0-9;]*m/g, "").length;
     const totalPadding = BOX_WIDTH - visibleLength;
     const left = " ".repeat(SIDE_PADDING);
@@ -36,16 +35,16 @@ function printSeedDataImportInstructions() {
     "",
     `┌${"─".repeat(BOX_WIDTH)}┐`,
     padLine(
-      `${COLOR_BLUE}To import the provided seed data into your Sanity dataset, run:${COLOR_RESET}`
+      `${COLOR_BLUE}To import the provided seed data into your Sanity dataset, run:${COLOR_RESET}`,
     ),
     padLine(),
     padLine(
-      `${COLOR_BLUE}${styleCommand("cd apps/studio && npx sanity dataset import seed-data.tar.gz <TARGET_DATASET>")}${COLOR_RESET}`
+      `${COLOR_BLUE}${styleCommand("cd apps/studio && npx sanity dataset import seed-data.tar.gz <TARGET_DATASET>")}${COLOR_RESET}`,
     ),
     padLine(),
     padLine(`${COLOR_BLUE}Example:${COLOR_RESET}`),
     padLine(
-      `${COLOR_BLUE}${styleCommand("cd apps/studio && npx sanity dataset import seed-data.tar.gz production --replace")}${COLOR_RESET}`
+      `${COLOR_BLUE}${styleCommand("cd apps/studio && npx sanity dataset import seed-data.tar.gz production --replace")}${COLOR_RESET}`,
     ),
     padLine(),
     `└${"─".repeat(BOX_WIDTH)}┘`,

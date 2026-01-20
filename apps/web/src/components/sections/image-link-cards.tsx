@@ -35,8 +35,8 @@ export function ImageLinkCards({
                   className={cn(
                     idx === 0 && "lg:rounded-r-none lg:rounded-l-3xl",
                     idx === cards.length - 1 &&
-                    "lg:rounded-r-3xl lg:rounded-l-none",
-                    idx !== 0 && idx !== cards.length - 1 && "lg:rounded-none"
+                      "lg:rounded-r-3xl lg:rounded-l-none",
+                    idx !== 0 && idx !== cards.length - 1 && "lg:rounded-none",
                   )}
                   key={card._key}
                 />

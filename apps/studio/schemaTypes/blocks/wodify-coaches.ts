@@ -48,8 +48,7 @@ export const wodifyCoaches = defineType({
           title: "Services",
           type: "array",
           of: [{ type: "string" }],
-          description:
-            "Optional list of services to filter coaches by.",
+          description: "Optional list of services to filter coaches by.",
         }),
       ],
     }),

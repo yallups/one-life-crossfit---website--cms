@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wodify API Endpoint Testing</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      color: #333;
+      margin-top: 0;
+    }
+
+    h2 {
+      color: #555;
+      margin-top: 30px;
+      border-bottom: 2px solid #007bff;
+      padding-bottom: 10px;
+    }
+
+    .test-section {
+      margin-bottom: 30px;
+      padding: 20px;
+      background: #f9f9f9;
+      border-radius: 4px;
+      border-left: 4px solid #007bff;
+    }
+
+    .test-section h3 {
+      margin-top: 0;
+      color: #333;
+    }
+
+    .endpoint {
+      font-family: 'Courier New', monospace;
+      background: #e9ecef;
+      padding: 10px;
+      border-radius: 4px;
+      margin: 10px 0;
+      word-break: break-all;
+    }
+
+    .result {
+      background: #2d2d2d;
+      color: #f8f8f2;
+      padding: 15px;
+      border-radius: 4px;
+      overflow-x: auto;
+      font-size: 13px;
+      max-height: 400px;
+      margin-top: 10px;
+    }
+
+    .success {
+      background: #d4edda;
+      border-left: 4px solid #28a745;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 4px;
+      color: #155724;
+    }
+
+    .error {
+      background: #f8d7da;
+      border-left: 4px solid #dc3545;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 4px;
+      color: #721c24;
+    }
+
+    .warning {
+      background: #fff3cd;
+      border-left: 4px solid #ffc107;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 4px;
+      color: #856404;
+    }
+
+    button {
+      background: #007bff;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      margin: 5px 5px 5px 0;
+    }
+
+    button:hover {
+      background: #0056b3;
+    }
+
+    button:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+
+    .params {
+      background: white;
+      border: 1px solid #ddd;
+      padding: 10px;
+      border-radius: 4px;
+      margin: 10px 0;
+    }
+
+    .stat {
+      display: inline-block;
+      background: #007bff;
+      color: white;
+      padding: 5px 10px;
+      border-radius: 4px;
+      margin: 5px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>🧪 Wodify API Endpoint Testing</h1>
+  <p>This page tests all Wodify API endpoints with various parameters to ensure they're working correctly.</p>
+
+  <button onclick="runAllTests()">🚀 Run All Tests</button>
+  <button onclick="clearResults()">🗑️ Clear Results</button>
+
+  <div id="results"></div>
+</div>
+
+<script>
+  const today = new Date().toISOString().split('T')[0];
+  const nextWeek = new Date();
+  nextWeek.setDate(nextWeek.getDate() + 7);
+  const nextWeekStr = nextWeek.toISOString().split('T')[0];
+
+  const tests = [
+    {
+      name: 'Locations',
+      endpoint: '/api/wodify/locations',
+      params: {},
+      description: 'Fetch all locations'
+    },
+    {
+      name: 'Programs',
+      endpoint: '/api/wodify/programs',
+      params: {},
+      description: 'Fetch all programs'
+    },
+    {
+      name: 'Coaches',
+      endpoint: '/api/wodify/coaches',
+      params: {},
+      description: 'Fetch all coaches'
+    },
+    {
+      name: 'Classes - Basic',
+      endpoint: '/api/wodify/classes',
+      params: {startDate: today, endDate: nextWeekStr},
+      description: 'Fetch classes for next 7 days'
+    },
+    {
+      name: 'Classes - With Program ID',
+      endpoint: '/api/wodify/classes',
+      params: {startDate: today, endDate: nextWeekStr, programId: '93798'},
+      description: 'Fetch classes filtered by program ID 93798'
+    },
+    {
+      name: 'Classes - With Sort',
+      endpoint: '/api/wodify/classes',
+      params: {startDate: today, endDate: nextWeekStr, sort: 'start_date_time'},
+      description: 'Fetch classes sorted by start time (ascending)'
+    },
+    {
+      name: 'Classes - Desc Sort',
+      endpoint: '/api/wodify/classes',
+      params: {startDate: '2025-12-25', endDate: '2026-01-01', sort: 'desc_start_date_time', programId: '93798'},
+      description: 'Your failing query - sorted desc with program filter'
+    },
+    {
+      name: 'Workouts - Basic',
+      endpoint: '/api/wodify/workouts',
+      params: {startDate: today, endDate: nextWeekStr},
+      description: 'Fetch workouts for next 7 days'
+    },
+    {
+      name: 'Workouts - With Program Name',
+      endpoint: '/api/wodify/workouts',
+      params: {startDate: '2025-12-20', endDate: '2025-12-24', programId: 'Bootcamp'},
+      description: 'Your failing query - Bootcamp program by name'
+    },
+    {
+      name: 'Workouts - With Program ID',
+      endpoint: '/api/wodify/workouts',
+      params: {startDate: '2025-12-20', endDate: '2025-12-24', programId: '93798'},
+      description: 'Bootcamp by numeric ID'
+    },
+    {
+      name: 'Announcements',
+      endpoint: '/api/wodify/announcements',
+      params: {},
+      description: 'Fetch announcements (may not be available)'
+    },
+    {
+      name: 'Availability',
+      endpoint: '/api/wodify/availability',
+      params: {startDate: today, endDate: nextWeekStr},
+      description: 'Fetch booking availability (may not be available)'
+    }
+  ];
+
+  async function runTest(test) {
+    const url = new URL(test.endpoint, window.location.origin);
+    Object.entries(test.params).forEach(([key, value]) => {
+      url.searchParams.set(key, value);
+    });
+
+    const startTime = Date.now();
+    try {
+      const response = await fetch(url.toString());
+      const duration = Date.now() - startTime;
+      const data = await response.json();
+
+      return {
+        success: response.ok,
+        status: response.status,
+        duration,
+        data,
+        url: url.toString()
+      };
+    } catch (error) {
+      const duration = Date.now() - startTime;
+      return {
+        success: false,
+        status: 0,
+        duration,
+        error: error.message,
+        url: url.toString()
+      };
+    }
+  }
+
+  function displayResult(test, result) {
+    const resultsDiv = document.getElementById('results');
+    const section = document.createElement('div');
+    section.className = 'test-section';
+
+    let html = `<h3>${test.name}</h3>`;
+    html += `<p>${test.description}</p>`;
+    html += `<div class="endpoint">${result.url}</div>`;
+
+    if (result.success) {
+      const itemCount = result.data.items?.length || 0;
+      const statusClass = itemCount > 0 ? 'success' : 'warning';
+      const statusText = itemCount > 0 ? '✅ Success' : '⚠️ Empty Result';
+
+      html += `<div class="${statusClass}">`;
+      html += `<strong>${statusText}</strong> - Status: ${result.status} - Duration: ${result.duration}ms`;
+      html += `</div>`;
+
+      html += `<div class="params">`;
+      html += `<span class="stat">Items: ${itemCount}</span>`;
+      if (result.data.pagination) {
+        html += `<span class="stat">Has More: ${result.data.pagination.has_more || false}</span>`;
+      }
+      html += `</div>`;
+
+      html += `<details>`;
+      html += `<summary style="cursor: pointer; padding: 10px; background: #e9ecef; border-radius: 4px; margin: 10px 0;">View Full Response</summary>`;
+      html += `<div class="result">${JSON.stringify(result.data, null, 2)}</div>`;
+      html += `</details>`;
+    } else {
+      html += `<div class="error">`;
+      html += `<strong>❌ Failed</strong> - Status: ${result.status} - Duration: ${result.duration}ms`;
+      if (result.error) html += `<br>Error: ${result.error}`;
+      html += `</div>`;
+      if (result.data) {
+        html += `<div class="result">${JSON.stringify(result.data, null, 2)}</div>`;
+      }
+    }
+
+    section.innerHTML = html;
+    resultsDiv.appendChild(section);
+  }
+
+  async function runAllTests() {
+    const resultsDiv = document.getElementById('results');
+    resultsDiv.innerHTML = '<div class="warning"><strong>🔄 Running tests...</strong> Please wait.</div>';
+
+    for (const test of tests) {
+      const result = await runTest(test);
+      displayResult(test, result);
+    }
+
+    // Add summary
+    const summary = document.createElement('div');
+    summary.className = 'success';
+    summary.innerHTML = '<strong>✅ All tests completed!</strong> Review results above.';
+    resultsDiv.insertBefore(summary, resultsDiv.firstChild);
+  }
+
+  function clearResults() {
+    document.getElementById('results').innerHTML = '';
+  }
+
+  // Run tests on load
+  window.addEventListener('load', runAllTests);
+</script>
+</body>
+</html>

@@ -1,3 +1,4 @@
+import { contactUs } from "./contact-us";
 import { cta } from "./cta";
 import { faqAccordion } from "./faq-accordion";
 import { featureCardsIcon } from "./feature-cards-icon";
@@ -8,7 +9,8 @@ import { layout } from "./layout";
 import { logos } from "./logos";
 import { subscribeNewsletter } from "./subscribe-newsletter";
 import { wodifyCoaches } from "./wodify-coaches";
-import { contactUs } from "./contact-us";
+import { wodifySchedule } from "./wodify-schedule";
+import { wodifyWod } from "./wodify-wod";
 
 export const pageBuilderBlocks = [
   hero,
@@ -21,5 +23,7 @@ export const pageBuilderBlocks = [
   subscribeNewsletter,
   googleReviews,
   wodifyCoaches,
+  wodifySchedule,
+  wodifyWod,
   contactUs,
 ];

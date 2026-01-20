@@ -1,6 +1,6 @@
-"use client"
-import { useEffect, useMemo, useRef, useState } from "react";
+"use client";
 import { useTheme } from "next-themes";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useIsMobile } from "@/hooks/use-is-mobile";
 
 // Important: keep the initial SSR and the first client render identical
@@ -14,20 +14,21 @@ export function Schedule() {
   const { resolvedTheme } = useTheme();
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
   const [height, setHeight] = useState<number>(INITIAL_IFRAME_HEIGHT);
-  const isMobile = useIsMobile()
+  const isMobile = useIsMobile();
 
   // Build the src only from stable values; the theme param may change,
   // but that will just reload the iframe. That doesn't affect hydration.
-  const src = useMemo(() =>
-      `${IFRAME_ORIGIN}/OnlineSalesPage/WebIntegration?IsDarkMode=${resolvedTheme === 'dark' ? 'True' : 'False'}&LocationId=9721&&ProgramId=124903,93813,93798,125629,121385,104287,117637`,
-    [resolvedTheme]
+  const src = useMemo(
+    () =>
+      `${IFRAME_ORIGIN}/OnlineSalesPage/WebIntegration?IsDarkMode=${resolvedTheme === "dark" ? "True" : "False"}&LocationId=9721&&ProgramId=124903,93813,93798,125629,121385,104287,117637`,
+    [resolvedTheme],
   );
 
   useEffect(() => {
     if (isMobile) {
       setHeight((h) => Math.max(h, MOBILE_IFRAME_HEIGHT));
     }
-  }, [isMobile])
+  }, [isMobile]);
 
   return (
     <section className="my-6 md:my-16 w-full" id="schedule">
@@ -40,5 +41,5 @@ export function Schedule() {
         style={{ display: "block", border: 0 }}
       />
     </section>
-  )
+  );
 }

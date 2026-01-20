@@ -1,16 +1,21 @@
 "use client";
 
-import Image from "next/image";
 import {
   Sheet,
   SheetContent,
   SheetDescription,
   SheetFooter,
   SheetHeader,
-  SheetTitle
+  SheetTitle,
 } from "@workspace/ui/components/sheet";
+import Image from "next/image";
+import {
+  CoachLinks,
+  CoachMetaBadges,
+  getCoachLinks,
+  splitCSV,
+} from "./coach-parts";
 import type { WodifyCoach } from "./coach-types";
-import { CoachLinks, CoachMetaBadges, getCoachLinks, splitCSV } from "./coach-parts";
 
 export function CoachModal({
   open,
@@ -25,13 +30,16 @@ export function CoachModal({
   showLinks?: boolean;
   side?: "top" | "right" | "bottom" | "left" | "center";
 }) {
-  if (!coach) return (
-    <Sheet open={open} onOpenChange={onOpenChangeAction}>
-      <SheetContent side={side} aria-hidden />
-    </Sheet>
-  );
+  if (!coach)
+    return (
+      <Sheet open={open} onOpenChange={onOpenChangeAction}>
+        <SheetContent side={side} aria-hidden />
+      </Sheet>
+    );
 
-  const fullName = [coach.first_name, coach.last_name].filter(Boolean).join(" ");
+  const fullName = [coach.first_name, coach.last_name]
+    .filter(Boolean)
+    .join(" ");
   const programs = splitCSV(coach.programs);
   const services = splitCSV(coach.services);
   const links = getCoachLinks(coach);
@@ -43,7 +51,13 @@ export function CoachModal({
           <div className="flex gap-4 p-5">
             <div className="relative aspect-square h-28 w-28 shrink-0 overflow-hidden rounded-xl bg-muted">
               {coach.picture_url ? (
-                <Image src={coach.picture_url} alt={fullName} fill sizes="112px" className="object-cover" />
+                <Image
+                  src={coach.picture_url}
+                  alt={fullName}
+                  fill
+                  sizes="112px"
+                  className="object-cover"
+                />
               ) : (
                 <div className="grid h-full w-full place-items-center text-muted-foreground">
                   <span className="text-2xl">👤</span>
@@ -52,7 +66,9 @@ export function CoachModal({
             </div>
             <div className="min-w-0 flex-1">
               <SheetHeader className="p-0">
-                <SheetTitle className="truncate text-xl font-semibold leading-tight">{fullName}</SheetTitle>
+                <SheetTitle className="truncate text-xl font-semibold leading-tight">
+                  {fullName}
+                </SheetTitle>
                 {coach.title && (
                   <SheetDescription className="text-muted-foreground">
                     {coach.title}

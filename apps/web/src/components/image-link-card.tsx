@@ -21,14 +21,13 @@ export function CTACard({ card, className }: CTACardProps) {
     <Comp
       className={cn(
         "group relative flex flex-col space-y-2 overflow-hidden rounded-3xl p-4 md:p-6 bg-card text-card-foreground border shadow",
-        className
+        className,
       )}
       href={href ?? "#"}
     >
       {image?.id && (
         <SanityImage
           className="-inset-4 pointer-events-none object-cover"
-          height={1080 / 6}
           image={image}
           loading="eager"
           width={1920 / 6}

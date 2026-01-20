@@ -11,7 +11,7 @@ import slugify from "slugify";
 import type { PathnameParams } from "./types";
 
 export function defineSlug(
-  schema: PathnameParams = { name: "slug" }
+  schema: PathnameParams = { name: "slug" },
 ): FieldDefinition<"slug"> {
   const slugOptions = schema?.options;
 
@@ -33,7 +33,7 @@ export function defineSlug(
 
 export async function isUnique(
   slug: string,
-  context: SlugValidationContext
+  context: SlugValidationContext,
 ): Promise<boolean> {
   const { document, getClient } = context;
   const client = getClient({ apiVersion: "2025-02-10" });

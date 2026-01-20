@@ -2,9 +2,9 @@
 
 import { cn } from "@workspace/ui/lib/utils";
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
+import type Slick from "react-slick";
 import type { SanityImageProps } from "@/types";
 import { SanityImage } from "../elements/sanity-image";
-import type Slick from "react-slick";
 
 const Slider = lazy(() => import("react-slick"));
 
@@ -46,7 +46,10 @@ export function MediaDisplay({
     return [...imageItems, ...videoItems];
   }, [images, videos]);
 
-  const firstImage = useMemo(() => items.find(({ type }) => type === 'image'), [items]);
+  const firstImage = useMemo(
+    () => items.find(({ type }) => type === "image"),
+    [items],
+  );
 
   const [index, setIndex] = useState(0);
   const sliderRef = useRef<Slick | null>(null);
@@ -74,7 +77,7 @@ export function MediaDisplay({
             autoPlay
             className={cn(
               `${rounded ? "rounded-3xl" : ""} h-full w-full object-cover`,
-              itemClassName
+              itemClassName,
             )}
             loop
             muted
@@ -91,7 +94,7 @@ export function MediaDisplay({
           className={cn(
             "w-full object-cover",
             rounded && "rounded-3xl",
-            itemClassName
+            itemClassName,
           )}
           fetchPriority="high"
           height={800}
@@ -109,15 +112,22 @@ export function MediaDisplay({
       className={cn(
         "relative w-full overflow-hidden",
         heightClassName,
-        className
+        className,
       )}
     >
-      <Suspense fallback={
-        <div className={heightClassName} aria-busy="true">
-          {firstImage &&
-            <SingleMedia current={firstImage} heightClassName={heightClassName} itemClassName={itemClassName} />}
-        </div>
-      }>
+      <Suspense
+        fallback={
+          <div className={heightClassName} aria-busy="true">
+            {firstImage && (
+              <SingleMedia
+                current={firstImage}
+                heightClassName={heightClassName}
+                itemClassName={itemClassName}
+              />
+            )}
+          </div>
+        }
+      >
         <Slider
           afterChange={(next) => {
             const item = items[next];
@@ -155,7 +165,7 @@ export function MediaDisplay({
                   className={cn(
                     "h-full w-full object-cover",
                     rounded && "rounded-3xl",
-                    itemClassName
+                    itemClassName,
                   )}
                   fetchPriority={idx === 0 ? "high" : "auto"}
                   height={1200}
@@ -172,7 +182,7 @@ export function MediaDisplay({
                   className={cn(
                     "h-full w-full object-cover",
                     rounded && "rounded-3xl",
-                    itemClassName
+                    itemClassName,
                   )}
                   loop={false}
                   muted
@@ -219,7 +229,7 @@ export function SingleMedia({
           autoPlay
           className={cn(
             `${rounded ? "rounded-3xl" : ""} h-full w-full object-cover`,
-            itemClassName
+            itemClassName,
           )}
           loop
           muted
@@ -236,7 +246,7 @@ export function SingleMedia({
         className={cn(
           "w-full object-cover",
           rounded && "rounded-3xl",
-          itemClassName
+          itemClassName,
         )}
         fetchPriority="high"
         height={800}

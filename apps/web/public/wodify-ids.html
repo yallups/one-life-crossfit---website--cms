@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wodify IDs - One Life CrossFit</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      color: #333;
+      margin-top: 0;
+    }
+
+    h2 {
+      color: #555;
+      margin-top: 30px;
+      border-bottom: 2px solid #007bff;
+      padding-bottom: 10px;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 40px;
+      color: #666;
+    }
+
+    .spinner {
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid #007bff;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 20px;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    .success {
+      background: #d4edda;
+      border-left: 4px solid #28a745;
+      padding: 15px;
+      margin: 20px 0;
+      border-radius: 4px;
+      color: #155724;
+    }
+
+    .error {
+      background: #fee;
+      border-left: 4px solid #d00;
+      padding: 15px;
+      margin: 20px 0;
+      border-radius: 4px;
+      color: #c00;
+    }
+
+    .info {
+      background: #d1ecf1;
+      border-left: 4px solid #17a2b8;
+      padding: 15px;
+      margin: 20px 0;
+      border-radius: 4px;
+    }
+
+    .result-section {
+      margin-bottom: 30px;
+      padding: 20px;
+      background: #f9f9f9;
+      border-radius: 4px;
+      border-left: 4px solid #007bff;
+    }
+
+    .result-section h3 {
+      margin-top: 0;
+      color: #333;
+    }
+
+    .id-list {
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 15px;
+    }
+
+    .id-item {
+      padding: 10px;
+      border-bottom: 1px solid #eee;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .id-item:last-child {
+      border-bottom: none;
+    }
+
+    .id-badge {
+      background: #007bff;
+      color: white;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-family: monospace;
+      font-size: 14px;
+    }
+
+    pre {
+      background: #2d2d2d;
+      color: #f8f8f2;
+      padding: 15px;
+      border-radius: 4px;
+      overflow-x: auto;
+      font-size: 13px;
+      max-height: 400px;
+    }
+
+    button {
+      background: #007bff;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background: #0056b3;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>🏋️ Wodify IDs - One Life CrossFit</h1>
+  <p>This page fetches all your Wodify identifiers through your backend API. Use these IDs when configuring Sanity
+    blocks.</p>
+
+  <div class="info">
+    <strong>💡 Note:</strong> This page calls your backend API routes which are already authenticated with your Wodify
+    API key. No need to enter anything!
+  </div>
+
+  <div id="content">
+    <div class="loading">
+      <div class="spinner"></div>
+      <p>Loading data from Wodify...</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  async function fetchAllData() {
+    const content = document.getElementById('content');
+
+    try {
+      // Fetch all data in parallel
+      const [locations, programs, coaches, classes] = await Promise.all([
+        fetch('/api/wodify/locations').then(r => r.json()).catch(e => ({error: e.message, items: []})),
+        fetch('/api/wodify/programs').then(r => r.json()).catch(e => ({error: e.message, items: []})),
+        fetch('/api/wodify/coaches').then(r => r.json()).catch(e => ({error: e.message, items: []})),
+        fetch('/api/wodify/classes?startDate=2025-12-24&endDate=2026-01-24&page_size=50')
+            .then(r => r.json()).catch(e => ({error: e.message, items: []}))
+      ]);
+
+      // Extract programs from classes if programs endpoint failed
+      const programsFromClasses = new Map();
+      (classes.items || []).forEach(c => {
+        if (c.program_id && c.program_name) {
+          programsFromClasses.set(String(c.program_id), c.program_name);
+        }
+      });
+
+      let html = '<div class="success"><strong>✅ Success!</strong> Data loaded from your backend API.</div>';
+
+      // Locations
+      html += '<div class="result-section">';
+      html += '<h3>📍 Locations</h3>';
+      if (locations.error) {
+        html += `<div class="error">Error: ${locations.error}</div>`;
+      } else if (locations.items && locations.items.length > 0) {
+        html += '<div class="id-list">';
+        locations.items.forEach(loc => {
+          html += '<div class="id-item">';
+          html += `<div><strong>${loc.name || 'Unknown'}</strong><br><small>${loc.formatted_address || loc.street_address_1 || ''}</small></div>`;
+          html += `<span class="id-badge">${loc.id}</span>`;
+          html += '</div>';
+        });
+        html += '</div>';
+        html += '<button onclick="copyJSON(' + JSON.stringify(locations.items).replace(/"/g, '&quot;') + ')">Copy JSON</button>';
+      } else {
+        html += '<p>No locations found</p>';
+      }
+      html += '</div>';
+
+      // Programs
+      html += '<div class="result-section">';
+      html += '<h3>📚 Programs</h3>';
+      if (programs.error && programsFromClasses.size === 0) {
+        html += `<div class="error">Programs endpoint not available. Extracted from classes below.</div>`;
+      }
+
+      const programList = [];
+      if (programs.items && programs.items.length > 0) {
+        programList.push(...programs.items);
+      } else if (programsFromClasses.size > 0) {
+        programsFromClasses.forEach((name, id) => {
+          programList.push({id, name});
+        });
+      }
+
+      if (programList.length > 0) {
+        html += '<div class="id-list">';
+        programList.forEach(prog => {
+          html += '<div class="id-item">';
+          html += `<div><strong>${prog.name || 'Unknown'}</strong></div>`;
+          html += `<span class="id-badge">${prog.id}</span>`;
+          html += '</div>';
+        });
+        html += '</div>';
+        html += '<p><em>Use these Program IDs in your Sanity blocks (Schedule, WOD, etc.)</em></p>';
+        html += '<button onclick="copyJSON(' + JSON.stringify(programList).replace(/"/g, '&quot;') + ')">Copy JSON</button>';
+      } else {
+        html += '<p>No programs found</p>';
+      }
+      html += '</div>';
+
+      // Coaches
+      html += '<div class="result-section">';
+      html += '<h3>👥 Coaches</h3>';
+      if (coaches.error) {
+        html += `<div class="error">Error: ${coaches.error}</div>`;
+      } else if (coaches.items && coaches.items.length > 0) {
+        html += '<div class="id-list">';
+        coaches.items.forEach(coach => {
+          const name = `${coach.first_name || ''} ${coach.last_name || ''}`.trim() || 'Unknown';
+          html += '<div class="id-item">';
+          html += `<div>`;
+          html += `<strong>${name}</strong>`;
+          if (coach.programs) html += `<br><small>Programs: ${coach.programs}</small>`;
+          if (coach.services) html += `<br><small>Services: ${coach.services}</small>`;
+          html += `</div>`;
+          html += `<span class="id-badge">${coach.id}</span>`;
+          html += '</div>';
+        });
+        html += '</div>';
+        html += '<button onclick="copyJSON(' + JSON.stringify(coaches.items).replace(/"/g, '&quot;') + ')">Copy JSON</button>';
+      } else {
+        html += '<p>No coaches found</p>';
+      }
+      html += '</div>';
+
+      // Full JSON
+      html += '<div class="result-section">';
+      html += '<h3>📋 Complete Data (JSON)</h3>';
+      html += '<p>Full JSON export of all data:</p>';
+      const fullData = {locations, programs, programsFromClasses: Array.from(programsFromClasses.entries()), coaches};
+      html += '<pre>' + JSON.stringify(fullData, null, 2) + '</pre>';
+      html += '<button onclick="copyJSON(' + JSON.stringify(fullData).replace(/"/g, '&quot;') + ')">Copy All JSON</button>';
+      html += '</div>';
+
+      content.innerHTML = html;
+
+    } catch (error) {
+      content.innerHTML = '<div class="error"><strong>❌ Error:</strong> ' + error.message + '</div>';
+    }
+  }
+
+  function copyJSON(data) {
+    const json = typeof data === 'string' ? data : JSON.stringify(data, null, 2);
+    navigator.clipboard.writeText(json).then(() => {
+      alert('✅ JSON copied to clipboard!');
+    }).catch(() => {
+      alert('❌ Failed to copy. Please copy manually from the page.');
+    });
+  }
+
+  // Auto-load on page load
+  document.addEventListener('DOMContentLoaded', fetchAllData);
+</script>
+</body>
+</html>

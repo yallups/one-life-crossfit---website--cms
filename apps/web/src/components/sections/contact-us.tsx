@@ -1,9 +1,9 @@
-import type { Maybe } from "@/types";
 import { Badge } from "@workspace/ui/components/badge";
 import { Button } from "@workspace/ui/components/button";
-import { Mail, MapPinned, Phone } from "lucide-react";
 import { cn } from "@workspace/ui/lib/utils";
+import { Mail, MapPinned, Phone } from "lucide-react";
 import { RichText } from "@/components/elements/rich-text";
+import type { Maybe } from "@/types";
 
 // Types are relaxed to avoid requiring a regenerate of sanity.types.ts
 // Matches fields selected in GROQ contactUsBlock + defaults from settings
@@ -15,16 +15,32 @@ export type ContactUsBlock = {
   richText?: any;
   email?: Maybe<string>;
   telephone?: Maybe<string>;
-  address?: Maybe<{ street?: string; city?: string; state?: string; zip?: string; placeId?: string }>;
-  hours?: Maybe<Array<{ day?: string; closed?: boolean; open?: string; close?: string }>>;
+  address?: Maybe<{
+    street?: string;
+    city?: string;
+    state?: string;
+    zip?: string;
+    placeId?: string;
+  }>;
+  hours?: Maybe<
+    Array<{ day?: string; closed?: boolean; open?: string; close?: string }>
+  >;
   showMap?: boolean;
   mapQuery?: Maybe<string>;
   googleMapsUrl?: Maybe<string>;
   defaults?: Maybe<{
     email?: Maybe<string>;
     telephone?: Maybe<string>;
-    address?: Maybe<{ street?: string; city?: string; state?: string; zip?: string; placeId?: string }>;
-    hours?: Maybe<Array<{ day?: string; closed?: boolean; open?: string; close?: string }>>;
+    address?: Maybe<{
+      street?: string;
+      city?: string;
+      state?: string;
+      zip?: string;
+      placeId?: string;
+    }>;
+    hours?: Maybe<
+      Array<{ day?: string; closed?: boolean; open?: string; close?: string }>
+    >;
   }>;
 };
 
@@ -40,7 +56,11 @@ const DAY_ORDER = [
 
 function formatAddress(addr?: ContactUsBlock["address"] | null): string | null {
   if (!addr) return null;
-  const parts = [addr.street, [addr.city, addr.state].filter(Boolean).join(", "), addr.zip]
+  const parts = [
+    addr.street,
+    [addr.city, addr.state].filter(Boolean).join(", "),
+    addr.zip,
+  ]
     .filter(Boolean)
     .join("\n");
   return parts || null;
@@ -48,9 +68,10 @@ function formatAddress(addr?: ContactUsBlock["address"] | null): string | null {
 
 function buildMapsQuery(
   address: ContactUsBlock["address"] | null | undefined,
-  overrideQuery?: string | null
+  overrideQuery?: string | null,
 ): string | null {
-  if (overrideQuery && overrideQuery.trim().length > 0) return overrideQuery.trim();
+  if (overrideQuery && overrideQuery.trim().length > 0)
+    return overrideQuery.trim();
   if (!address) return null;
   const parts = [address.street, address.city, address.state, address.zip]
     .filter(Boolean)
@@ -61,7 +82,7 @@ function buildMapsQuery(
 function buildEmbedSrc(params: {
   placeId?: string | null;
   query?: string | null | undefined;
-  apiKey?: string
+  apiKey?: string;
 }): string | null {
   const { placeId, query, apiKey } = params;
   if (!apiKey) return null;
@@ -77,7 +98,7 @@ function buildEmbedSrc(params: {
 function buildDirectionsHref(
   address: ContactUsBlock["address"] | null | undefined,
   mapsUrl?: string | null,
-  query?: string | null
+  query?: string | null,
 ): string | null {
   if (mapsUrl && mapsUrl.trim().length > 0) return mapsUrl.trim();
   const base = "https://www.google.com/maps/dir/?api=1";
@@ -85,7 +106,7 @@ function buildDirectionsHref(
   if (placeId) {
     return `${base}&destination_place_id=${encodeURIComponent(placeId)}&destination=One Life CrossFit`;
   }
-  return `${base}&destination=${encodeURIComponent(buildMapsQuery(address, query) ?? '')}`;
+  return `${base}&destination=${encodeURIComponent(buildMapsQuery(address, query) ?? "")}`;
 }
 
 function HoursTable({ hours }: { hours?: ContactUsBlock["hours"] | null }) {
@@ -101,14 +122,17 @@ function HoursTable({ hours }: { hours?: ContactUsBlock["hours"] | null }) {
       <dl className="grid grid-cols-1 gap-2 sm:grid-cols-2">
         {byDay.map((h) => {
           const d = (h.day || "").toLowerCase();
-          const title = d
-            ? d.charAt(0).toUpperCase() + d.slice(1)
-            : "Day";
+          const title = d ? d.charAt(0).toUpperCase() + d.slice(1) : "Day";
           return (
-            <div key={`${d}-${h.open}-${h.close}`} className="flex items-center justify-between rounded-md border p-3">
+            <div
+              key={`${d}-${h.open}-${h.close}`}
+              className="flex items-center justify-between rounded-md border p-3"
+            >
               <dt className="text-sm text-muted-foreground">{title}</dt>
               <dd className="text-sm font-medium">
-                {h.closed ? "Closed" : [h.open, h.close].filter(Boolean).join(" – ")}
+                {h.closed
+                  ? "Closed"
+                  : [h.open, h.close].filter(Boolean).join(" – ")}
               </dd>
             </div>
           );
@@ -120,40 +144,82 @@ function HoursTable({ hours }: { hours?: ContactUsBlock["hours"] | null }) {
 
 export function ContactUs(props: ContactUsBlock & { preloaded?: any }) {
   const wodify = (props as any)?.preloaded?.wodify as
-    | { telephone?: string; address?: ContactUsBlock["address"]; googleMapsUrl?: string }
+    | {
+        telephone?: string;
+        address?: ContactUsBlock["address"];
+        googleMapsUrl?: string;
+      }
     | undefined;
 
   // Precedence: block-level overrides > Settings defaults > Wodify defaults
   const email = props.email ?? props.defaults?.email ?? undefined;
-  const telephone = props.telephone ?? props.defaults?.telephone ?? wodify?.telephone ?? undefined;
+  const telephone =
+    props.telephone ??
+    props.defaults?.telephone ??
+    wodify?.telephone ??
+    undefined;
   const address = {
-    street: props.address?.street ?? props.defaults?.address?.street ?? wodify?.address?.street ?? undefined,
-    city: props.address?.city ?? props.defaults?.address?.city ?? wodify?.address?.city ?? undefined,
-    state: props.address?.state ?? props.defaults?.address?.state ?? wodify?.address?.state ?? undefined,
-    zip: props.address?.zip ?? props.defaults?.address?.zip ?? wodify?.address?.zip ?? undefined,
-    placeId: props.address?.placeId ?? props.defaults?.address?.placeId ?? wodify?.address?.placeId ?? undefined,
+    street:
+      props.address?.street ??
+      props.defaults?.address?.street ??
+      wodify?.address?.street ??
+      undefined,
+    city:
+      props.address?.city ??
+      props.defaults?.address?.city ??
+      wodify?.address?.city ??
+      undefined,
+    state:
+      props.address?.state ??
+      props.defaults?.address?.state ??
+      wodify?.address?.state ??
+      undefined,
+    zip:
+      props.address?.zip ??
+      props.defaults?.address?.zip ??
+      wodify?.address?.zip ??
+      undefined,
+    placeId:
+      props.address?.placeId ??
+      props.defaults?.address?.placeId ??
+      wodify?.address?.placeId ??
+      undefined,
   };
   const hours = props.hours ?? props.defaults?.hours ?? undefined;
 
   const query = buildMapsQuery(address, props.mapQuery);
   const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
   const embedSrc = buildEmbedSrc({ placeId: address?.placeId, query, apiKey });
-  const directionsHref = buildDirectionsHref(address, props.googleMapsUrl ?? wodify?.googleMapsUrl, query);
+  const directionsHref = buildDirectionsHref(
+    address,
+    props.googleMapsUrl ?? wodify?.googleMapsUrl,
+    query,
+  );
 
   const addressText = formatAddress(address);
 
   return (
-    <section className="px-4 py-8 sm:py-12 md:py-16" id={`contact-us-${props._key}`}>
+    <section
+      className="px-4 py-8 sm:py-12 md:py-16"
+      id={`contact-us-${props._key}`}
+    >
       <div className="container mx-auto">
         <div className="mx-auto max-w-5xl">
           {props.eyebrow && (
-            <Badge variant="secondary" className="mb-4">{props.eyebrow}</Badge>
+            <Badge variant="secondary" className="mb-4">
+              {props.eyebrow}
+            </Badge>
           )}
           {props.title && (
-            <h2 className="text-balance font-semibold text-3xl md:text-5xl">{props.title}</h2>
+            <h2 className="text-balance font-semibold text-3xl md:text-5xl">
+              {props.title}
+            </h2>
           )}
           {props.richText && (
-            <RichText className="mt-3 text-muted-foreground" richText={props.richText} />
+            <RichText
+              className="mt-3 text-muted-foreground"
+              richText={props.richText}
+            />
           )}
 
           <div className="mt-8 grid gap-8 lg:grid-cols-2">
@@ -161,7 +227,8 @@ export function ContactUs(props: ContactUsBlock & { preloaded?: any }) {
               {addressText && (
                 <div>
                   <div className="flex items-center gap-2 font-medium">
-                    <MapPinned className="size-4" aria-hidden /> <span>Address</span>
+                    <MapPinned className="size-4" aria-hidden />{" "}
+                    <span>Address</span>
                   </div>
                   <address className="mt-2 whitespace-pre-line not-italic text-sm text-muted-foreground">
                     {addressText}
@@ -169,7 +236,11 @@ export function ContactUs(props: ContactUsBlock & { preloaded?: any }) {
                   {directionsHref && (
                     <div className="mt-2">
                       <Button asChild size="sm" variant="outline">
-                        <a href={directionsHref} target="_blank" rel="noopener noreferrer">
+                        <a
+                          href={directionsHref}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
                           Get Directions
                         </a>
                       </Button>
@@ -185,7 +256,7 @@ export function ContactUs(props: ContactUsBlock & { preloaded?: any }) {
                       href={`tel:${telephone}`}
                       className={cn(
                         "flex items-center gap-3 rounded-md border p-3 transition-colors hover:bg-accent",
-                        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
                       )}
                     >
                       <Phone className="size-4" aria-hidden />
@@ -198,7 +269,7 @@ export function ContactUs(props: ContactUsBlock & { preloaded?: any }) {
                       href={`mailto:${email}`}
                       className={cn(
                         "flex items-center gap-3 rounded-md border p-3 transition-colors hover:bg-accent",
-                        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
                       )}
                     >
                       <Mail className="size-4" aria-hidden />

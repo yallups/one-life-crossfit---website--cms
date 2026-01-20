@@ -3,7 +3,12 @@
 import { useOptimistic } from "@sanity/visual-editing/react";
 import { createDataAttribute } from "next-sanity";
 import { useCallback, useMemo } from "react";
+import { ContactUs } from "@/components/sections/contact-us";
+import { GoogleReviews } from "@/components/sections/google-reviews";
 import { Logos } from "@/components/sections/logos";
+import { WodifyCoaches } from "@/components/sections/wodify-coaches";
+import { WodifySchedule } from "@/components/sections/wodify-schedule";
+import { WodifyWod } from "@/components/sections/wodify-wod";
 import { dataset, projectId, studioUrl } from "@/config";
 import type { QueryHomePageDataResult } from "@/lib/sanity/sanity.types";
 import type { PageBuilderBlockTypes, PagebuilderType } from "@/types";
@@ -14,9 +19,6 @@ import { HeroBlock } from "./sections/hero";
 import { ImageLinkCards } from "./sections/image-link-cards";
 import { LayoutBlock } from "./sections/layout";
 import { SubscribeNewsletter } from "./sections/subscribe-newsletter";
-import { GoogleReviews } from "@/components/sections/google-reviews";
-import { WodifyCoaches } from "@/components/sections/wodify-coaches";
-import { ContactUs } from "@/components/sections/contact-us";
 
 // More specific and descriptive type aliases
 type PageBuilderBlock = NonNullable<
@@ -57,7 +59,13 @@ const BLOCK_COMPONENTS = {
     PagebuilderType<"googleReviews">
   >,
   logos: Logos as React.ComponentType<PagebuilderType<"logos">>,
-  wodifyCoaches: WodifyCoaches as React.ComponentType<PagebuilderType<"wodifyCoaches">>,
+  wodifyCoaches: WodifyCoaches as React.ComponentType<
+    PagebuilderType<"wodifyCoaches">
+  >,
+  wodifySchedule: WodifySchedule as React.ComponentType<
+    PagebuilderType<"wodifySchedule">
+  >,
+  wodifyWod: WodifyWod as React.ComponentType<PagebuilderType<"wodifyWod">>,
   contactUs: ContactUs as React.ComponentType<PagebuilderType<"contactUs">>,
 } as const satisfies Record<PageBuilderBlockTypes, React.ComponentType<any>>;
 
@@ -107,7 +115,7 @@ function UnknownBlockError({
  */
 function useOptimisticPageBuilder(
   initialBlocks: PageBuilderBlock[],
-  documentId: string
+  documentId: string,
 ) {
   return useOptimistic<PageBuilderBlock[], any>(
     initialBlocks,
@@ -116,14 +124,18 @@ function useOptimisticPageBuilder(
         return action.document.pageBuilder;
       }
       return currentBlocks;
-    }
+    },
   );
 }
 
 /**
  * Custom hook for block component rendering logic
  */
-function useBlockRenderer(id: string, type: string, preloadedData?: Record<string, any>) {
+function useBlockRenderer(
+  id: string,
+  type: string,
+  preloadedData?: Record<string, any>,
+) {
   const createBlockDataAttribute = useCallback(
     (blockKey: string) =>
       createSanityDataAttribute({
@@ -131,16 +143,15 @@ function useBlockRenderer(id: string, type: string, preloadedData?: Record<strin
         type,
         path: `pageBuilder[_key=="${blockKey}"]`,
       }),
-    [id, type]
+    [id, type],
   );
 
   const renderBlock = useCallback(
     (block: PageBuilderBlock, _index: number) => {
       // Map _type to component. Allow fallback for newly added blocks not in type mapping yet.
-      let Component = BLOCK_COMPONENTS[
+      const Component = BLOCK_COMPONENTS[
         block._type as keyof typeof BLOCK_COMPONENTS
-        ] as React.ComponentType<any> | undefined;
-
+      ] as React.ComponentType<any> | undefined;
 
       if (!Component) {
         return (
@@ -170,7 +181,7 @@ function useBlockRenderer(id: string, type: string, preloadedData?: Record<strin
         </div>
       );
     },
-    [createBlockDataAttribute, preloadedData]
+    [createBlockDataAttribute, preloadedData],
   );
 
   return { renderBlock };
@@ -190,7 +201,7 @@ export function PageBuilder({
 
   const containerDataAttribute = useMemo(
     () => createSanityDataAttribute({ id, type, path: "pageBuilder" }),
-    [id, type]
+    [id, type],
   );
 
   if (!blocks.length) {

@@ -25,9 +25,12 @@ export function absoluteLinear(pointsPerUnit: number) {
 }
 
 export function relativeScaledMax(maxPoints: number) {
-  const fn = ({ improvement, topImprovementInDivision }: {
+  const fn = ({
+    improvement,
+    topImprovementInDivision,
+  }: {
     improvement: number;
-    topImprovementInDivision?: number
+    topImprovementInDivision?: number;
   }) => {
     if (!isFinite(improvement) || improvement <= 0) return 0;
     const top = topImprovementInDivision ?? 0;
@@ -44,6 +47,6 @@ export function clampValue(v: number, min = 0, max = Infinity) {
 }
 
 export function roundTo(v: number, decimals = 2) {
-  const p = Math.pow(10, decimals);
+  const p = 10 ** decimals;
   return Math.round(v * p) / p;
 }

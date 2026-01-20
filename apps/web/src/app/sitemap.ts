@@ -12,8 +12,12 @@ type Page = QuerySitemapDataResult["slugPages"][number];
 const baseUrl = getBaseUrl();
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const { data } = await sanityFetch({ query: querySitemapData, tags: ["sanity:sitemap"] });
-  const { slugPages, blogPages } = data ?? { slugPages: [], blogPages: [] } as QuerySitemapDataResult;
+  const { data } = await sanityFetch({
+    query: querySitemapData,
+    tags: ["sanity:sitemap"],
+  });
+  const { slugPages, blogPages } =
+    data ?? ({ slugPages: [], blogPages: [] } as QuerySitemapDataResult);
   return [
     {
       url: baseUrl,
