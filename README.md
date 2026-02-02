@@ -34,105 +34,100 @@ A modern, full-stack monorepo template built with Next.js App Router, Sanity CMS
 ## TODO
 
 - [ ] List styles in rich text renderer
-- [ ] Home Page
-    - [X] Value Prop section
-    - [ ] Guide section - trusted authority - social proof
-    - [X] Plan section - "How it works" - fun easy
-    - [X] explanitory - SEO keyword rich
-        - At One Life CrossFit we know that you want to be healthy and strong. In order to do that, you need to train
-          hard and do it correctly. The problem is lacking knowledge and a plan which makes you feel stuck. We believe
-          excellent coaching delivers results. We understand the struggle to get fit, which is why we hire the best
-          coaches, use the best equipment, and run the best training classes and sessions in Santa Maria. Here's how we
-          do it."
-            1. Plan step one
-            2. Plan step two
-            3. Plan step three
-               So, direct CTA so you can stop failure and instead success.
-    - [ ] FAQs
-- [ ] Website Structures
-    - [ ] Contact Section - from settings (Should be included with footer)
-        - Map of address
-        - Business hours
-        - email
-        - phone number
-    - [X] Value Props component
-        - variant
-            - title, image, text
-            - image background
-        - Value Prop
-            - Title
-            - image
-            - rich text
-            - link?
-            - CTAs?
-    - [ ] testimonial
-        - image
-        - rich text
-        - page tags (group training, private, crossfit, etc)
-    - [ ] Global Component - Lead generator - free 30 day plan to get fit... (Lead magnet)
-- [ ] Programs/services
-    - [ ] group training
-        - Pages
-            - [ ] crossfit
-            - [ ] bootcamp
-            - [ ] AA
-        - Page structure
-            - Hero
-            - Announcements component - from Wodify
-            - Value Prop
-            - WOD - from Wodify - https://docs.wodify.com/reference/get_workouts-1
-            - Schedule component - from Wodify
-            - CTA - book consult
-            - Testimonial
-    - [ ] Private training
-        - Pages
-            - [ ] 1:1
-            - [ ] semi-private
-        - Page Structure
-            - Hero
-            - Value Prop
-            - CTA - book consult
-            - Testimonial
-    - [ ] Nutrition / Lifestyle
-        - Page Structure
-            - Hero
-            - Value Prop
-            - CTA - book consult
-            - Testimonial
-    - [ ] Sports Massage Therapy
-        - Page Structure
-            - Hero
-            - Value Prop
-            - CTA
-- [ ] Memberships
-    - [ ] New Foundations
-        - You’ll complete the fundamentals sessions (4 of them 30 min each) - these are not heavy workouts, they are
-          informational and form developing. It’s usually recommended to do them just before or right after a class.
-        - Then Hans or a coach will conduct a base line private training session with you where he will coach your
-          through a couple benchmarks.
-        - I’ll put you down in the next 60 days for a nutrition review after you’ve had some time in class so we can
-          check energy levels and make sure you’re getting the right fuel.
-        - Finally at day 90 you’ll use your last Private Training session to retest your baselines and we will make sure
-          your one the right path to maximum health.
-    - [ ] "Jump start"
-        - Group + Fundamentals
-    - [ ] Hybrid 1, 2, 4
-    - [ ] Private Coaching
-        - Nutrition
-        - Custom program (Hyrox, Spartan, CrossFit, Endurance, Running, Weightlifting)
-        - packs, monthly
-- [ ] Schedule
-    - Master schedule with booking links - from wodify
-    - Map to gym
-    - Contact Section
+
+### Global Sections / Blocks
+- [ ] Contact section (from settings) — map, business hours, email, phone
+- [ ] Testimonials block (image + rich text + page tags)
+
+### Home Page (`https://onelifecrossfit.com/`)
+- [x] Value Prop section
+- [ ] Guide section (trusted authority / social proof)
+- [x] Plan section (“How it works”)
+- [x] Explanatory SEO-rich section
+  - At One Life CrossFit we know that you want to be healthy and strong. In order to do that, you need to train
+    hard and do it correctly. The problem is lacking knowledge and a plan which makes you feel stuck. We believe
+    excellent coaching delivers results. We understand the struggle to get fit, which is why we hire the best
+    coaches, use the best equipment, and run the best training classes and sessions in Santa Maria. Here's how we
+    do it."
+    1. Plan step one
+    2. Plan step two
+    3. Plan step three
+       So, direct CTA so you can stop failure and instead success.
+- [ ] FAQs
+
+### Programs / Services
+- [ ] Group Training
+  - Pages
+    - [ ] CrossFit (`https://onelifecrossfit.com/programs/group-training/crossfit`)
+    - [ ] Bootcamp (`https://onelifecrossfit.com/programs/group-training/bootcamp`)
+    - [ ] AA (`https://onelifecrossfit.com/programs/group-training/aa`)
+  - Structure
+    - Hero
+    - Announcements (from Wodify or placeholder)
+    - Value Prop
+    - WOD (from Wodify — https://docs.wodify.com/reference/get_workouts-1)
+    - Schedule (from Wodify)
+    - CTA (book consult)
+    - Testimonial
+- [ ] Private Training
+  - Pages
+    - [ ] 1:1 (`https://onelifecrossfit.com/programs/private-training/1-1`)
+    - [ ] Semi-private (`https://onelifecrossfit.com/programs/private-training/semi-private`)
+  - Structure
+    - Hero
+    - Value Prop
+    - CTA (book consult)
+    - Testimonial
+- [ ] Nutrition / Lifestyle (`https://onelifecrossfit.com/programs/nutrition-lifestyle`)
+  - Structure
+    - Hero
+    - Value Prop
+    - CTA (book consult)
+    - Testimonial
+- [ ] Sports Massage Therapy (`https://onelifecrossfit.com/programs/sports-massage-therapy`)
+  - Structure
+    - Hero
+    - Value Prop
+    - CTA
+
+### Memberships
+- [ ] Memberships overview page (`https://onelifecrossfit.com/memberships`)
+- [ ] New Foundations (`https://onelifecrossfit.com/memberships/new-foundations`)
+  - You’ll complete the fundamentals sessions (4 of them 30 min each) - these are not heavy workouts, they are
+    informational and form developing. It’s usually recommended to do them just before or right after a class.
+  - Then Hans or a coach will conduct a base line private training session with you where he will coach your
+    through a couple benchmarks.
+  - I’ll put you down in the next 60 days for a nutrition review after you’ve had some time in class so we can
+    check energy levels and make sure you’re getting the right fuel.
+  - Finally at day 90 you’ll use your last Private Training session to retest your baselines and we will make sure
+    your one the right path to maximum health.
+- [ ] Jump start (Group + Fundamentals) (`https://onelifecrossfit.com/memberships/jump-start`)
+- [ ] Hybrid (1/2/4/8 options) (`https://onelifecrossfit.com/memberships/hybrid`)
+- [ ] Private Coaching (`https://onelifecrossfit.com/memberships/private-coaching`)
+  - Nutrition
+  - Custom program (Hyrox, Spartan, CrossFit, Endurance, Running, Weightlifting)
+  - packs, monthly
+
+### Schedule (`https://onelifecrossfit.com/schedule`)
+- [ ] Master schedule with booking links (from Wodify)
+- [ ] Map to gym
+- [ ] Contact Section
+
+### About / Team (`https://onelifecrossfit.com/about`)
+- [ ] Hero — CTA “talk with a team member”
+- [ ] Team Member List — Pull Coaches from Wodify https://docs.wodify.com/reference/get_coaches-1
+
+### Gym Gallery (`https://onelifecrossfit.com/gallery`)
+- [ ] Gallery blocks (placeholder until dedicated component exists)
+
+### Instagram Feed
+- [ ] Instagram feed component (placeholder for now)
+
+### Yelp Reviews
+- [ ] Yelp review component (placeholder for now)
+
+### Blog
 - [ ] Fill out blog pages
-- [ ] About / Team
-    - Page Structure
-        - Hero - CTA "talk with a team member"
-        - Team Member List - Pull Coaches from Wodify https://docs.wodify.com/reference/get_coaches-1
-- [ ] Gym Gallery
-- [ ] Instagram Feed component
-- [ ] Yelp Review component
 
 ## Getting Started
 
