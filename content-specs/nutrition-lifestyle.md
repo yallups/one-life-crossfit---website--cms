@@ -1,17 +1,18 @@
 ---
 slug: /programs/nutrition-lifestyle
-seo_title: 
+seo_title:
 seo_description: Nutrition and lifestyle coaching with assessments, habit-based plans, and accountability to support fat loss, performance, and energy in real life.
-og_title: 
-og_description: 
+og_title:
+og_description:
 primary_keyword: nutrition coaching Santa Maria
-secondary_keywords: ["nutrition coach Santa Maria", "lifestyle coaching Santa Maria", "weight loss coaching Santa Maria"]
+secondary_keywords: [ "nutrition coach Santa Maria", "lifestyle coaching Santa Maria", "weight loss coaching Santa Maria" ]
 image_notes: Use coaching consult or healthy lifestyle imagery from the library.
 ---
 
 # Nutrition & Lifestyle
 
 ## Page Builder Blocks (ordered)
+
 - hero: Hero
 - layout: Intro
 - featureCardsIcon: Value Props / Benefits
@@ -21,61 +22,73 @@ image_notes: Use coaching consult or healthy lifestyle imagery from the library.
 - faqAccordion: FAQs
 
 ## Blocks (config-ready)
+
 - hero
-  - variant: centered
-  - title: Nutrition & Lifestyle Coaching
-  - richText: Build sustainable habits that match your training—simple, personalized coaching that works in real life.
-  - buttons:
-    - text: Book A Free Consultation
-      url: { type: internal, internal: /free-consultation }
-    - text: Learn About Memberships
-      url: { type: internal, internal: #memberships-options }
+    - variant: centered
+    - title: Nutrition & Lifestyle Coaching
+    - richText: Build sustainable habits that match your training—simple, personalized coaching that works in real life.
+    - buttons:
+        - text: Book A Free Consultation
+          url: { type: internal, internal: /free-consultation }
+        - text: Learn About Memberships
+          url: { type: internal, internal: /memberships }
 - layout (Intro)
-  - variant: centered
-  - title: Get results faster with a plan you can stick to
-  - richText: Training works best when your nutrition supports it. Our coaching focuses on simple, sustainable habits—so you lose fat, gain energy, and feel better without extreme dieting.
-- featureCardsIcon (Benefits)
-  - title: Benefits
-  - cards:
-    - title: Personalized guidance
-      richText: Coaching based on your goals and lifestyle.
-    - title: Habit-based approach
-      richText: Sustainable changes you can maintain.
-    - title: Performance + recovery support
-      richText: Better fuel for training and recovery.
-    - title: Works with any program
-      richText: Pairs well with CrossFit, Bootcamp, or private coaching.
-- layout (Program Details)
-  - variant: centered
-  - title: Program details
-  - richText: 1:1 coaching, progress tracking, and strategies tailored to your goals. Options for short-term starts or longer cycles.
+    - variant: centered
+    - title: Get results faster with a plan you can stick to
+    - richText: Training works best when your nutrition supports it. Our coaching focuses on simple, sustainable
+      habits—so you lose fat, gain energy, and feel better without extreme dieting.
+- layout (Benefits & Details)
+    - variant: centered
+    - title: Benefits
+    - richText: |-
+      ### Benefits
+        - Personalized guidance: Coaching based on your goals and lifestyle.
+        - Habit-based approach: Sustainable changes you can maintain.
+        - Performance + recovery support: Better fuel for training and recovery.
+        - Works with any program: Pairs well with CrossFit, Bootcamp, or private coaching.
+
+      ### Program details
+      1:1 coaching, progress tracking, and strategies tailored to your goals. Options for short-term starts or longer
+      cycles.
+
+      ### Who it’s for
+        - Anyone who wants fat loss, more energy, or better recovery.
+        - Athletes who want performance-focused nutrition support.
+        - Busy people who need a simple, sustainable plan.
+- layout (Outcomes)
+    - variant: centered
+    - title: Outcomes you can expect
+    - richText: |-
+        - Consistent habits you can stick to.
+        - Better energy and recovery.
+        - Clear, realistic progress over time.
 - imageLinkCards (Top Memberships)
-  - title: Top Memberships
-  - cards:
-    - title: Private Coaching
-      description: Personalized coaching with the option to include nutrition support.
-      url: { type: internal, internal: /memberships/private-coaching }
-    - title: Hybrid
-      description: Group training plus coaching sessions you can use for nutrition.
-      url: { type: internal, internal: /memberships/hybrid }
-  - buttons:
-    - text: See All Options
-      url: { type: internal, internal: /memberships }
+    - title: Top Memberships
+    - cards:
+        - title: Private Coaching
+          description: Personalized coaching with the option to include nutrition support.
+          url: { type: internal, internal: /memberships/private-coaching }
+        - title: Hybrid
+          description: Group training plus coaching sessions you can use for nutrition.
+          url: { type: internal, internal: /memberships/hybrid }
+    - buttons:
+        - text: See All Options
+          url: { type: internal, internal: /memberships }
 - cta
-  - title: Ready to level up your results?
-  - richText: Book a free consultation and we’ll outline the best nutrition coaching path for you.
-  - buttons:
-    - text: Book A Free Consultation
-      url: { type: internal, internal: /free-consultation }
-    - text: Learn About Memberships
-      url: { type: internal, internal: #memberships-options }
+    - title: Ready to level up your results?
+    - richText: Book a free consultation and we’ll outline the best nutrition coaching path for you.
+    - buttons:
+        - text: Book A Free Consultation
+          url: { type: internal, internal: /free-consultation }
+        - text: Learn About Memberships
+          url: { type: internal, internal: /memberships }
 - faqAccordion
-  - title: FAQs
-  - faqs:
-    - faq-nutrition-need
-    - faq-nutrition-meal-plan
-    - faq-nutrition-weight-loss
-    - faq-nutrition-only
+    - title: FAQs
+    - faqs:
+        - faq-nutrition-need
+        - faq-nutrition-meal-plan
+        - faq-nutrition-weight-loss
+        - faq-nutrition-only
 
 ## Hero
 
@@ -84,7 +97,7 @@ image_notes: Use coaching consult or healthy lifestyle imagery from the library.
 - primary_cta: Book A Free Consultation
 - primary_cta_link: https://onelifecrossfit.com/free-consultation
 - secondary_cta: Learn About Memberships
-- secondary_cta_link: #memberships-options
+- secondary_cta_link: /memberships
 - hero_image_notes: Nutrition coaching or lifestyle-focused image.
 
 ## Intro
@@ -129,7 +142,7 @@ image_notes: Use coaching consult or healthy lifestyle imagery from the library.
 - primary_cta: Book A Free Consultation
 - primary_cta_link: https://onelifecrossfit.com/free-consultation
 - secondary_cta: Learn About Memberships
-- secondary_cta_link: #memberships-options
+- secondary_cta_link: /memberships
 
 ## FAQs
 
@@ -145,7 +158,7 @@ image_notes: Use coaching consult or healthy lifestyle imagery from the library.
 ## Internal Links
 
 - /memberships/private-coaching
-- /schedule
+- /memberships
 
 ## Notes
 

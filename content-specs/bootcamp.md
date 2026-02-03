@@ -29,8 +29,8 @@ image_notes: Hero image: image-0ed914850a58ecf00b75107a88d739f1cbb7e210-2001x300
   - buttons:
     - text: Book A Free Consultation
       url: { type: internal, internal: /free-consultation }
-    - text: Purchase A Membership
-      url: { type: internal, internal: #memberships-options }
+    - text: Book A Free Class
+      url: { type: internal, internal: /free-consultation }
   - media: image-0ed914850a58ecf00b75107a88d739f1cbb7e210-2001x3000-jpg
 - layout (Intro)
   - variant: centered
@@ -72,8 +72,8 @@ image_notes: Hero image: image-0ed914850a58ecf00b75107a88d739f1cbb7e210-2001x300
   - buttons:
     - text: Book A Free Consultation
       url: { type: internal, internal: /free-consultation }
-    - text: Purchase A Membership
-      url: { type: internal, internal: #memberships-options }
+    - text: Book A Free Class
+      url: { type: internal, internal: /free-consultation }
 - faqAccordion
   - title: FAQs
   - faqs:
@@ -90,8 +90,8 @@ image_notes: Hero image: image-0ed914850a58ecf00b75107a88d739f1cbb7e210-2001x300
 - subheadline: A fast-paced, coach-led 45-minute class with simpler movement patterns—perfect for conditioning, weight loss, and getting moving.
 - primary_cta: Book A Free Consultation
 - primary_cta_link: https://onelifecrossfit.com/free-consultation
-- secondary_cta: Purchase A Membership
-- secondary_cta_link: #memberships-options
+- secondary_cta: Book A Free Class
+- secondary_cta_link: https://onelifecrossfit.com/free-consultation
 - hero_image_notes: image-0ed914850a58ecf00b75107a88d739f1cbb7e210-2001x3000-jpg
 
 ## Intro
@@ -148,8 +148,8 @@ image_notes: Hero image: image-0ed914850a58ecf00b75107a88d739f1cbb7e210-2001x300
 - body: Book a free consultation and we’ll recommend the best path for your goals—Bootcamp, CrossFit, or both.
 - primary_cta: Book A Free Consultation
 - primary_cta_link: https://onelifecrossfit.com/free-consultation
-- secondary_cta: Purchase A Membership
-- secondary_cta_link: #memberships-options
+- secondary_cta: Book A Free Class
+- secondary_cta_link: https://onelifecrossfit.com/free-consultation
 
 ## FAQs
 - Q: Is Bootcamp good for beginners?

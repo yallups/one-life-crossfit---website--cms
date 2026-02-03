@@ -1,0 +1,2814 @@
+{
+  "generatedAt": "2026-02-02T08:08:00.515Z",
+  "locationId": 9721,
+  "serviceCount": 8,
+  "services": [
+    {
+      "serviceName": "CrossFit Fundamentals",
+      "serviceId": 14467,
+      "durations": [
+        {
+          "serviceDurationId": 18629,
+          "durationName": null
+        }
+      ]
+    },
+    {
+      "serviceName": "CrossFit Fundamentals ",
+      "serviceId": 15235,
+      "durations": [
+        {
+          "serviceDurationId": 26669,
+          "durationName": null
+        }
+      ]
+    },
+    {
+      "serviceName": "Recovery",
+      "serviceId": 15931,
+      "durations": [
+        {
+          "serviceDurationId": 19659,
+          "durationName": null
+        }
+      ]
+    },
+    {
+      "serviceName": "Private Training",
+      "serviceId": 18760,
+      "durations": [
+        {
+          "serviceDurationId": 23187,
+          "durationName": null
+        },
+        {
+          "serviceDurationId": 26624,
+          "durationName": null
+        }
+      ]
+    },
+    {
+      "serviceName": "Online Consultation ",
+      "serviceId": 23463,
+      "durations": [
+        {
+          "serviceDurationId": 29181,
+          "durationName": null
+        }
+      ]
+    },
+    {
+      "serviceName": "Nutrition / Lifestyle Coaching",
+      "serviceId": 24317,
+      "durations": [
+        {
+          "serviceDurationId": 30231,
+          "durationName": null
+        }
+      ]
+    },
+    {
+      "serviceName": "Summer Skills Camp",
+      "serviceId": 24936,
+      "durations": [
+        {
+          "serviceDurationId": 31033,
+          "durationName": null
+        }
+      ]
+    },
+    {
+      "serviceName": "Pop up Pilates",
+      "serviceId": 26043,
+      "durations": [
+        {
+          "serviceDurationId": 32552,
+          "durationName": null
+        }
+      ]
+    }
+  ],
+  "templatesFound": 51,
+  "paymentPlanLinks": [
+    {
+      "serviceName": "CrossFit Fundamentals ",
+      "serviceId": 15235,
+      "serviceDurationId": 26669,
+      "onlineMembershipId": 245395,
+      "locationId": 9721,
+      "url": "https://onelifefitness.wodify.com/OnlineSalesPage/Main?q=PaymentPlans%7COnlineMembershipId%3D245395%26LocationId%3D9721%26ServiceId%3D15235%26ServiceDurationId%3D26669"
+    },
+    {
+      "serviceName": "Private Training",
+      "serviceId": 18760,
+      "serviceDurationId": 23187,
+      "onlineMembershipId": 287743,
+      "locationId": 9721,
+      "url": "https://onelifefitness.wodify.com/OnlineSalesPage/Main?q=PaymentPlans%7COnlineMembershipId%3D287743%26LocationId%3D9721%26ServiceId%3D18760%26ServiceDurationId%3D23187"
+    },
+    {
+      "serviceName": "Private Training",
+      "serviceId": 18760,
+      "serviceDurationId": 26624,
+      "onlineMembershipId": 287743,
+      "locationId": 9721,
+      "url": "https://onelifefitness.wodify.com/OnlineSalesPage/Main?q=PaymentPlans%7COnlineMembershipId%3D287743%26LocationId%3D9721%26ServiceId%3D18760%26ServiceDurationId%3D26624"
+    },
+    {
+      "serviceName": "Online Consultation ",
+      "serviceId": 23463,
+      "serviceDurationId": 29181,
+      "onlineMembershipId": 261049,
+      "locationId": 9721,
+      "url": "https://onelifefitness.wodify.com/OnlineSalesPage/Main?q=PaymentPlans%7COnlineMembershipId%3D261049%26LocationId%3D9721%26ServiceId%3D23463%26ServiceDurationId%3D29181"
+    },
+    {
+      "serviceName": "Nutrition / Lifestyle Coaching",
+      "serviceId": 24317,
+      "serviceDurationId": 30231,
+      "onlineMembershipId": 279253,
+      "locationId": 9721,
+      "url": "https://onelifefitness.wodify.com/OnlineSalesPage/Main?q=PaymentPlans%7COnlineMembershipId%3D279253%26LocationId%3D9721%26ServiceId%3D24317%26ServiceDurationId%3D30231"
+    },
+    {
+      "serviceName": "Summer Skills Camp",
+      "serviceId": 24936,
+      "serviceDurationId": 31033,
+      "onlineMembershipId": 273122,
+      "locationId": 9721,
+      "url": "https://onelifefitness.wodify.com/OnlineSalesPage/Main?q=PaymentPlans%7COnlineMembershipId%3D273122%26LocationId%3D9721%26ServiceId%3D24936%26ServiceDurationId%3D31033"
+    }
+  ],
+  "_debug": {
+    "templatesRaw": {
+      "membership_templates": [
+        {
+          "id": 191264,
+          "name": "Free Intro",
+          "description": "",
+          "membership_type_id": 3,
+          "membership_type": "Appointment Pack",
+          "attendance_type_id": 2,
+          "attendance_type": "Limited",
+          "attendance_limit": 0,
+          "attendance_limit_frequency": 1,
+          "attendance_limit_type_id": 0,
+          "attendance_limit_type": "",
+          "number_of_sessions": 1,
+          "does_membership_expire": false,
+          "expiration_type_id": 0,
+          "expiration_type": "",
+          "expiration_length": 0,
+          "revenue_category_id": 294903,
+          "revenue_category": "Free Trials",
+          "membership_contract_template_id": 0,
+          "contract_name": "",
+          "service_id": 0,
+          "service": "",
+          "service_duration_id": 0,
+          "service_duration_hours": 0,
+          "service_duration_minutes": 0,
+          "allow_rollover": false,
+          "max_total_sessions": 0,
+          "created": {
+            "created_by_id": 17597,
+            "created_by": "System User",
+            "created_on_datetime": "2022-03-10T12:51:52Z"
+          },
+          "updated": {
+            "updated_by_id": 4219402,
+            "updated_by": "Shawn Jones",
+            "updated_on_datetime": "2022-06-09T21:02:06Z"
+          }
+        },
+        {
+          "id": 191294,
+          "name": "Group Class",
+          "description": "Show up. Put in work. Get results. 🏁\n\nThis is our most popular membership—for a reason.\nIt’s for those who don’t cut corners. You want strength, skill, and conditioning—and you want it delivered by coaches who take your progress personally.\n\n✅ What’s included:\n\n* 🏋️‍♂️ Unlimited access to CrossFit + Bootcamp classes\n* 🔓 Open Gym access to train on your terms\n* 📊 Daily performance tracking + leaderboard accountability\n* 🎯 Coaching that demands more—and helps you deliver\n* 🧠 Smart programming with purpose, not fluff\n\nEvery session is intentional. Every coach is dialed in.\nNo gimmicks. No shortcuts. Just a clear path to real fitness.\n\nTrain with purpose. Join the crew. Earn your results.\n",
+          "membership_type_id": 2,
+          "membership_type": "Class Plan",
+          "attendance_type_id": 1,
+          "attendance_type": "Unlimited",
+          "attendance_limit": 0,
+          "attendance_limit_frequency": 1,
+          "attendance_limit_type_id": 2,
+          "attendance_limit_type": "Weeks",
+          "number_of_sessions": 0,
+          "does_membership_expire": false,
+          "expiration_type_id": 0,
+          "expiration_type": "",
+          "expiration_length": 0,
+          "revenue_category_id": 294896,
+          "revenue_category": "Membership Sales",
+          "membership_contract_template_id": 57660,
+          "contract_name": "Class Membership Agreement v1.0",
+          "service_id": 0,
+          "service": "",
+          "service_duration_id": 0,
+          "service_duration_hours": 0,
+          "service_duration_minutes": 0,
+          "allow_rollover": false,
+          "max_total_sessions": 0,
+          "created": {
+            "created_by_id": 4218937,
+            "created_by": "Hans Koellnberger",
+            "created_on_datetime": "2022-03-10T18:47:07Z"
+          },
+          "updated": {
+            "updated_by_id": 4219402,
+            "updated_by": "Shawn Jones",
+            "updated_on_datetime": "2025-10-16T16:02:41Z"
+          }
+        },
+        {
+          "id": 191296,
+          "name": "Bootcamp",
+          "description": "One Life Bootcamp\n\nNo mirrors. No machines. Just hard work. 💪\n\nOne Life Bootcamp is where you come to sweat, suffer a little, and come out stronger. We keep it simple: bodyweight, dumbbells, conditioning, and intensity. No barbells, no fluff — just real training that gets results.\n\nThis is for people who want to move better, feel better, and look like they actually work out. You’ll burn fat, build muscle, and earn your confidence — one brutal rep at a time.\n\n🔥 What to expect:\n🏋️ Fast-paced group workouts that hit different\n✅ Coaching that holds the standard high\n🤝 Community that shows up and puts in work\n🔥 Results that speak for themselves\n\nYou don’t need to be fit to start. You just need to show up.\n\nWelcome to the grind. Welcome to One Life.",
+          "membership_type_id": 2,
+          "membership_type": "Class Plan",
+          "attendance_type_id": 1,
+          "attendance_type": "Unlimited",
+          "attendance_limit": 0,
+          "attendance_limit_frequency": 1,
+          "attendance_limit_type_id": 2,
+          "attendance_limit_type": "Weeks",
+          "number_of_sessions": 0,
+          "does_membership_expire": false,
+          "expiration_type_id": 0,
+          "expiration_type": "",
+          "expiration_length": 0,
+          "revenue_category_id": 294896,
+          "revenue_category": "Membership Sales",
+          "membership_contract_template_id": 57660,
+          "contract_name": "Class Membership Agreement v1.0",
+          "service_id": 0,
+          "service": "",
+          "service_duration_id": 0,
+          "service_duration_hours": 0,
+          "service_duration_minutes": 0,
+          "allow_rollover": false,
+          "max_total_sessions": 0,
+          "created": {
+            "created_by_id": 4218937,
+            "created_by": "Hans Koellnberger",
+            "created_on_datetime": "2022-03-10T18:48:46Z"
+          },
+          "updated": {
+            "updated_by_id": 4219402,
+            "updated_by": "Shawn Jones",
+            "updated_on_datetime": "2025-10-16T16:02:41Z"
+          }
+        },
+        {
+          "id": 192424,
+          "name": "20 Session Punch Card",
+          "description": "",
+          "membership_type_id": 1,
+          "membership_type": "Class Pack",
+          "attendance_type_id": 1,
+          "attendance_type": "Unlimited",
+          "attendance_limit": 0,
+          "attendance_limit_frequency": 1,
+          "attendance_limit_type_id": 1,
+          "attendance_limit_type": "Months",
+          "number_of_sessions": 20,
+          "does_membership_expire": false,
+          "expiration_type_id": 4,
+          "expiration_type": "Days",
+          "expiration_length": 0,
+          "revenue_category_id": 294896,
+          "revenue_category": "Membership Sales",
+          "membership_contract_template_id": 57660,
+          "contract_name": "Class Membership Agreement v1.0",
+          "service_id": 0,
+          "service": "",
+          "service_duration_id": 0,
+          "service_duration_hours": 0,
+          "service_duration_minutes": 0,
+          "allow_rollover": false,
+          "max_total_sessions": 0,
+          "created": {
+            "created_by_id": 4219402,
+            "created_by": "Shawn Jones",
+            "created_on_datetime": "2022-03-28T20:25:17Z"
+          },
+          "updated": {
+            "updated_by_id": 4219402,
+            "updated_by": "Shawn Jones",
+            "updated_on_datetime": "2025-10-16T16:02:41Z"
+          }
+        },
+        {
+          "id": 192425,
+          "name": "10 Session Punch Card",
+          "description": "",
+          "membership_type_id": 1,
+          "membership_type": "Class Pack",
+          "attendance_type_id": 1,
+          "attendance_type": "Unlimited",
+          "attendance_limit": 0,
+          "attendance_limit_frequency": 1,
+          "attendance_limit_type_id": 1,
+          "attendance_limit_type": "Months",
+          "number_of_sessions": 10,
+          "does_membership_expire": false,
+          "expiration_type_id": 4,
+          "expiration_type": "Days",
+          "expiration_length": 0,
+          "revenue_category_id": 294896,
+          "revenue_category": "Membership Sales",
+          "membership_contract_template_id": 57660,
+          "contract_name": "Class Membership Agreement v1.0",
+          "service_id": 0,
+          "service": "",
+          "service_duration_id": 0,
+          "service_duration_hours": 0,
+          "service_duration_minutes": 0,
+          "allow_rollover": false,
+          "max_total_sessions": 0,
+          "created": {
+            "created_by_id": 4219402,
+            "created_by": "Shawn Jones",
+            "created_on_datetime": "2022-03-28T20:26:02Z"
+          },
+          "updated": {
+            "updated_by_id": 4219402,
+            "updated_by": "Shawn Jones",
+            "updated_on_datetime": "2025-10-16T16:02:41Z"
+          }
+        },
+        {
+          "id": 193074,
+          "name": "Open Gym (Head coaches approval)",
+          "description": "",
+          "membership_type_id": 2,
+          "membership_type": "Class Plan",
+          "attendance_type_id": 1,
+          "attendance_type": "Unlimited",
+          "attendance_limit": 0,
+          "attendance_limit_frequency": 1,
+          "attendance_limit_type_id": 2,
+          "attendance_limit_type": "Weeks",
+          "number_of_sessions": 0,
+          "does_membership_expire": false,
+          "expiration_type_id": 4,
+          "expiration_type": "Days",
+          "expiration_length": 0,
+          "revenue_category_id": 294896,
+          "revenue_category": "Membership Sales",
+          "membership_contract_template_id": 57660,
+          "contract_name": "Class Membership Agreement v1.0",
+          "service_id": 0,
+          "service": "",
+          "service_duration_id": 0,
+          "service_duration_hours": 0,
+          "service_duration_minutes": 0,
+          "allow_rollover": false,
+          "max_total_sessions": 0,
+          "created": {
+            "created_by_id": 4218937,
+            "created_by": "Hans Koellnberger",
+            "created_on_datetime": "2022-04-05T21:34:44Z"
+          },
+          "updated": {
+            "updated_by_id": 4219402,
+            "updated_by": "Shawn Jones",
+            "updated_on_datetime": "2025-10-16T16:02:41Z"
+          }
+        },
+        {
+          "id": 206015,
+          "name": "1 week drop in",
+          "description": "",
+          "membership_type_id": 2,
+          "membership_type": "Class Plan",
+          "attendance_type_id": 1,
+          "attendance_type": "Unlimited",
+          "attendance_limit": 0,
+          "attendance_limit_frequency": 1,
+          "attendance_limit_type_id": 2,
+          "attendance_limit_type": "Weeks",
+          "number_of_sessions": 0,
+          "does_membership_expire": false,
+          "expiration_type_id": 4,
+          "expiration_type": "Days",
+          "expiration_length": 0,
+          "revenue_category_id": 294896,
+          "revenue_category": "Membership Sales",
+          "membership_contract_template_id": 57660,
+          "contract_name": "Class Membership Agreement v1.0",
+          "service_id": 0,
+          "service": "",
+          "service_duration_id": 0,
+          "service_duration_hours": 0,
+          "service_duration_minutes": 0,
+          "allow_rollover": false,
+          "max_total_sessions": 0,
+          "created": {
+            "created_by_id": 4219402,
+            "created_by": "Shawn Jones",
+            "created_on_datetime": "2022-10-14T21:28:28Z"
+          },
+          "updated": {
+            "updated_by_id": 4219402,
+            "updated_by": "Shawn Jones",
+            "updated_on_datetime": "2025-10-16T16:02:41Z"
+          }
+        },
+        {
+          "id": 224873,
+          "name": "1 hour Complete Fitness Consultation (Nutrition / Strength / Conditioning)",
+          "description": "",
+          "membership_type_id": 3,
+          "membership_type": "Appointment Pack",
+          "attendance_type_id": 2,
+          "attendance_type": "Limited",
+          "attendance_limit": 0,
+          "attendance_limit_frequency": 1,
+          "attendance_limit_type_id": 0,
+          "attendance_limit_type": "",
+          "number_of_sessions": 1,
+          "does_membership_expire": true,
+          "expiration_type_id": 1,
+          "expiration_type": "Months",
+          "expiration_length": 2,
+          "revenue_category_id": 303904,
+          "revenue_category": "Appointment Sales",
+          "membership_contract_template_id": 58082,
+          "contract_name": "Customer Agreement for Nutrition & Lifestyle Coach",
+          "service_id": 18760,
+          "service": "Private Training",
+          "service_duration_id": 23187,
+          "service_duration_hours": 1,
+          "service_duration_minutes": 0,
+          "allow_rollover": false,
+          "max_total_sessions": 0,
+          "created": {
+            "created_by_id": 4219402,
+            "created_by": "Shawn Jones",
+            "created_on_datetime": "2023-06-27T16:44:34Z"
+          },
+          "updated": {
+            "updated_by_id": 4219402,
+            "updated_by": "Shawn Jones",
+            "updated_on_datetime": "2025-03-26T21:22:06Z"
+          }
+        },
+        {
+          "id": 244966,
+          "name": "1 session pack for Semi-Private 2:1 Training (1 hrs )",
+          "description": "",
+          "membership_type_id": 3,
+          "membership_type": "Appointment Pack",
+          "attendance_type_id": 2,
+          "attendance_type": "Limited",
+          "attendance_limit": 0,
+          "attendance_limit_frequency": 1,
+          "attendance_limit_type_id": 0,
+          "attendance_limit_type": "",
+          "number_of_sessions": 1,
+          "does_membership_expire": true,
+          "expiration_type_id": 1,
+          "expiration_type": "Months",
+          "expiration_length": 2,
+          "revenue_category_id": 303904,
+          "revenue_category": "Appointment Sales",
+          "membership_contract_template_id": 0,
+          "contract_name": "",
+          "service_id": 18760,
+          "service": "Private Training",
+          "service_duration_id": 23187,
+          "service_duration_hours": 1,
+          "service_duration_minutes": 0,
+          "allow_rollover": false,
+          "max_total_sessions": 0,
+          "created": {
+            "created_by_id": 4219402,
+            "created_by": "Shawn Jones",
+            "created_on_datetime": "2024-04-02T22:07:05Z"
+          },
+          "updated": {
+            "updated_by_id": 4219402,
+            "updated_by": "Shawn Jones",
+            "updated_on_datetime": "2025-10-23T23:20:01Z"
+          }
+        },
+        {
+          "id": 244967,
+          "name": "4 session pack for Private Training (1 hrs )",
+          "description": "",
+          "membership_type_id": 3,
+          "membership_type": "Appointment Pack",
+          "attendance_type_id": 2,
+          "attendance_type": "Limited",
+          "attendance_limit": 0,
+          "attendance_limit_frequency": 1,
+          "attendance_limit_type_id": 0,
+          "attendance_limit_type": "",
+          "number_of_sessions": 4,
+          "does_membership_expire": true,
+          "expiration_type_id": 1,
+          "expiration_type": "Months",
+          "expiration_length": 3,
+          "revenue_category_id": 303904,
+          "revenue_category": "Appointment Sales",
+          "membership_contract_template_id": 56807,
+          "contract_name": "Private Training Agreement",
+          "service_id": 18760,
+          "service": "Private Training",
+          "service_duration_id": 23187,
+          "service_duration_hours": 1,
+          "service_duration_minutes": 0,
+          "allow_rollover": false,
+          "max_total_sessions": 0,
+          "created": {
+            "created_by_id": 4219402,
+            "created_by": "Shawn Jones",
+            "created_on_datetime": "2024-04-02T22:08:54Z"
+          },
+          "updated": {
+            "updated_by_id": 4219402,
+            "updated_by": "Shawn Jones",
+            "updated_on_datetime": "2024-12-24T18:55:44Z"
+          }
+        },
+        {
+          "id": 244968,
+          "name": "4 session pack for Private Training (30 min)",
+          "description": "",
+          "membership_type_id": 3,
+          "membership_type": "Appointment Pack",
+          "attendance_type_id": 2,
+          "attendance_type": "Limited",
+          "attendance_limit": 0,
+          "attendance_limit_frequency": 1,
+          "attendance_limit_type_id": 0,
+          "attendance_limit_type": "",
+          "number_of_sessions": 4,
+          "does_membership_expire": true,
+          "expiration_type_id": 1,
+          "expiration_type": "Months",
+          "expiration_length": 3,
+          "revenue_category_id": 303904,
+          "revenue_category": "Appointment Sales",
+          "membership_contract_template_id": 56807,
+          "contract_name": "Private Training Agreement",
+          "service_id": 18760,
+          "service": "Private Training",
+          "service_duration_id": 26624,
+          "service_duration_hours": 0,
+          "service_duration_minutes": 30,
+          "allow_rollover": false,
+          "max_total_sessions": 0,
+          "created": {
+            "created_by_id": 4219402,
+            "created_by": "Shawn Jones",
+            "created_on_datetime": "2024-04-02T22:10:45Z"
+          },
+          "updated": {
+            "updated_by_id": 4219402,
+            "updated_by": "Shawn Jones",
+            "updated_on_datetime": "2024-12-24T18:55:44Z"
+          }
+        },
+        {
+          "id": 244969,
+          "name": "12 session pack for Private Training (30 min)",
+          "description": "",
+          "membership_type_id": 3,
+          "membership_type": "Appointment Pack",
+          "attendance_type_id": 2,
+          "attendance_type": "Limited",
+          "attendance_limit": 0,
+          "attendance_limit_frequency": 1,
+          "attendance_limit_type_id": 0,
+          "attendance_limit_type": "",
+          "number_of_sessions": 12,
+          "does_membership_expire": true,
+          "expiration_type_id": 1,
+          "expiration_type": "Months",
+          "expiration_length": 6,
+          "revenue_category_id": 303904,
+          "revenue_category": "Appointment Sales",
+          "membership_contract_template_id": 56807,
+          "contract_name": "Private Training Agreement",
+          "service_id": 18760,
+          "service": "Private Training",
+          "service_duration_id": 26624,
+          "service_duration_hours": 0,
+          "service_duration_minutes": 30,
+          "allow_rollover": false,
+          "max_total_sessions": 0,
+          "created": {
+            "created_by_id": 4219402,
+            "created_by": "Shawn Jones",
+            "created_on_datetime": "2024-04-02T22:12:44Z"
+          },
+          "updated": {
+            "updated_by_id": 4219402,
+            "updated_by": "Shawn Jones",
+            "updated_on_datetime": "2024-12-24T18:55:43Z"
+          }
+        },
+        {
+          "id": 245395,
+          "name": "CrossFit Fundamentals (4 sessions - 30 min)",
+          "description": "Private training introduction to the CrossFit methodology. We teach safety, form and efficacy for the majority of movements we use in our methodology. Use this as a starting point or to enhance your knowledge and skill in major lifts, gymnastics and other movements.",
+          "membership_type_id": 3,
+          "membership_type": "Appointment Pack",
+          "attendance_type_id": 2,
+          "attendance_type": "Limited",
+          "attendance_limit": 0,
+          "attendance_limit_frequency": 1,
+          "attendance_limit_type_id": 4,
+          "attendance_limit_type": "Days",
+          "number_of_sessions": 4,
+          "does_membership_expire": false,
+          "expiration_type_id": 0,
+          "expiration_type": "",
+          "expiration_length": 0,
+          "revenue_category_id": 303904,
+          "revenue_category": "Appointment Sales",
+          "membership_contract_template_id": 56807,
+          "contract_name": "Private Training Agreement",
+          "service_id": 15235,
+          "service": "CrossFit Fundamentals ",
+          "service_duration_id": 26669,
+          "service_duration_hours": 0,
+          "service_duration_minutes": 30,
+          "allow_rollover": false,
+          "max_total_sessions": 0,
+          "created": {
+            "created_by_id": 4219402,
+            "created_by": "Shawn Jones",
+            "created_on_datetime": "2024-04-09T23:42:05Z"
+          },
+          "updated": {
+            "updated_by_id": 4354719,
+            "updated_by": "Jack Handfield",
+            "updated_on_datetime": "2026-01-05T23:10:42Z"
+          }
+        },
+        {
+          "id": 245536,
+          "name": "24 session pack for Private Training (30 min)",
+          "description": "",
+          "membership_type_id": 3,
+          "membership_type": "Appointment Pack",
+          "attendance_type_id": 2,
+          "attendance_type": "Limited",
+          "attendance_limit": 0,
+          "attendance_limit_frequency": 1,
+          "attendance_limit_type_id": 0,
+          "attendance_limit_type": "",
+          "number_of_sessions": 24,
+          "does_membership_expire": true,
+          "expiration_type_id": 1,
+          "expiration_type": "Months",
+          "expiration_length": 8,
+          "revenue_category_id": 303904,
+          "revenue_category": "Appointment Sales",
+          "membership_contract_template_id": 56807,
+          "contract_name": "Private Training Agreement",
+          "service_id": 18760,
+          "service": "Private Training",
+          "service_duration_id": 26624,
+          "service_duration_hours": 0,
+          "service_duration_minutes": 30,
+          "allow_rollover": false,
+          "max_total_sessions": 0,
+          "created": {
+            "created_by_id": 4219402,
+            "created_by": "Shawn Jones",
+            "created_on_datetime": "2024-04-11T22:12:11Z"
+          },
+          "updated": {
+            "updated_by_id": 4219402,
+            "updated_by": "Shawn Jones",
+            "updated_on_datetime": "2024-12-24T18:55:43Z"
+          }
+        },
+        {
+          "id": 245537,
+          "name": "48 session pack for Private Training (30 min)",
+          "description": "",
+          "membership_type_id": 3,
+          "membership_type": "Appointment Pack",
+          "attendance_type_id": 2,
+          "attendance_type": "Limited",
+          "attendance_limit": 0,
+          "attendance_limit_frequency": 1,
+          "attendance_limit_type_id": 0,
+          "attendance_limit_type": "",
+          "number_of_sessions": 48,
+          "does_membership_expire": true,
+          "expiration_type_id": 1,
+          "expiration_type": "Months",
+          "expiration_length": 16,
+          "revenue_category_id": 303904,
+          "revenue_category": "Appointment Sales",
+          "membership_contract_template_id": 56807,
+          "contract_name": "Private Training Agreement",
+          "service_id": 18760,
+          "service": "Private Training",
+          "service_duration_id": 26624,
+          "service_duration_hours": 0,
+          "service_duration_minutes": 30,
+          "allow_rollover": false,
+          "max_total_sessions": 0,
+          "created": {
+            "created_by_id": 4219402,
+            "created_by": "Shawn Jones",
+            "created_on_datetime": "2024-04-11T22:22:07Z"
+          },
+          "updated": {
+            "updated_by_id": 4219402,
+            "updated_by": "Shawn Jones",
+            "updated_on_datetime": "2024-12-24T18:55:44Z"
+          }
+        },
+        {
+          "id": 245538,
+          "name": "12 session pack for Private Training (1 hrs )",
+          "description": "",
+          "membership_type_id": 3,
+          "membership_type": "Appointment Pack",
+          "attendance_type_id": 2,
+          "attendance_type": "Limited",
+          "attendance_limit": 0,
+          "attendance_limit_frequency": 1,
+          "attendance_limit_type_id": 0,
+          "attendance_limit_type": "",
+          "number_of_sessions": 12,
+          "does_membership_expire": true,
+          "expiration_type_id": 1,
+          "expiration_type": "Months",
+          "expiration_length": 6,
+          "revenue_category_id": 303904,
+          "revenue_category": "Appointment Sales",
+          "membership_contract_template_id": 56807,
+          "contract_name": "Private Training Agreement",
+          "service_id": 18760,
+          "service": "Private Training",
+          "service_duration_id": 23187,
+          "service_duration_hours": 1,
+          "service_duration_minutes": 0,
+          "allow_rollover": false,
+          "max_total_sessions": 0,
+          "created": {
+            "created_by_id": 4219402,
+            "created_by": "Shawn Jones",
+            "created_on_datetime": "2024-04-11T22:25:47Z"
+          },
+          "updated": {
+            "updated_by_id": 4219402,
+            "updated_by": "Shawn Jones",
+            "updated_on_datetime": "2024-12-24T18:55:43Z"
+          }
+        },
+        {
+          "id": 245539,
+          "name": "24 session pack for Private Training (1 hrs )",
+          "description": "",
+          "membership_type_id": 3,
+          "membership_type": "Appointment Pack",
+          "attendance_type_id": 2,
+          "attendance_type": "Limited",
+          "attendance_limit": 0,
+          "attendance_limit_frequency": 1,
+          "attendance_limit_type_id": 4,
+          "attendance_limit_type": "Days",
+          "number_of_sessions": 24,
+          "does_membership_expire": true,
+          "expiration_type_id": 1,
+          "expiration_type": "Months",
+          "expiration_length": 8,
+          "revenue_category_id": 303904,
+          "revenue_category": "Appointment Sales",
+          "membership_contract_template_id": 56807,
+          "contract_name": "Private Training Agreement",
+          "service_id": 18760,
+          "service": "Private Training",
+          "service_duration_id": 23187,
+          "service_duration_hours": 1,
+          "service_duration_minutes": 0,
+          "allow_rollover": false,
+          "max_total_sessions": 0,
+          "created": {
+            "created_by_id": 4219402,
+            "created_by": "Shawn Jones",
+            "created_on_datetime": "2024-04-11T22:26:29Z"
+          },
+          "updated": {
+            "updated_by_id": 4219402,
+            "updated_by": "Shawn Jones",
+            "updated_on_datetime": "2025-10-31T12:50:25Z"
+          }
+        },
+        {
+          "id": 245540,
+          "name": "48 session pack for Private Training (1 hrs )",
+          "description": "",
+          "membership_type_id": 3,
+          "membership_type": "Appointment Pack",
+          "attendance_type_id": 2,
+          "attendance_type": "Limited",
+          "attendance_limit": 0,
+          "attendance_limit_frequency": 1,
+          "attendance_limit_type_id": 0,
+          "attendance_limit_type": "",
+          "number_of_sessions": 48,
+          "does_membership_expire": true,
+          "expiration_type_id": 1,
+          "expiration_type": "Months",
+          "expiration_length": 16,
+          "revenue_category_id": 303904,
+          "revenue_category": "Appointment Sales",
+          "membership_contract_template_id": 56807,
+          "contract_name": "Private Training Agreement",
+          "service_id": 18760,
+          "service": "Private Training",
+          "service_duration_id": 23187,
+          "service_duration_hours": 1,
+          "service_duration_minutes": 0,
+          "allow_rollover": false,
+          "max_total_sessions": 0,
+          "created": {
+            "created_by_id": 4219402,
+            "created_by": "Shawn Jones",
+            "created_on_datetime": "2024-04-11T22:31:03Z"
+          },
+          "updated": {
+            "updated_by_id": 4219402,
+            "updated_by": "Shawn Jones",
+            "updated_on_datetime": "2024-12-24T18:55:44Z"
+          }
+        },
+        {
+          "id": 246336,
+          "name": "1 session pack for Private Training (30 min)",
+          "description": "",
+          "membership_type_id": 3,
+          "membership_type": "Appointment Pack",
+          "attendance_type_id": 2,
+          "attendance_type": "Limited",
+          "attendance_limit": 0,
+          "attendance_limit_frequency": 1,
+          "attendance_limit_type_id": 4,
+          "attendance_limit_type": "Days",
+          "number_of_sessions": 1,
+          "does_membership_expire": true,
+          "expiration_type_id": 1,
+          "expiration_type": "Months",
+          "expiration_length": 1,
+          "revenue_category_id": 303904,
+          "revenue_category": "Appointment Sales",
+          "membership_contract_template_id": 56807,
+          "contract_name": "Private Training Agreement",
+          "service_id": 18760,
+          "service": "Private Training",
+          "service_duration_id": 26624,
+          "service_duration_hours": 0,
+          "service_duration_minutes": 30,
+          "allow_rollover": false,
+          "max_total_sessions": 0,
+          "created": {
+            "created_by_id": 4219402,
+            "created_by": "Shawn Jones",
+            "created_on_datetime": "2024-04-24T18:49:57Z"
+          },
+          "updated": {
+            "updated_by_id": 4219402,
+            "updated_by": "Shawn Jones",
+            "updated_on_datetime": "2025-07-21T00:13:02Z"
+          }
+        },
+        {
+          "id": 248508,
+          "name": "Custom Programming (Home Program, travel program, specific goal)",
+          "description": "Built for YOU. 🛠️\n\nWhether you’re training around an injury, stuck in a hotel gym, grinding it out at home, or chasing a specific goal — we’ll build your plan from the ground up.\n\nThis isn’t cookie-cutter. It’s custom. Every rep, every workout is tailored to your equipment, schedule, and goals. You’ll have direct access to a coach who knows your plan and keeps you accountable.\n\n💥 Perfect for:\n\n* 💪 Injury rehab or training around limitations\n* 🏝️ Travel workouts or hotel/garage gym setups\n* 🎯 Goal-specific programming (strength, fat loss, sport prep)\n* 🧠 Athletes who want to stop guessing and start progressing\n\nYour life, your gear, your results. We’ll write the playbook — you show up and execute.\n",
+          "membership_type_id": 2,
+          "membership_type": "Class Plan",
+          "attendance_type_id": 1,
+          "attendance_type": "Unlimited",
+          "attendance_limit": 0,
+          "attendance_limit_frequency": 1,
+          "attendance_limit_type_id": 4,
+          "attendance_limit_type": "Days",
+          "number_of_sessions": 0,
+          "does_membership_expire": false,
+          "expiration_type_id": 0,
+          "expiration_type": "",
+          "expiration_length": 0,
+          "revenue_category_id": 294896,
+          "revenue_category": "Membership Sales",
+          "membership_contract_template_id": 58356,
+          "contract_name": "Programming Access Agreement",
+          "service_id": 0,
+          "service": "",
+          "service_duration_id": 0,
+          "service_duration_hours": 0,
+          "service_duration_minutes": 0,
+          "allow_rollover": false,
+          "max_total_sessions": 0,
+          "created": {
+            "created_by_id": 4218937,
+            "created_by": "Hans Koellnberger",
+            "created_on_datetime": "2024-05-26T18:58:01Z"
+          },
+          "updated": {
+            "updated_by_id": 4219402,
+            "updated_by": "Shawn Jones",
+            "updated_on_datetime": "2025-07-20T22:10:30Z"
+          }
+        },
+        {
+          "id": 253695,
+          "name": "Current Member Drop-in ",
+          "description": "Fee for current members to drop into another program",
+          "membership_type_id": 1,
+          "membership_type": "Class Pack",
+          "attendance_type_id": 1,
+          "attendance_type": "Unlimited",
+          "attendance_limit": 0,
+          "attendance_limit_frequency": 1,
+          "attendance_limit_type_id": 1,
+          "attendance_limit_type": "Months",
+          "number_of_sessions": 1,
+          "does_membership_expire": false,
+          "expiration_type_id": 0,
+          "expiration_type": "",
+          "expiration_length": 0,
+          "revenue_category_id": 294896,
+          "revenue_category": "Membership Sales",
+          "membership_contract_template_id": 57660,
+          "contract_name": "Class Membership Agreement v1.0",
+          "service_id": 0,
+          "service": "",
+          "service_duration_id": 0,
+          "service_duration_hours": 0,
+          "service_duration_minutes": 0,
+          "allow_rollover": false,
+          "max_total_sessions": 0,
+          "created": {
+            "created_by_id": 4219402,
+            "created_by": "Shawn Jones",
+            "created_on_datetime": "2024-08-23T04:01:21Z"
+          },
+          "updated": {
+            "updated_by_id": 4219402,
+            "updated_by": "Shawn Jones",
+            "updated_on_datetime": "2025-10-16T16:02:41Z"
+          }
+        },
+        {
+          "id": 256166,
+          "name": "Specialty appointments",
+          "description": "",
+          "membership_type_id": 1,
+          "membership_type": "Class Pack",
+          "attendance_type_id": 1,
+          "attendance_type": "Unlimited",
+          "attendance_limit": 0,
+          "attendance_limit_frequency": 1,
+          "attendance_limit_type_id": 1,
+          "attendance_limit_type": "Months",
+          "number_of_sessions": 1,
+          "does_membership_expire": false,
+          "expiration_type_id": 0,
+          "expiration_type": "",
+          "expiration_length": 0,
+          "revenue_category_id": 303904,
+          "revenue_category": "Appointment Sales",
+          "membership_contract_template_id": 57660,
+          "contract_name": "Class Membership Agreement v1.0",
+          "service_id": 0,
+          "service": "",
+          "service_duration_id": 0,
+          "service_duration_hours": 0,
+          "service_duration_minutes": 0,
+          "allow_rollover": false,
+          "max_total_sessions": 0,
+          "created": {
+            "created_by_id": 4219402,
+            "created_by": "Shawn Jones",
+            "created_on_datetime": "2024-10-01T22:24:40Z"
+          },
+          "updated": {
+            "updated_by_id": 4219402,
+            "updated_by": "Shawn Jones",
+            "updated_on_datetime": "2025-11-18T03:20:55Z"
+          }
+        },
+        {
+          "id": 256635,
+          "name": "Engine Course",
+          "description": "Don't you hate that feeling when you get on the rower, start rowing, look up and only see 5 calories and you are already out of breath? Yeah, me too, it sucks! \nRowing is hard but it's even worse when you are not proficient at rowing. It may feel like you are rowing upstream and not getting anywhere! \n\n​​​​​​​Well I'm excited to let you know I have a lot of the answers how to make rowing feel easier and it all starts with a couple things. \n\nTechnique, breathing patterns, aerobic capacity! 2 of those things I can teach you, the other one you need to put the work in to improve! \n\nStarting Wednesday, October 16th 2024 at 6:30pm, Hans will be hosting an Engine Course! the course will be 6 weeks long, meeting every Wednesday @6:30pm",
+          "membership_type_id": 2,
+          "membership_type": "Class Plan",
+          "attendance_type_id": 1,
+          "attendance_type": "Unlimited",
+          "attendance_limit": 0,
+          "attendance_limit_frequency": 1,
+          "attendance_limit_type_id": 4,
+          "attendance_limit_type": "Days",
+          "number_of_sessions": 0,
+          "does_membership_expire": false,
+          "expiration_type_id": 0,
+          "expiration_type": "",
+          "expiration_length": 0,
+          "revenue_category_id": 303904,
+          "revenue_category": "Appointment Sales",
+          "membership_contract_template_id": 57660,
+          "contract_name": "Class Membership Agreement v1.0",
+          "service_id": 0,
+          "service": "",
+          "service_duration_id": 0,
+          "service_duration_hours": 0,
+          "service_duration_minutes": 0,
+          "allow_rollover": false,
+          "max_total_sessions": 0,
+          "created": {
+            "created_by_id": 4219402,
+            "created_by": "Shawn Jones",
+            "created_on_datetime": "2024-10-10T10:36:40Z"
+          },
+          "updated": {
+            "updated_by_id": 4219402,
+            "updated_by": "Shawn Jones",
+            "updated_on_datetime": "2025-10-16T16:02:41Z"
+          }
+        },
+        {
+          "id": 257864,
+          "name": "Specialty Program",
+          "description": "",
+          "membership_type_id": 2,
+          "membership_type": "Class Plan",
+          "attendance_type_id": 1,
+          "attendance_type": "Unlimited",
+          "attendance_limit": 0,
+          "attendance_limit_frequency": 1,
+          "attendance_limit_type_id": 4,
+          "attendance_limit_type": "Days",
+          "number_of_sessions": 0,
+          "does_membership_expire": false,
+          "expiration_type_id": 0,
+          "expiration_type": "",
+          "expiration_length": 0,
+          "revenue_category_id": 294896,
+          "revenue_category": "Membership Sales",
+          "membership_contract_template_id": 58082,
+          "contract_name": "Customer Agreement for Nutrition & Lifestyle Coach",
+          "service_id": 0,
+          "service": "",
+          "service_duration_id": 0,
+          "service_duration_hours": 0,
+          "service_duration_minutes": 0,
+          "allow_rollover": false,
+          "max_total_sessions": 0,
+          "created": {
+            "created_by_id": 4219402,
+            "created_by": "Shawn Jones",
+            "created_on_datetime": "2024-11-01T17:41:28Z"
+          },
+          "updated": {
+            "updated_by_id": 4219402,
+            "updated_by": "Shawn Jones",
+            "updated_on_datetime": "2025-03-26T21:22:06Z"
+          }
+        },
+        {
+          "id": 261049,
+          "name": "1 Session for Online consultation  (30min)",
+          "description": "Our online consultation is your personalized entry point into the One Life CrossFit experience. Whether you're looking to improve your fitness, optimize your health, or gain clarity on your next steps, this one-on-one session is designed to deliver expert guidance tailored to your goals. Clear, professional, and built around you—this is where your transformation begins.",
+          "membership_type_id": 3,
+          "membership_type": "Appointment Pack",
+          "attendance_type_id": 2,
+          "attendance_type": "Limited",
+          "attendance_limit": 0,
+          "attendance_limit_frequency": 1,
+          "attendance_limit_type_id": 4,
+          "attendance_limit_type": "Days",
+          "number_of_sessions": 1,
+          "does_membership_expire": false,
+          "expiration_type_id": 0,
+          "expiration_type": "",
+          "expiration_length": 0,
+          "revenue_category_id": 303904,
+          "revenue_category": "Appointment Sales",
+          "membership_contract_template_id": 0,
+          "contract_name": "",
+          "service_id": 23463,
+          "service": "Online Consultation ",
+          "service_duration_id": 29181,
+          "service_duration_hours": 0,
+          "service_duration_minutes": 30,
+          "allow_rollover": false,
+          "max_total_sessions": 0,
+          "created": {
+            "created_by_id": 4219402,
+            "created_by": "Shawn Jones",
+            "created_on_datetime": "2024-12-26T15:25:25Z"
+          },
+          "updated": {
+            "updated_by_id": 4219402,
+            "updated_by": "Shawn Jones",
+            "updated_on_datetime": "2025-10-23T23:20:01Z"
+          }
+        },
+        {
+          "id": 262858,
+          "name": "Open Prep - 1 Session",
+          "description": "How to get your best score yet in The Open!\n\nDuring The Open, your fitness can only take you so far. You don't have to be the strongest person to get a good score, you have to be the most efficient!! \n\nWe will be offering “Open Prep” specialty courses where we will go over the best way possible to perform a handful of movements typically seen in The Open! If you are interested in taking one of these courses take a look at the dates and movements and book today! Space is limited so be sure to register quickly.\n",
+          "membership_type_id": 1,
+          "membership_type": "Class Pack",
+          "attendance_type_id": 1,
+          "attendance_type": "Unlimited",
+          "attendance_limit": 0,
+          "attendance_limit_frequency": 1,
+          "attendance_limit_type_id": 1,
+          "attendance_limit_type": "Months",
+          "number_of_sessions": 1,
+          "does_membership_expire": true,
+          "expiration_type_id": 1,
+          "expiration_type": "Months",
+          "expiration_length": 2,
+          "revenue_category_id": 303904,
+          "revenue_category": "Appointment Sales",
+          "membership_contract_template_id": 57660,
+          "contract_name": "Class Membership Agreement v1.0",
+          "service_id": 0,
+          "service": "",
+          "service_duration_id": 0,
+          "service_duration_hours": 0,
+          "service_duration_minutes": 0,
+          "allow_rollover": false,
+          "max_total_sessions": 0,
+          "created": {
+            "created_by_id": 4219402,
+            "created_by": "Shawn Jones",
+            "created_on_datetime": "2025-01-17T19:56:50Z"
+          },
+          "updated": {
+            "updated_by_id": 4354719,
+            "updated_by": "Jack Handfield",
+            "updated_on_datetime": "2026-01-20T20:29:46Z"
+          }
+        },
+        {
+          "id": 262859,
+          "name": "Open Prep - 3 Sessions",
+          "description": "How to get your best score yet in The Open\n\nDuring The Open, your fitness can only take you so far. You don't have to be the strongest person to get a good score, you have to be the most efficient!! \n\nWe will be offering “Open Prep” specialty courses where we will go over the best way possible to perform a handful of movements typically seen in The Open! If you are interested in taking one of these courses take a look at the dates and movements and book today! Space is limited so be sure to register quickly.\n",
+          "membership_type_id": 1,
+          "membership_type": "Class Pack",
+          "attendance_type_id": 1,
+          "attendance_type": "Unlimited",
+          "attendance_limit": 0,
+          "attendance_limit_frequency": 1,
+          "attendance_limit_type_id": 1,
+          "attendance_limit_type": "Months",
+          "number_of_sessions": 3,
+          "does_membership_expire": true,
+          "expiration_type_id": 1,
+          "expiration_type": "Months",
+          "expiration_length": 2,
+          "revenue_category_id": 303904,
+          "revenue_category": "Appointment Sales",
+          "membership_contract_template_id": 57660,
+          "contract_name": "Class Membership Agreement v1.0",
+          "service_id": 0,
+          "service": "",
+          "service_duration_id": 0,
+          "service_duration_hours": 0,
+          "service_duration_minutes": 0,
+          "allow_rollover": false,
+          "max_total_sessions": 0,
+          "created": {
+            "created_by_id": 4219402,
+            "created_by": "Shawn Jones",
+            "created_on_datetime": "2025-01-17T19:59:01Z"
+          },
+          "updated": {
+            "updated_by_id": 4354719,
+            "updated_by": "Jack Handfield",
+            "updated_on_datetime": "2026-01-19T19:09:54Z"
+          }
+        },
+        {
+          "id": 262890,
+          "name": "Program Only (CrossFit + Bootcamp)",
+          "description": "Programming Only\n\nWant the workouts, but cant make it to the gym? This is for the self-motivated. 🚀\n\nOur Programming-Only membership gives you access to all daily workouts — Bootcamp and CrossFit — including leaderboard access and performance tracking. You’ll follow the same battle-tested program as our coached athletes, built for real results: strength, speed, stamina, and grit.\n\nYou’re not here for hand-holding — you’re here to win.\n\n💥 What’s included:\n📲 Daily CrossFit + Bootcamp workouts\n🧠 Expert programming with progress in mind\n🏆 Leaderboard access so you can compete\n🔄 Performance tracking to level up every week\n\nNo excuses. No BS. Just the plan — now go make it count.",
+          "membership_type_id": 2,
+          "membership_type": "Class Plan",
+          "attendance_type_id": 2,
+          "attendance_type": "Limited",
+          "attendance_limit": 0,
+          "attendance_limit_frequency": 1,
+          "attendance_limit_type_id": 2,
+          "attendance_limit_type": "Weeks",
+          "number_of_sessions": 0,
+          "does_membership_expire": false,
+          "expiration_type_id": 0,
+          "expiration_type": "",
+          "expiration_length": 0,
+          "revenue_category_id": 294896,
+          "revenue_category": "Membership Sales",
+          "membership_contract_template_id": 58356,
+          "contract_name": "Programming Access Agreement",
+          "service_id": 0,
+          "service": "",
+          "service_duration_id": 0,
+          "service_duration_hours": 0,
+          "service_duration_minutes": 0,
+          "allow_rollover": false,
+          "max_total_sessions": 0,
+          "created": {
+            "created_by_id": 4219402,
+            "created_by": "Shawn Jones",
+            "created_on_datetime": "2025-01-18T17:03:35Z"
+          },
+          "updated": {
+            "updated_by_id": 4219402,
+            "updated_by": "Shawn Jones",
+            "updated_on_datetime": "2025-07-20T22:11:58Z"
+          }
+        },
+        {
+          "id": 264488,
+          "name": "Drop In",
+          "description": "",
+          "membership_type_id": 1,
+          "membership_type": "Class Pack",
+          "attendance_type_id": 1,
+          "attendance_type": "Unlimited",
+          "attendance_limit": 0,
+          "attendance_limit_frequency": 1,
+          "attendance_limit_type_id": 1,
+          "attendance_limit_type": "Months",
+          "number_of_sessions": 1,
+          "does_membership_expire": false,
+          "expiration_type_id": 0,
+          "expiration_type": "",
+          "expiration_length": 0,
+          "revenue_category_id": 294896,
+          "revenue_category": "Membership Sales",
+          "membership_contract_template_id": 57660,
+          "contract_name": "Class Membership Agreement v1.0",
+          "service_id": 0,
+          "service": "",
+          "service_duration_id": 0,
+          "service_duration_hours": 0,
+          "service_duration_minutes": 0,
+          "allow_rollover": false,
+          "max_total_sessions": 0,
+          "created": {
+            "created_by_id": 4219402,
+            "created_by": "Shawn Jones",
+            "created_on_datetime": "2025-02-11T21:39:47Z"
+          },
+          "updated": {
+            "updated_by_id": 4219402,
+            "updated_by": "Shawn Jones",
+            "updated_on_datetime": "2025-10-16T16:02:41Z"
+          }
+        },
+        {
+          "id": 264979,
+          "name": "Abs & A$$ Program",
+          "description": "Abs & A$$ – The Ultimate Core & Glutes Program For Ladies\n\nSculpt, strengthen, and build with Abs & A$$, the flexible training program that fits your life! Whether you’re working out at home, in open gym, or in class, this program gives you the tools to stay consistent and see real results.\n\nWith your Abs & A$$ subscription, you get:\n✔️ 2-3 workouts per week to target your core, glutes, and stabilizers.\n✔️ The flexibility to train anywhere—follow the program at home or during open gym.\n✔️ Access to all Abs & A$$ classes—join in for extra motivation and coaching!\n✔️ Progress tracking & structured cycles to keep you on the path to success.\n\nNo more guessing. No more missed workouts. Just a proven program designed to help you build strength, confidence, and that sculpted look.",
+          "membership_type_id": 2,
+          "membership_type": "Class Plan",
+          "attendance_type_id": 1,
+          "attendance_type": "Unlimited",
+          "attendance_limit": 0,
+          "attendance_limit_frequency": 1,
+          "attendance_limit_type_id": 4,
+          "attendance_limit_type": "Days",
+          "number_of_sessions": 0,
+          "does_membership_expire": false,
+          "expiration_type_id": 0,
+          "expiration_type": "",
+          "expiration_length": 0,
+          "revenue_category_id": 294896,
+          "revenue_category": "Membership Sales",
+          "membership_contract_template_id": 58356,
+          "contract_name": "Programming Access Agreement",
+          "service_id": 0,
+          "service": "",
+          "service_duration_id": 0,
+          "service_duration_hours": 0,
+          "service_duration_minutes": 0,
+          "allow_rollover": false,
+          "max_total_sessions": 0,
+          "created": {
+            "created_by_id": 4219402,
+            "created_by": "Shawn Jones",
+            "created_on_datetime": "2025-02-21T04:33:02Z"
+          },
+          "updated": {
+            "updated_by_id": 4219402,
+            "updated_by": "Shawn Jones",
+            "updated_on_datetime": "2025-05-15T16:48:15Z"
+          }
+        },
+        {
+          "id": 266718,
+          "name": "🔥'25 Summer Shred Challenge: Train Hard, Eat Smart, Get Ripped🔥",
+          "description": "Summer is coming fast, and this is your chance to get lean, get strong, and reveal the muscle you’ve been working for! The 2025 Summer Shred Challenge at OneLife CrossFit is a 6-week guided fat-burning program designed to help you lose fat, maintain muscle, and stay accountable with expert coaching and a competitive edge.\n\nThis isn’t just a challenge—it’s your roadmap to serious results. Each week, we’ll give you a specific focus to lock in on, and you’ll earn points by staying consistent and committed.\n\n🔥 How It Works\n\n📆 6 Weeks of Fat-Burning Focus\n\n📅 Start Date: April 6, 2025\n📅 End Date: May 18, 2025\n\nEvery day, you’ll earn points by sticking to the weekly focus and completing healthy habits.\n\n💥 Why Join?\n✅ You’ll Have a Plan – Each week gives you a clear goal to focus on.\n✅ You’ll Stay Accountable – Earn points by showing up and staying consistent.\n✅ You’ll Get Expert Guidance – We’ll tell you what to focus on for fat loss and muscle retention.\n✅ You’ll Push Yourself – Compete with other members and stay motivated.\n✅ You’ll Be Summer-Ready – Because this is YOUR year to get shredded.\n\n💰 Exclusive Discounts for Participants\nWhile enrolled in the Summer Shred Challenge, participants will receive 15% off on Private Training and Nutrition Coaching to maximize their results.\n\n🔥 The Weekly Focus Habits:\nWeek 1: No processed carbs (flour, sugar, packaged junk)\nWeek 2: Hit 1.2g of protein per pound of your desired body weight\nWeek 3: Get 8 hours in bed (because recovery = results!)\nWeek 4: No processed carbs (flour, sugar, packaged junk) – round 2!\nWeek 5: Eat 30g of fiber per day\nWeek 6: Intermittent fasting – 6-hour eating window\n\nRead more at https://onelifecrossfit.com/announcements/f/%F0%9F%94%A525-summer-shred-challenge-train-hard-eat-smart-get-ripped%F0%9F%94%A5",
+          "membership_type_id": 2,
+          "membership_type": "Class Plan",
+          "attendance_type_id": 1,
+          "attendance_type": "Unlimited",
+          "attendance_limit": 0,
+          "attendance_limit_frequency": 1,
+          "attendance_limit_type_id": 4,
+          "attendance_limit_type": "Days",
+          "number_of_sessions": 0,
+          "does_membership_expire": false,
+          "expiration_type_id": 0,
+          "expiration_type": "",
+          "expiration_length": 0,
+          "revenue_category_id": 294896,
+          "revenue_category": "Membership Sales",
+          "membership_contract_template_id": 61035,
+          "contract_name": "Time based \"Challenge\" Agreement",
+          "service_id": 0,
+          "service": "",
+          "service_duration_id": 0,
+          "service_duration_hours": 0,
+          "service_duration_minutes": 0,
+          "allow_rollover": false,
+          "max_total_sessions": 0,
+          "created": {
+            "created_by_id": 4219402,
+            "created_by": "Shawn Jones",
+            "created_on_datetime": "2025-03-20T13:58:51Z"
+          },
+          "updated": {
+            "updated_by_id": 4219402,
+            "updated_by": "Shawn Jones",
+            "updated_on_datetime": "2025-10-23T23:20:01Z"
+          }
+        },
+        {
+          "id": 268043,
+          "name": "1 Session for Nutrition Session (30min)",
+          "description": "",
+          "membership_type_id": 3,
+          "membership_type": "Appointment Pack",
+          "attendance_type_id": 2,
+          "attendance_type": "Limited",
+          "attendance_limit": 0,
+          "attendance_limit_frequency": 1,
+          "attendance_limit_type_id": 4,
+          "attendance_limit_type": "Days",
+          "number_of_sessions": 1,
+          "does_membership_expire": false,
+          "expiration_type_id": 0,
+          "expiration_type": "",
+          "expiration_length": 0,
+          "revenue_category_id": 294896,
+          "revenue_category": "Membership Sales",
+          "membership_contract_template_id": 58082,
+          "contract_name": "Customer Agreement for Nutrition & Lifestyle Coach",
+          "service_id": 24317,
+          "service": "Nutrition / Lifestyle Coaching",
+          "service_duration_id": 30231,
+          "service_duration_hours": 0,
+          "service_duration_minutes": 30,
+          "allow_rollover": false,
+          "max_total_sessions": 0,
+          "created": {
+            "created_by_id": 4219402,
+            "created_by": "Shawn Jones",
+            "created_on_datetime": "2025-04-09T16:24:45Z"
+          },
+          "updated": {
+            "updated_by_id": 4354719,
+            "updated_by": "Jack Handfield",
+            "updated_on_datetime": "2026-01-25T14:15:19Z"
+          }
+        },
+        {
+          "id": 268044,
+          "name": "1 Month Nutrition Program (3 sessions)",
+          "description": "Eat like it matters—because it does. 🥩🥬🔥\n\n3 checkins over a month (example: 1st, 15th, 31st): Kick off, Check-in, Wrap-up!\n\nYou can’t out-train a broken diet. Our nutrition program is built to fuel performance, cut fat, build muscle, and take the guesswork out of eating.\n\nThis isn’t another generic meal plan.\nIt’s 1-on-1 coaching tailored to your goals, your lifestyle, and your results.\n\n✅ What’s included:\n\n📊 Personalized nutrition strategy (not a template)\n🧠 Education on habits, timing, macros, and real food\n🔁 Biweekly check-ins + goal reviews\n📈 Progress tracking (InBody, photos, metrics)\n🛠️ Adjustments based on your results—not hype\n\nWhether your goal is fat loss, performance, strength, or better health markers (yep, we’ve had members get off meds and drop A1C), this is how we get it done.\n\nDial it in. Feel the difference.\nFuel the One Life you’ve got.",
+          "membership_type_id": 3,
+          "membership_type": "Appointment Pack",
+          "attendance_type_id": 2,
+          "attendance_type": "Limited",
+          "attendance_limit": 0,
+          "attendance_limit_frequency": 1,
+          "attendance_limit_type_id": 4,
+          "attendance_limit_type": "Days",
+          "number_of_sessions": 3,
+          "does_membership_expire": true,
+          "expiration_type_id": 1,
+          "expiration_type": "Months",
+          "expiration_length": 2,
+          "revenue_category_id": 303904,
+          "revenue_category": "Appointment Sales",
+          "membership_contract_template_id": 58082,
+          "contract_name": "Customer Agreement for Nutrition & Lifestyle Coach",
+          "service_id": 24317,
+          "service": "Nutrition / Lifestyle Coaching",
+          "service_duration_id": 30231,
+          "service_duration_hours": 0,
+          "service_duration_minutes": 30,
+          "allow_rollover": false,
+          "max_total_sessions": 0,
+          "created": {
+            "created_by_id": 4219402,
+            "created_by": "Shawn Jones",
+            "created_on_datetime": "2025-04-09T16:27:12Z"
+          },
+          "updated": {
+            "updated_by_id": 4219402,
+            "updated_by": "Shawn Jones",
+            "updated_on_datetime": "2025-07-20T23:53:36Z"
+          }
+        },
+        {
+          "id": 272656,
+          "name": "Summer Youth Program",
+          "description": "",
+          "membership_type_id": 2,
+          "membership_type": "Class Plan",
+          "attendance_type_id": 1,
+          "attendance_type": "Unlimited",
+          "attendance_limit": 1,
+          "attendance_limit_frequency": 1,
+          "attendance_limit_type_id": 2,
+          "attendance_limit_type": "Weeks",
+          "number_of_sessions": 1,
+          "does_membership_expire": false,
+          "expiration_type_id": 0,
+          "expiration_type": "",
+          "expiration_length": 0,
+          "revenue_category_id": 294896,
+          "revenue_category": "Membership Sales",
+          "membership_contract_template_id": 0,
+          "contract_name": "",
+          "service_id": 0,
+          "service": "",
+          "service_duration_id": 0,
+          "service_duration_hours": 0,
+          "service_duration_minutes": 0,
+          "allow_rollover": false,
+          "max_total_sessions": 0,
+          "created": {
+            "created_by_id": 4219402,
+            "created_by": "Shawn Jones",
+            "created_on_datetime": "2025-06-12T23:38:28Z"
+          },
+          "updated": {
+            "updated_by_id": 4219402,
+            "updated_by": "Shawn Jones",
+            "updated_on_datetime": "2025-10-23T23:20:01Z"
+          }
+        },
+        {
+          "id": 273122,
+          "name": "1 Session for Summer Skills Camp (1hrs)",
+          "description": "",
+          "membership_type_id": 3,
+          "membership_type": "Appointment Pack",
+          "attendance_type_id": 2,
+          "attendance_type": "Limited",
+          "attendance_limit": 0,
+          "attendance_limit_frequency": 1,
+          "attendance_limit_type_id": 0,
+          "attendance_limit_type": "",
+          "number_of_sessions": 1,
+          "does_membership_expire": false,
+          "expiration_type_id": 0,
+          "expiration_type": "",
+          "expiration_length": 0,
+          "revenue_category_id": 303904,
+          "revenue_category": "Appointment Sales",
+          "membership_contract_template_id": 0,
+          "contract_name": "",
+          "service_id": 24936,
+          "service": "Summer Skills Camp",
+          "service_duration_id": 31033,
+          "service_duration_hours": 1,
+          "service_duration_minutes": 0,
+          "allow_rollover": false,
+          "max_total_sessions": 0,
+          "created": {
+            "created_by_id": 4354719,
+            "created_by": "Jack Handfield",
+            "created_on_datetime": "2025-06-20T20:55:54Z"
+          },
+          "updated": {
+            "updated_by_id": 4219402,
+            "updated_by": "Shawn Jones",
+            "updated_on_datetime": "2025-10-23T23:20:01Z"
+          }
+        },
+        {
+          "id": 274817,
+          "name": " Personal Coaching Sessions 1/4wks (monthly)",
+          "description": "Plan for a monthly check-in. Use this session to focus on skill work, focussing on a specific weakness or learn about nutrition or lifestyle adjustments to optimize your training.",
+          "membership_type_id": 4,
+          "membership_type": "Appointment Plan",
+          "attendance_type_id": 2,
+          "attendance_type": "Limited",
+          "attendance_limit": 1,
+          "attendance_limit_frequency": 28,
+          "attendance_limit_type_id": 4,
+          "attendance_limit_type": "Days",
+          "number_of_sessions": 1,
+          "does_membership_expire": false,
+          "expiration_type_id": 0,
+          "expiration_type": "",
+          "expiration_length": 0,
+          "revenue_category_id": 303904,
+          "revenue_category": "Appointment Sales",
+          "membership_contract_template_id": 58082,
+          "contract_name": "Customer Agreement for Nutrition & Lifestyle Coach",
+          "service_id": 18760,
+          "service": "Private Training",
+          "service_duration_id": 26624,
+          "service_duration_hours": 0,
+          "service_duration_minutes": 30,
+          "allow_rollover": false,
+          "max_total_sessions": 0,
+          "created": {
+            "created_by_id": 4219402,
+            "created_by": "Shawn Jones",
+            "created_on_datetime": "2025-07-18T16:35:57Z"
+          },
+          "updated": {
+            "updated_by_id": 4354719,
+            "updated_by": "Jack Handfield",
+            "updated_on_datetime": "2025-12-31T13:57:00Z"
+          }
+        },
+        {
+          "id": 274929,
+          "name": "Hybrid (Group Class + Personal Coaching)",
+          "description": "More than just classes. This is next-level progress. 💥\n\nHybrid is where group intensity meets personalized precision.\nYou get the best of both worlds: hard-hitting CrossFit classes AND dedicated 1-on-1 coaching to level up faster, fix weaknesses, and stay laser-focused on your goals.\n\n✅ What’s included:\n\n* 💪 Unlimited Group + Bootcamp classes\n* 🎯 Monthly 1-on-1 sessions with your personal coach (Hybrid 1 = once/month, Hybrid 4 = weekly)\n* 🧩 Custom strategies for nutrition, recovery, mindset & more\n* 📝 Goal reviews, progress tracking, and adjustments on the fly\n* 🔐 Priority access to specialty programs, seminars, and accountability tools\n\nWhether you’re chasing PRs, rebuilding after injury, or just want to train like your life depends on it — Hybrid is the most powerful tool we offer.\n\nSerious results require serious structure.\nHybrid delivers.\n",
+          "membership_type_id": 2,
+          "membership_type": "Class Plan",
+          "attendance_type_id": 1,
+          "attendance_type": "Unlimited",
+          "attendance_limit": 0,
+          "attendance_limit_frequency": 1,
+          "attendance_limit_type_id": 4,
+          "attendance_limit_type": "Days",
+          "number_of_sessions": 1,
+          "does_membership_expire": false,
+          "expiration_type_id": 0,
+          "expiration_type": "",
+          "expiration_length": 0,
+          "revenue_category_id": 294896,
+          "revenue_category": "Membership Sales",
+          "membership_contract_template_id": 60899,
+          "contract_name": "Hybrid Agreement",
+          "service_id": 0,
+          "service": "",
+          "service_duration_id": 0,
+          "service_duration_hours": 0,
+          "service_duration_minutes": 0,
+          "allow_rollover": false,
+          "max_total_sessions": 0,
+          "created": {
+            "created_by_id": 4219402,
+            "created_by": "Shawn Jones",
+            "created_on_datetime": "2025-07-20T22:33:44Z"
+          },
+          "updated": {
+            "updated_by_id": 4354719,
+            "updated_by": "Jack Handfield",
+            "updated_on_datetime": "2026-01-07T14:30:45Z"
+          }
+        },
+        {
+          "id": 274931,
+          "name": " Personal Coaching Sessions 2/4wks (every other week)",
+          "description": "Plan for a bi-weekly check-in. Use this session to focus on skill work, focussing on a specific weakness or learn about nutrition or lifestyle adjustments to optimize your training.",
+          "membership_type_id": 4,
+          "membership_type": "Appointment Plan",
+          "attendance_type_id": 2,
+          "attendance_type": "Limited",
+          "attendance_limit": 2,
+          "attendance_limit_frequency": 28,
+          "attendance_limit_type_id": 4,
+          "attendance_limit_type": "Days",
+          "number_of_sessions": 1,
+          "does_membership_expire": false,
+          "expiration_type_id": 0,
+          "expiration_type": "",
+          "expiration_length": 0,
+          "revenue_category_id": 303904,
+          "revenue_category": "Appointment Sales",
+          "membership_contract_template_id": 56807,
+          "contract_name": "Private Training Agreement",
+          "service_id": 18760,
+          "service": "Private Training",
+          "service_duration_id": 26624,
+          "service_duration_hours": 0,
+          "service_duration_minutes": 30,
+          "allow_rollover": false,
+          "max_total_sessions": 0,
+          "created": {
+            "created_by_id": 4219402,
+            "created_by": "Shawn Jones",
+            "created_on_datetime": "2025-07-20T22:45:33Z"
+          },
+          "updated": {
+            "updated_by_id": 4354719,
+            "updated_by": "Jack Handfield",
+            "updated_on_datetime": "2025-12-31T13:57:26Z"
+          }
+        },
+        {
+          "id": 274932,
+          "name": "Personal Coaching Session 8/4wks (2x per week)",
+          "description": "Plan for 2x per week Personal Coaching. Use this session to focus on skill work, focussing on a specific weakness or learn about nutrition or lifestyle adjustments to optimize your training.",
+          "membership_type_id": 4,
+          "membership_type": "Appointment Plan",
+          "attendance_type_id": 2,
+          "attendance_type": "Limited",
+          "attendance_limit": 8,
+          "attendance_limit_frequency": 28,
+          "attendance_limit_type_id": 4,
+          "attendance_limit_type": "Days",
+          "number_of_sessions": 1,
+          "does_membership_expire": false,
+          "expiration_type_id": 0,
+          "expiration_type": "",
+          "expiration_length": 0,
+          "revenue_category_id": 303904,
+          "revenue_category": "Appointment Sales",
+          "membership_contract_template_id": 56807,
+          "contract_name": "Private Training Agreement",
+          "service_id": 18760,
+          "service": "Private Training",
+          "service_duration_id": 26624,
+          "service_duration_hours": 0,
+          "service_duration_minutes": 30,
+          "allow_rollover": false,
+          "max_total_sessions": 0,
+          "created": {
+            "created_by_id": 4219402,
+            "created_by": "Shawn Jones",
+            "created_on_datetime": "2025-07-20T22:48:44Z"
+          },
+          "updated": {
+            "updated_by_id": 4354719,
+            "updated_by": "Jack Handfield",
+            "updated_on_datetime": "2025-12-31T14:01:14Z"
+          }
+        },
+        {
+          "id": 274935,
+          "name": "Personal Coaching Sessions 4/4wks (weekly)",
+          "description": "Plan for a weekly check-in. Use this session to focus on skill work, focussing on a specific weakness or learn about nutrition or lifestyle adjustments to optimize your training.",
+          "membership_type_id": 4,
+          "membership_type": "Appointment Plan",
+          "attendance_type_id": 2,
+          "attendance_type": "Limited",
+          "attendance_limit": 4,
+          "attendance_limit_frequency": 28,
+          "attendance_limit_type_id": 4,
+          "attendance_limit_type": "Days",
+          "number_of_sessions": 1,
+          "does_membership_expire": false,
+          "expiration_type_id": 0,
+          "expiration_type": "",
+          "expiration_length": 0,
+          "revenue_category_id": 303904,
+          "revenue_category": "Appointment Sales",
+          "membership_contract_template_id": 56807,
+          "contract_name": "Private Training Agreement",
+          "service_id": 18760,
+          "service": "Private Training",
+          "service_duration_id": 26624,
+          "service_duration_hours": 0,
+          "service_duration_minutes": 30,
+          "allow_rollover": false,
+          "max_total_sessions": 0,
+          "created": {
+            "created_by_id": 4219402,
+            "created_by": "Shawn Jones",
+            "created_on_datetime": "2025-07-20T23:30:07Z"
+          },
+          "updated": {
+            "updated_by_id": 4354719,
+            "updated_by": "Jack Handfield",
+            "updated_on_datetime": "2025-12-31T14:00:37Z"
+          }
+        },
+        {
+          "id": 274937,
+          "name": "Nutrition \"Start\"",
+          "description": "Eat like it matters—because it does. 🥩🥬🔥\nThis is your kick start 12 week program.\n\nYou can’t out-train a broken diet. Our nutrition program is built to fuel performance, cut fat, build muscle, and take the guesswork out of eating.\n\nThis isn’t another generic meal plan.\nIt’s 1-on-1 coaching tailored to your goals, your lifestyle, and your results.\n\n✅ What’s included:\n\n📊 Personalized nutrition strategy (not a template)\n\n🧠 Education on habits, timing, macros, and real food\n\n🔁 Biweekly check-ins + goal reviews\n\n📈 Progress tracking (InBody, photos, metrics)\n\n🛠️ Adjustments based on your results—not hype\n\nWhether your goal is fat loss, performance, strength, or better health markers (yep, we’ve had members get off meds and drop A1C), this is how we get it done.\n\nDial it in. Feel the difference.\nFuel the One Life you’ve got.",
+          "membership_type_id": 4,
+          "membership_type": "Appointment Plan",
+          "attendance_type_id": 2,
+          "attendance_type": "Limited",
+          "attendance_limit": 1,
+          "attendance_limit_frequency": 1,
+          "attendance_limit_type_id": 2,
+          "attendance_limit_type": "Weeks",
+          "number_of_sessions": 1,
+          "does_membership_expire": false,
+          "expiration_type_id": 0,
+          "expiration_type": "",
+          "expiration_length": 0,
+          "revenue_category_id": 303904,
+          "revenue_category": "Appointment Sales",
+          "membership_contract_template_id": 58082,
+          "contract_name": "Customer Agreement for Nutrition & Lifestyle Coach",
+          "service_id": 24317,
+          "service": "Nutrition / Lifestyle Coaching",
+          "service_duration_id": 30231,
+          "service_duration_hours": 0,
+          "service_duration_minutes": 30,
+          "allow_rollover": false,
+          "max_total_sessions": 0,
+          "created": {
+            "created_by_id": 4219402,
+            "created_by": "Shawn Jones",
+            "created_on_datetime": "2025-07-20T23:59:17Z"
+          },
+          "updated": {
+            "updated_by_id": 4219402,
+            "updated_by": "Shawn Jones",
+            "updated_on_datetime": "2025-07-20T23:59:17Z"
+          }
+        },
+        {
+          "id": 274938,
+          "name": "Nutrition \"Stride\"",
+          "description": "Eat like it matters—because it does. 🥩🥬🔥\nThis program is for a checkin every other week. You just need a little monitoring and guidance.\n\nYou can’t out-train a broken diet. Our nutrition program is built to fuel performance, cut fat, build muscle, and take the guesswork out of eating.\n\nThis isn’t another generic meal plan.\nIt’s 1-on-1 coaching tailored to your goals, your lifestyle, and your results.\n\n✅ What’s included:\n\n📊 Personalized nutrition strategy (not a template)\n\n🧠 Education on habits, timing, macros, and real food\n\n🔁 Biweekly check-ins + goal reviews\n\n📈 Progress tracking (InBody, photos, metrics)\n\n🛠️ Adjustments based on your results—not hype\n\nWhether your goal is fat loss, performance, strength, or better health markers (yep, we’ve had members get off meds and drop A1C), this is how we get it done.\n\nDial it in. Feel the difference.\nFuel the One Life you’ve got.",
+          "membership_type_id": 4,
+          "membership_type": "Appointment Plan",
+          "attendance_type_id": 2,
+          "attendance_type": "Limited",
+          "attendance_limit": 7,
+          "attendance_limit_frequency": 85,
+          "attendance_limit_type_id": 4,
+          "attendance_limit_type": "Days",
+          "number_of_sessions": 1,
+          "does_membership_expire": false,
+          "expiration_type_id": 0,
+          "expiration_type": "",
+          "expiration_length": 0,
+          "revenue_category_id": 303904,
+          "revenue_category": "Appointment Sales",
+          "membership_contract_template_id": 58082,
+          "contract_name": "Customer Agreement for Nutrition & Lifestyle Coach",
+          "service_id": 24317,
+          "service": "Nutrition / Lifestyle Coaching",
+          "service_duration_id": 30231,
+          "service_duration_hours": 0,
+          "service_duration_minutes": 30,
+          "allow_rollover": false,
+          "max_total_sessions": 0,
+          "created": {
+            "created_by_id": 4219402,
+            "created_by": "Shawn Jones",
+            "created_on_datetime": "2025-07-21T00:00:56Z"
+          },
+          "updated": {
+            "updated_by_id": 4219402,
+            "updated_by": "Shawn Jones",
+            "updated_on_datetime": "2025-07-21T00:07:27Z"
+          }
+        },
+        {
+          "id": 277672,
+          "name": "Nutrition Sessions 2/4wks (every other week)",
+          "description": "Plan for a bi-weekly check-in. Use this session to learn about nutrition or lifestyle adjustments to optimize your training.",
+          "membership_type_id": 4,
+          "membership_type": "Appointment Plan",
+          "attendance_type_id": 2,
+          "attendance_type": "Limited",
+          "attendance_limit": 2,
+          "attendance_limit_frequency": 28,
+          "attendance_limit_type_id": 4,
+          "attendance_limit_type": "Days",
+          "number_of_sessions": 1,
+          "does_membership_expire": false,
+          "expiration_type_id": 0,
+          "expiration_type": "",
+          "expiration_length": 0,
+          "revenue_category_id": 303904,
+          "revenue_category": "Appointment Sales",
+          "membership_contract_template_id": 58082,
+          "contract_name": "Customer Agreement for Nutrition & Lifestyle Coach",
+          "service_id": 24317,
+          "service": "Nutrition / Lifestyle Coaching",
+          "service_duration_id": 30231,
+          "service_duration_hours": 0,
+          "service_duration_minutes": 30,
+          "allow_rollover": false,
+          "max_total_sessions": 0,
+          "created": {
+            "created_by_id": 4219402,
+            "created_by": "Shawn Jones",
+            "created_on_datetime": "2025-08-27T21:23:52Z"
+          },
+          "updated": {
+            "updated_by_id": 4354719,
+            "updated_by": "Jack Handfield",
+            "updated_on_datetime": "2025-12-31T13:59:08Z"
+          }
+        },
+        {
+          "id": 278053,
+          "name": " Nutrition Sessions 1/4wks (monthly)",
+          "description": "",
+          "membership_type_id": 4,
+          "membership_type": "Appointment Plan",
+          "attendance_type_id": 2,
+          "attendance_type": "Limited",
+          "attendance_limit": 1,
+          "attendance_limit_frequency": 28,
+          "attendance_limit_type_id": 4,
+          "attendance_limit_type": "Days",
+          "number_of_sessions": 1,
+          "does_membership_expire": false,
+          "expiration_type_id": 0,
+          "expiration_type": "",
+          "expiration_length": 0,
+          "revenue_category_id": 303904,
+          "revenue_category": "Appointment Sales",
+          "membership_contract_template_id": 58082,
+          "contract_name": "Customer Agreement for Nutrition & Lifestyle Coach",
+          "service_id": 24317,
+          "service": "Nutrition / Lifestyle Coaching",
+          "service_duration_id": 30231,
+          "service_duration_hours": 0,
+          "service_duration_minutes": 30,
+          "allow_rollover": false,
+          "max_total_sessions": 0,
+          "created": {
+            "created_by_id": 4219402,
+            "created_by": "Shawn Jones",
+            "created_on_datetime": "2025-09-02T13:28:17Z"
+          },
+          "updated": {
+            "updated_by_id": 4354719,
+            "updated_by": "Jack Handfield",
+            "updated_on_datetime": "2025-12-31T13:58:14Z"
+          }
+        },
+        {
+          "id": 278391,
+          "name": "Nutrition \"Stride\" - 7 Pack",
+          "description": "",
+          "membership_type_id": 3,
+          "membership_type": "Appointment Pack",
+          "attendance_type_id": 1,
+          "attendance_type": "Unlimited",
+          "attendance_limit": 0,
+          "attendance_limit_frequency": 1,
+          "attendance_limit_type_id": 4,
+          "attendance_limit_type": "Days",
+          "number_of_sessions": 7,
+          "does_membership_expire": true,
+          "expiration_type_id": 1,
+          "expiration_type": "Months",
+          "expiration_length": 6,
+          "revenue_category_id": 303904,
+          "revenue_category": "Appointment Sales",
+          "membership_contract_template_id": 58082,
+          "contract_name": "Customer Agreement for Nutrition & Lifestyle Coach",
+          "service_id": 24317,
+          "service": "Nutrition / Lifestyle Coaching",
+          "service_duration_id": 30231,
+          "service_duration_hours": 0,
+          "service_duration_minutes": 30,
+          "allow_rollover": false,
+          "max_total_sessions": 0,
+          "created": {
+            "created_by_id": 4219402,
+            "created_by": "Shawn Jones",
+            "created_on_datetime": "2025-09-05T18:02:14Z"
+          },
+          "updated": {
+            "updated_by_id": 4219402,
+            "updated_by": "Shawn Jones",
+            "updated_on_datetime": "2025-10-08T23:44:06Z"
+          }
+        },
+        {
+          "id": 279253,
+          "name": "Nutrition Sessions 4/4wks (weekly)",
+          "description": "",
+          "membership_type_id": 4,
+          "membership_type": "Appointment Plan",
+          "attendance_type_id": 2,
+          "attendance_type": "Limited",
+          "attendance_limit": 4,
+          "attendance_limit_frequency": 28,
+          "attendance_limit_type_id": 4,
+          "attendance_limit_type": "Days",
+          "number_of_sessions": 1,
+          "does_membership_expire": false,
+          "expiration_type_id": 0,
+          "expiration_type": "",
+          "expiration_length": 0,
+          "revenue_category_id": 294896,
+          "revenue_category": "Membership Sales",
+          "membership_contract_template_id": 58082,
+          "contract_name": "Customer Agreement for Nutrition & Lifestyle Coach",
+          "service_id": 24317,
+          "service": "Nutrition / Lifestyle Coaching",
+          "service_duration_id": 30231,
+          "service_duration_hours": 0,
+          "service_duration_minutes": 30,
+          "allow_rollover": false,
+          "max_total_sessions": 0,
+          "created": {
+            "created_by_id": 4219402,
+            "created_by": "Shawn Jones",
+            "created_on_datetime": "2025-09-18T19:28:53Z"
+          },
+          "updated": {
+            "updated_by_id": 4354719,
+            "updated_by": "Jack Handfield",
+            "updated_on_datetime": "2025-12-31T13:59:55Z"
+          }
+        },
+        {
+          "id": 280211,
+          "name": "Accompanied Dependent Plan",
+          "description": "This membership is exclusively for a member who wants to occasionally bring a dependent child/family/friend along to a few (up to 4) classes per month",
+          "membership_type_id": 2,
+          "membership_type": "Class Plan",
+          "attendance_type_id": 2,
+          "attendance_type": "Limited",
+          "attendance_limit": 4,
+          "attendance_limit_frequency": 1,
+          "attendance_limit_type_id": 1,
+          "attendance_limit_type": "Months",
+          "number_of_sessions": 1,
+          "does_membership_expire": false,
+          "expiration_type_id": 0,
+          "expiration_type": "",
+          "expiration_length": 0,
+          "revenue_category_id": 294896,
+          "revenue_category": "Membership Sales",
+          "membership_contract_template_id": 57660,
+          "contract_name": "Class Membership Agreement v1.0",
+          "service_id": 0,
+          "service": "",
+          "service_duration_id": 0,
+          "service_duration_hours": 0,
+          "service_duration_minutes": 0,
+          "allow_rollover": false,
+          "max_total_sessions": 0,
+          "created": {
+            "created_by_id": 4219402,
+            "created_by": "Shawn Jones",
+            "created_on_datetime": "2025-10-03T21:18:06Z"
+          },
+          "updated": {
+            "updated_by_id": 4219402,
+            "updated_by": "Shawn Jones",
+            "updated_on_datetime": "2025-10-16T16:02:41Z"
+          }
+        },
+        {
+          "id": 281332,
+          "name": "💪🎄 Flex the Halls Challenge 🎄💪",
+          "description": "Build Muscle. Lift Heavy. Stay Consistent.\n\nThe holidays are coming… and while everyone else is coasting into cookie season, you’re going to be flexing through it.\n\nThis winter, we’re turning the holidays into a muscle-building season with the One Life CrossFit “Flex the Halls Challenge.”Six weeks of strength, discipline, and next-level gains — led by Coach Shawn and powered by Earth Fed Muscle.\n\n3 options for the challenge\n1. just the challenge\n2. challenge + 30 servings of grassfed whey protein + 60 servings of creatine + shaker bottle\n3. challenge + 60 servings of grassfed whey protein + 60 servings of creatine + shaker bottle\n\nSee more here: https://onelifecrossfit.com/blog/f/%F0%9F%92%AA%F0%9F%8E%84-flex-the-halls-challenge-%F0%9F%8E%84%F0%9F%92%AA\n",
+          "membership_type_id": 2,
+          "membership_type": "Class Plan",
+          "attendance_type_id": 1,
+          "attendance_type": "Unlimited",
+          "attendance_limit": 0,
+          "attendance_limit_frequency": 1,
+          "attendance_limit_type_id": 4,
+          "attendance_limit_type": "Days",
+          "number_of_sessions": 1,
+          "does_membership_expire": false,
+          "expiration_type_id": 0,
+          "expiration_type": "",
+          "expiration_length": 0,
+          "revenue_category_id": 294896,
+          "revenue_category": "Membership Sales",
+          "membership_contract_template_id": 61035,
+          "contract_name": "Time based \"Challenge\" Agreement",
+          "service_id": 0,
+          "service": "",
+          "service_duration_id": 0,
+          "service_duration_hours": 0,
+          "service_duration_minutes": 0,
+          "allow_rollover": false,
+          "max_total_sessions": 0,
+          "created": {
+            "created_by_id": 4219402,
+            "created_by": "Shawn Jones",
+            "created_on_datetime": "2025-10-23T23:22:01Z"
+          },
+          "updated": {
+            "updated_by_id": 4219402,
+            "updated_by": "Shawn Jones",
+            "updated_on_datetime": "2025-10-23T23:31:26Z"
+          }
+        },
+        {
+          "id": 286401,
+          "name": "Foundations",
+          "description": "Unlimited + Fundamentals + 3 PT Sessions",
+          "membership_type_id": 2,
+          "membership_type": "Class Plan",
+          "attendance_type_id": 1,
+          "attendance_type": "Unlimited",
+          "attendance_limit": 0,
+          "attendance_limit_frequency": 1,
+          "attendance_limit_type_id": 4,
+          "attendance_limit_type": "Days",
+          "number_of_sessions": 1,
+          "does_membership_expire": false,
+          "expiration_type_id": 0,
+          "expiration_type": "",
+          "expiration_length": 0,
+          "revenue_category_id": 294896,
+          "revenue_category": "Membership Sales",
+          "membership_contract_template_id": 57660,
+          "contract_name": "Class Membership Agreement v1.0",
+          "service_id": 0,
+          "service": "",
+          "service_duration_id": 0,
+          "service_duration_hours": 0,
+          "service_duration_minutes": 0,
+          "allow_rollover": false,
+          "max_total_sessions": 0,
+          "created": {
+            "created_by_id": 4354719,
+            "created_by": "Jack Handfield",
+            "created_on_datetime": "2026-01-05T22:58:15Z"
+          },
+          "updated": {
+            "updated_by_id": 4354719,
+            "updated_by": "Jack Handfield",
+            "updated_on_datetime": "2026-01-05T23:02:53Z"
+          }
+        },
+        {
+          "id": 286404,
+          "name": "Foundations",
+          "description": "1X Nutrition 2X Personal Training",
+          "membership_type_id": 3,
+          "membership_type": "Appointment Pack",
+          "attendance_type_id": 1,
+          "attendance_type": "Unlimited",
+          "attendance_limit": 0,
+          "attendance_limit_frequency": 1,
+          "attendance_limit_type_id": 4,
+          "attendance_limit_type": "Days",
+          "number_of_sessions": 3,
+          "does_membership_expire": false,
+          "expiration_type_id": 0,
+          "expiration_type": "",
+          "expiration_length": 0,
+          "revenue_category_id": 294896,
+          "revenue_category": "Membership Sales",
+          "membership_contract_template_id": 56807,
+          "contract_name": "Private Training Agreement",
+          "service_id": 18760,
+          "service": "Private Training",
+          "service_duration_id": 26624,
+          "service_duration_hours": 0,
+          "service_duration_minutes": 30,
+          "allow_rollover": false,
+          "max_total_sessions": 0,
+          "created": {
+            "created_by_id": 4354719,
+            "created_by": "Jack Handfield",
+            "created_on_datetime": "2026-01-05T23:07:32Z"
+          },
+          "updated": {
+            "updated_by_id": 4219402,
+            "updated_by": "Shawn Jones",
+            "updated_on_datetime": "2026-01-06T00:16:40Z"
+          }
+        },
+        {
+          "id": 287743,
+          "name": "Foundations -2 Sessions",
+          "description": "",
+          "membership_type_id": 3,
+          "membership_type": "Appointment Pack",
+          "attendance_type_id": 1,
+          "attendance_type": "Unlimited",
+          "attendance_limit": 0,
+          "attendance_limit_frequency": 1,
+          "attendance_limit_type_id": 4,
+          "attendance_limit_type": "Days",
+          "number_of_sessions": 2,
+          "does_membership_expire": true,
+          "expiration_type_id": 1,
+          "expiration_type": "Months",
+          "expiration_length": 3,
+          "revenue_category_id": 294896,
+          "revenue_category": "Membership Sales",
+          "membership_contract_template_id": 57660,
+          "contract_name": "Class Membership Agreement v1.0",
+          "service_id": 18760,
+          "service": "Private Training",
+          "service_duration_id": 26624,
+          "service_duration_hours": 0,
+          "service_duration_minutes": 30,
+          "allow_rollover": false,
+          "max_total_sessions": 0,
+          "created": {
+            "created_by_id": 4354719,
+            "created_by": "Jack Handfield",
+            "created_on_datetime": "2026-01-25T14:16:59Z"
+          },
+          "updated": {
+            "updated_by_id": 4354719,
+            "updated_by": "Jack Handfield",
+            "updated_on_datetime": "2026-01-25T14:17:14Z"
+          }
+        }
+      ],
+      "pagination": {
+        "page": 1,
+        "page_size": 51,
+        "has_more": false
+      }
+    },
+    "durationRawByService": {
+      "14467": {
+        "path": "/v1/appointments/services/14467",
+        "data": {
+          "id": 14467,
+          "name": "CrossFit Fundamentals",
+          "description": "",
+          "service_icon_id": 0,
+          "service_icon": "workout",
+          "hex_color": "#B71C1C",
+          "attendance_limit": 6,
+          "has_free_intro_limit": false,
+          "free_intro_limit": 0,
+          "durations": [
+            {
+              "id": 18629,
+              "duration_hour": 1,
+              "duration_minutes": 30
+            }
+          ],
+          "cancellation_policy": {
+            "has_cancellation_policy": false,
+            "cancellation_time_window": 1,
+            "cancellation_unit_of_time_id": 6,
+            "cancellation_unit_of_time": "Hour(s)",
+            "cancellation_has_loss_of_session": false,
+            "cancellation_has_fee": false,
+            "cancellation_fee": 0,
+            "cancellation_fee_tax_rate_id": 0,
+            "cancellation_fee_tax_rate": ""
+          },
+          "no_show_policy": {
+            "has_no_show_policy": false,
+            "no_show_has_loss_of_session": false,
+            "no_show_has_fee": false,
+            "no_show_fee": 0,
+            "no_show_fee_tax_rate_id": 0,
+            "no_show_fee_tax_rate": ""
+          },
+          "location_providers": [
+            {
+              "id": 15100,
+              "location_id": 9721,
+              "location": "One Life CrossFit",
+              "show_in_simple_sign_in": true,
+              "providers": []
+            }
+          ],
+          "bookings_open_time_window": 30,
+          "bookings_open_time_window_unit_of_time_id": 4,
+          "bookings_open_time_window_unit_of_time": "Day(s)",
+          "bookings_close_time_window": 1,
+          "bookings_close_time_window_unit_of_time_id": 6,
+          "bookings_close_time_window_unit_of_time": "Hour(s)",
+          "buffer_time": 0,
+          "appointments_can_start_at_00": true,
+          "appointments_can_start_at_05": false,
+          "appointments_can_start_at_10": false,
+          "appointments_can_start_at_15": true,
+          "appointments_can_start_at_20": false,
+          "appointments_can_start_at_25": false,
+          "appointments_can_start_at_30": true,
+          "appointments_can_start_at_35": false,
+          "appointments_can_start_at_40": false,
+          "appointments_can_start_at_45": true,
+          "appointments_can_start_at_50": false,
+          "appointments_can_start_at_55": false,
+          "waivers": [],
+          "is_active": false,
+          "created": {
+            "created_by_id": 4218937,
+            "created_by": "Hans Koellnberger",
+            "created_on_datetime": "2022-03-10T18:49:22Z"
+          },
+          "updated": {
+            "updated_by_id": 4219402,
+            "updated_by": "Shawn Jones",
+            "updated_on_datetime": "2023-08-01T22:56:58Z"
+          }
+        }
+      },
+      "15235": {
+        "path": "/v1/appointments/services/15235",
+        "data": {
+          "id": 15235,
+          "name": "CrossFit Fundamentals ",
+          "description": "Private training introduction to the CrossFit methodology. We teach safety, form and efficacy for the majority of movements we use in the methodology. Use this as a starting point or to enhance your knowledge and skill in major lifts, gymnastics and other movements.",
+          "service_icon_id": 0,
+          "service_icon": "workout",
+          "hex_color": "#FF5722",
+          "attendance_limit": 6,
+          "has_free_intro_limit": false,
+          "free_intro_limit": 0,
+          "durations": [
+            {
+              "id": 26669,
+              "duration_hour": 0,
+              "duration_minutes": 30
+            }
+          ],
+          "cancellation_policy": {
+            "has_cancellation_policy": true,
+            "cancellation_time_window": 12,
+            "cancellation_unit_of_time_id": 6,
+            "cancellation_unit_of_time": "Hour(s)",
+            "cancellation_has_loss_of_session": false,
+            "cancellation_has_fee": true,
+            "cancellation_fee": 20,
+            "cancellation_fee_tax_rate_id": 0,
+            "cancellation_fee_tax_rate": ""
+          },
+          "no_show_policy": {
+            "has_no_show_policy": true,
+            "no_show_has_loss_of_session": false,
+            "no_show_has_fee": true,
+            "no_show_fee": 45,
+            "no_show_fee_tax_rate_id": 0,
+            "no_show_fee_tax_rate": ""
+          },
+          "location_providers": [
+            {
+              "id": 15915,
+              "location_id": 9721,
+              "location": "One Life CrossFit",
+              "show_in_simple_sign_in": true,
+              "providers": []
+            }
+          ],
+          "bookings_open_time_window": 30,
+          "bookings_open_time_window_unit_of_time_id": 4,
+          "bookings_open_time_window_unit_of_time": "Day(s)",
+          "bookings_close_time_window": 1,
+          "bookings_close_time_window_unit_of_time_id": 6,
+          "bookings_close_time_window_unit_of_time": "Hour(s)",
+          "buffer_time": 0,
+          "appointments_can_start_at_00": true,
+          "appointments_can_start_at_05": false,
+          "appointments_can_start_at_10": false,
+          "appointments_can_start_at_15": true,
+          "appointments_can_start_at_20": false,
+          "appointments_can_start_at_25": false,
+          "appointments_can_start_at_30": true,
+          "appointments_can_start_at_35": false,
+          "appointments_can_start_at_40": false,
+          "appointments_can_start_at_45": true,
+          "appointments_can_start_at_50": false,
+          "appointments_can_start_at_55": false,
+          "waivers": [
+            {
+              "waiver_id": 92576,
+              "waiver": "One Life CrossFit Waiver"
+            }
+          ],
+          "is_active": true,
+          "created": {
+            "created_by_id": 4219402,
+            "created_by": "Shawn Jones",
+            "created_on_datetime": "2022-06-10T04:40:53Z"
+          },
+          "updated": {
+            "updated_by_id": 4219402,
+            "updated_by": "Shawn Jones",
+            "updated_on_datetime": "2025-04-21T15:48:49Z"
+          }
+        }
+      },
+      "15931": {
+        "path": "/v1/appointments/services/15931",
+        "data": {
+          "id": 15931,
+          "name": "Recovery",
+          "description": "Recovery Sessions are design to help you recover from your intense workouts. Our therapist will use a combination of methods to enhance your recovery such as:\r\n- Taping\r\n- Graston (Scraping)\r\n- Massage\r\n- Cupping\r\n",
+          "service_icon_id": 0,
+          "service_icon": "massage",
+          "hex_color": "#F9C000",
+          "attendance_limit": 1,
+          "has_free_intro_limit": false,
+          "free_intro_limit": 0,
+          "durations": [
+            {
+              "id": 19659,
+              "duration_hour": 0,
+              "duration_minutes": 30
+            }
+          ],
+          "cancellation_policy": {
+            "has_cancellation_policy": true,
+            "cancellation_time_window": 12,
+            "cancellation_unit_of_time_id": 6,
+            "cancellation_unit_of_time": "Hour(s)",
+            "cancellation_has_loss_of_session": false,
+            "cancellation_has_fee": true,
+            "cancellation_fee": 20,
+            "cancellation_fee_tax_rate_id": 0,
+            "cancellation_fee_tax_rate": ""
+          },
+          "no_show_policy": {
+            "has_no_show_policy": true,
+            "no_show_has_loss_of_session": false,
+            "no_show_has_fee": true,
+            "no_show_fee": 45,
+            "no_show_fee_tax_rate_id": 0,
+            "no_show_fee_tax_rate": ""
+          },
+          "location_providers": [
+            {
+              "id": 16659,
+              "location_id": 9721,
+              "location": "One Life CrossFit",
+              "show_in_simple_sign_in": true,
+              "providers": []
+            }
+          ],
+          "bookings_open_time_window": 30,
+          "bookings_open_time_window_unit_of_time_id": 4,
+          "bookings_open_time_window_unit_of_time": "Day(s)",
+          "bookings_close_time_window": 1,
+          "bookings_close_time_window_unit_of_time_id": 6,
+          "bookings_close_time_window_unit_of_time": "Hour(s)",
+          "buffer_time": 0,
+          "appointments_can_start_at_00": true,
+          "appointments_can_start_at_05": false,
+          "appointments_can_start_at_10": false,
+          "appointments_can_start_at_15": false,
+          "appointments_can_start_at_20": false,
+          "appointments_can_start_at_25": false,
+          "appointments_can_start_at_30": true,
+          "appointments_can_start_at_35": false,
+          "appointments_can_start_at_40": false,
+          "appointments_can_start_at_45": false,
+          "appointments_can_start_at_50": false,
+          "appointments_can_start_at_55": false,
+          "waivers": [
+            {
+              "waiver_id": 92576,
+              "waiver": "One Life CrossFit Waiver"
+            }
+          ],
+          "is_active": false,
+          "created": {
+            "created_by_id": 4219402,
+            "created_by": "Shawn Jones",
+            "created_on_datetime": "2022-08-18T17:16:22Z"
+          },
+          "updated": {
+            "updated_by_id": 4219402,
+            "updated_by": "Shawn Jones",
+            "updated_on_datetime": "2025-11-10T15:12:14Z"
+          }
+        }
+      },
+      "18760": {
+        "path": "/v1/appointments/services/18760",
+        "data": {
+          "id": 18760,
+          "name": "Private Training",
+          "description": "Why invest in personal training?\r\nPersonalized instruction means that every second of your gym time is devoted to meeting your needs. As a busy adult, finding time to prioritize exercise can often feel like an impossible task. However, Personal Training offers a solution tailored to your hectic schedule. Our flexible training options allow you to work out on your own time, with sessions conveniently scheduled around your commitments.\r\n\r\nWith 100% attention on you, your Personal Trainer can help you build a specific skill set, strengthen weak areas, gain a competitive edge in your sport, and stay motivated to reach your goals.",
+          "service_icon_id": 0,
+          "service_icon": "workout",
+          "hex_color": "#4CAF50",
+          "attendance_limit": 1,
+          "has_free_intro_limit": false,
+          "free_intro_limit": 0,
+          "durations": [
+            {
+              "id": 23187,
+              "duration_hour": 1,
+              "duration_minutes": 0
+            },
+            {
+              "id": 26624,
+              "duration_hour": 0,
+              "duration_minutes": 30
+            }
+          ],
+          "cancellation_policy": {
+            "has_cancellation_policy": true,
+            "cancellation_time_window": 12,
+            "cancellation_unit_of_time_id": 6,
+            "cancellation_unit_of_time": "Hour(s)",
+            "cancellation_has_loss_of_session": false,
+            "cancellation_has_fee": true,
+            "cancellation_fee": 20,
+            "cancellation_fee_tax_rate_id": 0,
+            "cancellation_fee_tax_rate": ""
+          },
+          "no_show_policy": {
+            "has_no_show_policy": true,
+            "no_show_has_loss_of_session": false,
+            "no_show_has_fee": true,
+            "no_show_fee": 45,
+            "no_show_fee_tax_rate_id": 0,
+            "no_show_fee_tax_rate": ""
+          },
+          "location_providers": [
+            {
+              "id": 19603,
+              "location_id": 9721,
+              "location": "One Life CrossFit",
+              "show_in_simple_sign_in": true,
+              "providers": []
+            }
+          ],
+          "bookings_open_time_window": 30,
+          "bookings_open_time_window_unit_of_time_id": 4,
+          "bookings_open_time_window_unit_of_time": "Day(s)",
+          "bookings_close_time_window": 1,
+          "bookings_close_time_window_unit_of_time_id": 6,
+          "bookings_close_time_window_unit_of_time": "Hour(s)",
+          "buffer_time": 0,
+          "appointments_can_start_at_00": true,
+          "appointments_can_start_at_05": false,
+          "appointments_can_start_at_10": false,
+          "appointments_can_start_at_15": true,
+          "appointments_can_start_at_20": false,
+          "appointments_can_start_at_25": false,
+          "appointments_can_start_at_30": true,
+          "appointments_can_start_at_35": false,
+          "appointments_can_start_at_40": false,
+          "appointments_can_start_at_45": true,
+          "appointments_can_start_at_50": false,
+          "appointments_can_start_at_55": false,
+          "waivers": [
+            {
+              "waiver_id": 92576,
+              "waiver": "One Life CrossFit Waiver"
+            }
+          ],
+          "is_active": true,
+          "created": {
+            "created_by_id": 4219402,
+            "created_by": "Shawn Jones",
+            "created_on_datetime": "2023-06-27T16:43:49Z"
+          },
+          "updated": {
+            "updated_by_id": 4219402,
+            "updated_by": "Shawn Jones",
+            "updated_on_datetime": "2025-12-26T15:42:49Z"
+          }
+        }
+      },
+      "23463": {
+        "path": "/v1/appointments/services/23463",
+        "data": {
+          "id": 23463,
+          "name": "Online Consultation ",
+          "description": "Book a session to tell us your goals and we will put together a plan on how to meet them. \r\n\r\nOur mission at One Life CrossFit is to coach greatness into your life. Fitness, accountability, and direction are the tools we use to attain your goals.\r\n\r\nThe meeting will be over video call. Your provided phone number will be used as a backup method. If you would like an in-person meeting please reach out to team@onelifecrossfit.com.",
+          "service_icon_id": 0,
+          "service_icon": "instructor",
+          "hex_color": "#00897B",
+          "attendance_limit": 1,
+          "has_free_intro_limit": true,
+          "free_intro_limit": 1,
+          "durations": [
+            {
+              "id": 29181,
+              "duration_hour": 0,
+              "duration_minutes": 30
+            }
+          ],
+          "cancellation_policy": {
+            "has_cancellation_policy": true,
+            "cancellation_time_window": 12,
+            "cancellation_unit_of_time_id": 6,
+            "cancellation_unit_of_time": "Hour(s)",
+            "cancellation_has_loss_of_session": false,
+            "cancellation_has_fee": true,
+            "cancellation_fee": 20,
+            "cancellation_fee_tax_rate_id": 0,
+            "cancellation_fee_tax_rate": ""
+          },
+          "no_show_policy": {
+            "has_no_show_policy": true,
+            "no_show_has_loss_of_session": false,
+            "no_show_has_fee": true,
+            "no_show_fee": 20,
+            "no_show_fee_tax_rate_id": 0,
+            "no_show_fee_tax_rate": ""
+          },
+          "location_providers": [
+            {
+              "id": 24419,
+              "location_id": 9721,
+              "location": "One Life CrossFit",
+              "show_in_simple_sign_in": true,
+              "providers": []
+            }
+          ],
+          "bookings_open_time_window": 30,
+          "bookings_open_time_window_unit_of_time_id": 4,
+          "bookings_open_time_window_unit_of_time": "Day(s)",
+          "bookings_close_time_window": 4,
+          "bookings_close_time_window_unit_of_time_id": 6,
+          "bookings_close_time_window_unit_of_time": "Hour(s)",
+          "buffer_time": 0,
+          "appointments_can_start_at_00": true,
+          "appointments_can_start_at_05": false,
+          "appointments_can_start_at_10": false,
+          "appointments_can_start_at_15": true,
+          "appointments_can_start_at_20": false,
+          "appointments_can_start_at_25": false,
+          "appointments_can_start_at_30": true,
+          "appointments_can_start_at_35": false,
+          "appointments_can_start_at_40": false,
+          "appointments_can_start_at_45": true,
+          "appointments_can_start_at_50": false,
+          "appointments_can_start_at_55": false,
+          "waivers": [],
+          "is_active": true,
+          "created": {
+            "created_by_id": 4219402,
+            "created_by": "Shawn Jones",
+            "created_on_datetime": "2024-12-26T15:24:43Z"
+          },
+          "updated": {
+            "updated_by_id": 4219402,
+            "updated_by": "Shawn Jones",
+            "updated_on_datetime": "2025-08-18T20:52:31Z"
+          }
+        }
+      },
+      "24317": {
+        "path": "/v1/appointments/services/24317",
+        "data": {
+          "id": 24317,
+          "name": "Nutrition / Lifestyle Coaching",
+          "description": "",
+          "service_icon_id": 0,
+          "service_icon": "nutritionEntry",
+          "hex_color": "#03A9F4",
+          "attendance_limit": 1,
+          "has_free_intro_limit": false,
+          "free_intro_limit": 0,
+          "durations": [
+            {
+              "id": 30231,
+              "duration_hour": 0,
+              "duration_minutes": 30
+            }
+          ],
+          "cancellation_policy": {
+            "has_cancellation_policy": true,
+            "cancellation_time_window": 12,
+            "cancellation_unit_of_time_id": 6,
+            "cancellation_unit_of_time": "Hour(s)",
+            "cancellation_has_loss_of_session": false,
+            "cancellation_has_fee": true,
+            "cancellation_fee": 20,
+            "cancellation_fee_tax_rate_id": 0,
+            "cancellation_fee_tax_rate": ""
+          },
+          "no_show_policy": {
+            "has_no_show_policy": true,
+            "no_show_has_loss_of_session": false,
+            "no_show_has_fee": true,
+            "no_show_fee": 45,
+            "no_show_fee_tax_rate_id": 0,
+            "no_show_fee_tax_rate": ""
+          },
+          "location_providers": [
+            {
+              "id": 25309,
+              "location_id": 9721,
+              "location": "One Life CrossFit",
+              "show_in_simple_sign_in": true,
+              "providers": []
+            }
+          ],
+          "bookings_open_time_window": 30,
+          "bookings_open_time_window_unit_of_time_id": 4,
+          "bookings_open_time_window_unit_of_time": "Day(s)",
+          "bookings_close_time_window": 12,
+          "bookings_close_time_window_unit_of_time_id": 6,
+          "bookings_close_time_window_unit_of_time": "Hour(s)",
+          "buffer_time": 0,
+          "appointments_can_start_at_00": true,
+          "appointments_can_start_at_05": false,
+          "appointments_can_start_at_10": false,
+          "appointments_can_start_at_15": true,
+          "appointments_can_start_at_20": false,
+          "appointments_can_start_at_25": false,
+          "appointments_can_start_at_30": true,
+          "appointments_can_start_at_35": false,
+          "appointments_can_start_at_40": false,
+          "appointments_can_start_at_45": true,
+          "appointments_can_start_at_50": false,
+          "appointments_can_start_at_55": false,
+          "waivers": [
+            {
+              "waiver_id": 92576,
+              "waiver": "One Life CrossFit Waiver"
+            }
+          ],
+          "is_active": true,
+          "created": {
+            "created_by_id": 4219402,
+            "created_by": "Shawn Jones",
+            "created_on_datetime": "2025-04-09T16:24:26Z"
+          },
+          "updated": {
+            "updated_by_id": 4219402,
+            "updated_by": "Shawn Jones",
+            "updated_on_datetime": "2025-12-26T15:43:06Z"
+          }
+        }
+      },
+      "24936": {
+        "path": "/v1/appointments/services/24936",
+        "data": {
+          "id": 24936,
+          "name": "Summer Skills Camp",
+          "description": "1 Hour Summer Skills Camp",
+          "service_icon_id": 0,
+          "service_icon": "workout",
+          "hex_color": "#ff5722",
+          "attendance_limit": 12,
+          "has_free_intro_limit": false,
+          "free_intro_limit": 0,
+          "durations": [
+            {
+              "id": 31033,
+              "duration_hour": 1,
+              "duration_minutes": 0
+            }
+          ],
+          "cancellation_policy": {
+            "has_cancellation_policy": true,
+            "cancellation_time_window": 12,
+            "cancellation_unit_of_time_id": 6,
+            "cancellation_unit_of_time": "Hour(s)",
+            "cancellation_has_loss_of_session": false,
+            "cancellation_has_fee": true,
+            "cancellation_fee": 20,
+            "cancellation_fee_tax_rate_id": 0,
+            "cancellation_fee_tax_rate": ""
+          },
+          "no_show_policy": {
+            "has_no_show_policy": true,
+            "no_show_has_loss_of_session": false,
+            "no_show_has_fee": true,
+            "no_show_fee": 25,
+            "no_show_fee_tax_rate_id": 0,
+            "no_show_fee_tax_rate": ""
+          },
+          "location_providers": [
+            {
+              "id": 25928,
+              "location_id": 9721,
+              "location": "One Life CrossFit",
+              "show_in_simple_sign_in": true,
+              "providers": []
+            }
+          ],
+          "bookings_open_time_window": 30,
+          "bookings_open_time_window_unit_of_time_id": 4,
+          "bookings_open_time_window_unit_of_time": "Day(s)",
+          "bookings_close_time_window": 0,
+          "bookings_close_time_window_unit_of_time_id": 6,
+          "bookings_close_time_window_unit_of_time": "Hour(s)",
+          "buffer_time": 0,
+          "appointments_can_start_at_00": true,
+          "appointments_can_start_at_05": false,
+          "appointments_can_start_at_10": false,
+          "appointments_can_start_at_15": true,
+          "appointments_can_start_at_20": false,
+          "appointments_can_start_at_25": false,
+          "appointments_can_start_at_30": true,
+          "appointments_can_start_at_35": false,
+          "appointments_can_start_at_40": false,
+          "appointments_can_start_at_45": true,
+          "appointments_can_start_at_50": false,
+          "appointments_can_start_at_55": false,
+          "waivers": [],
+          "is_active": true,
+          "created": {
+            "created_by_id": 4354719,
+            "created_by": "Jack Handfield",
+            "created_on_datetime": "2025-06-20T20:55:31Z"
+          },
+          "updated": {
+            "updated_by_id": 4219402,
+            "updated_by": "Shawn Jones",
+            "updated_on_datetime": "2025-11-10T15:12:14Z"
+          }
+        }
+      },
+      "26043": {
+        "path": "/v1/appointments/services/26043",
+        "data": {
+          "id": 26043,
+          "name": "Pop up Pilates",
+          "description": "",
+          "service_icon_id": 0,
+          "service_icon": "24_reformer",
+          "hex_color": "#4a9ec2",
+          "attendance_limit": 12,
+          "has_free_intro_limit": false,
+          "free_intro_limit": 1,
+          "durations": [
+            {
+              "id": 32552,
+              "duration_hour": 1,
+              "duration_minutes": 0
+            }
+          ],
+          "cancellation_policy": {
+            "has_cancellation_policy": true,
+            "cancellation_time_window": 12,
+            "cancellation_unit_of_time_id": 6,
+            "cancellation_unit_of_time": "Hour(s)",
+            "cancellation_has_loss_of_session": true,
+            "cancellation_has_fee": false,
+            "cancellation_fee": 20,
+            "cancellation_fee_tax_rate_id": 0,
+            "cancellation_fee_tax_rate": ""
+          },
+          "no_show_policy": {
+            "has_no_show_policy": true,
+            "no_show_has_loss_of_session": true,
+            "no_show_has_fee": false,
+            "no_show_fee": 45,
+            "no_show_fee_tax_rate_id": 0,
+            "no_show_fee_tax_rate": ""
+          },
+          "location_providers": [
+            {
+              "id": 27067,
+              "location_id": 9721,
+              "location": "One Life CrossFit",
+              "show_in_simple_sign_in": true,
+              "providers": []
+            }
+          ],
+          "bookings_open_time_window": 30,
+          "bookings_open_time_window_unit_of_time_id": 4,
+          "bookings_open_time_window_unit_of_time": "Day(s)",
+          "bookings_close_time_window": 12,
+          "bookings_close_time_window_unit_of_time_id": 6,
+          "bookings_close_time_window_unit_of_time": "Hour(s)",
+          "buffer_time": 0,
+          "appointments_can_start_at_00": true,
+          "appointments_can_start_at_05": false,
+          "appointments_can_start_at_10": false,
+          "appointments_can_start_at_15": true,
+          "appointments_can_start_at_20": false,
+          "appointments_can_start_at_25": false,
+          "appointments_can_start_at_30": true,
+          "appointments_can_start_at_35": false,
+          "appointments_can_start_at_40": false,
+          "appointments_can_start_at_45": true,
+          "appointments_can_start_at_50": false,
+          "appointments_can_start_at_55": false,
+          "waivers": [
+            {
+              "waiver_id": 92576,
+              "waiver": "One Life CrossFit Waiver"
+            }
+          ],
+          "is_active": false,
+          "created": {
+            "created_by_id": 4219402,
+            "created_by": "Shawn Jones",
+            "created_on_datetime": "2025-11-18T03:03:35Z"
+          },
+          "updated": {
+            "updated_by_id": 4219402,
+            "updated_by": "Shawn Jones",
+            "updated_on_datetime": "2025-11-18T17:35:18Z"
+          }
+        }
+      }
+    }
+  }
+}

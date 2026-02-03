@@ -44,6 +44,9 @@ image_notes: Use a community-focused group photo or coaching-in-action shot from
     - title: Hybrid
       description: Group classes plus personal coaching sessions (1/2/4/8 per 4 weeks).
       url: { type: internal, internal: /memberships/hybrid }
+    - title: Group Class
+      description: Unlimited CrossFit + Bootcamp classes with Open Gym access.
+      url: { type: internal, internal: /memberships/group-class }
     - title: Private Coaching
       description: One-on-one or semi-private coaching built around your goals.
       url: { type: internal, internal: /memberships/private-coaching }

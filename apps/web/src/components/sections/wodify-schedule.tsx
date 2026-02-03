@@ -3,6 +3,7 @@
 import { Badge } from "@workspace/ui/components/badge";
 import { Button } from "@workspace/ui/components/button";
 import { cn } from "@workspace/ui/lib/utils";
+import slugify from "slugify";
 import { useEffect, useMemo, useState } from "react";
 import { RichText } from "@/components/elements/rich-text";
 import {
@@ -485,6 +486,10 @@ export function WodifySchedule({
   className,
   preloaded,
 }: WodifyScheduleBlockProps) {
+  const sectionId = useMemo(() => {
+    if (!title) return undefined;
+    return slugify(String(title), { lower: true, strict: true });
+  }, [title]);
   const resolvedPreloaded = useMemo<WodifySchedulePreloaded | null>(() => {
     if (!preloaded) return null;
     if (Array.isArray(preloaded)) {
@@ -566,7 +571,7 @@ export function WodifySchedule({
   }, [filteredData, location]);
 
   return (
-    <section className={cn("my-8 md:my-16", className)}>
+    <section id={sectionId} className={cn("my-8 md:my-16", className)}>
       {scheduleJsonLd && (
         <script
           type="application/ld+json"

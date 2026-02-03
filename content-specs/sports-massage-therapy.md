@@ -34,19 +34,29 @@ image_notes: Use recovery or massage therapy imagery from the library.
   - variant: centered
   - title: Recovery is part of training
   - richText: Sports massage supports better movement, quicker recovery, and more consistent training.
-- featureCardsIcon (Benefits)
-  - title: Benefits
-  - cards:
-    - title: Recover faster
-      richText: Reduce soreness and improve recovery.
-    - title: Move better
-      richText: Support mobility and movement quality.
-    - title: Address tightness
-      richText: Relief for training or daily-life stress.
-- layout (Program Details)
+- layout (Benefits & Details)
   - variant: centered
-  - title: Program details
-  - richText: Targeted massage sessions focused on problem areas and movement restrictions.
+  - title: Benefits
+  - richText: |-
+      ### Benefits
+      - Recover faster: Reduce soreness and improve recovery.
+      - Move better: Support mobility and movement quality.
+      - Address tightness: Relief for training or daily-life stress.
+
+      ### Program details
+      Targeted massage sessions focused on problem areas and movement restrictions.
+
+      ### Who it’s for
+      - Athletes who train hard and want to recover smarter.
+      - Anyone dealing with tightness, stress, or limited mobility.
+      - Members who want better movement quality and consistency.
+- layout (Outcomes)
+  - variant: centered
+  - title: Outcomes you can expect
+  - richText: |-
+      - Better recovery and reduced soreness over time.
+      - Improved mobility and movement quality.
+      - Training that feels smoother and more consistent.
 - imageLinkCards (Top Memberships)
   - title: Recommended Memberships
   - cards:

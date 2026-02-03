@@ -1,17 +1,18 @@
 ---
 slug: /programs/private-training/1-1
-seo_title: 
+seo_title:
 seo_description: 1:1 personal training with individualized programming, technique coaching, and flexible scheduling to hit your goals faster and stay accountable.
-og_title: 
-og_description: 
+og_title:
+og_description:
 primary_keyword: personal training Santa Maria
-secondary_keywords: ["1:1 training Santa Maria", "private coaching Santa Maria", "personal trainer Santa Maria"]
+secondary_keywords: [ "1:1 training Santa Maria", "private coaching Santa Maria", "personal trainer Santa Maria" ]
 image_notes: Use assessment or one-on-one coaching imagery.
 ---
 
 # 1:1 Training
 
 ## Page Builder Blocks (ordered)
+
 - hero: Hero
 - layout: Intro
 - layout: Benefits & Details
@@ -21,67 +22,81 @@ image_notes: Use assessment or one-on-one coaching imagery.
 - faqAccordion: FAQs
 
 ## Blocks (config-ready)
+
 - hero
-  - variant: centered
-  - title: 1:1 Personal Training
-  - richText: Fully personalized coaching to help you reach your goals faster—strength, weight loss, performance, or recovery.
-  - buttons:
-    - text: Book A Free Consultation
-      url: { type: internal, internal: /free-consultation }
-    - text: Learn About Memberships
-      url: { type: internal, internal: #memberships-options }
+    - variant: centered
+    - title: 1:1 Personal Training
+    - richText: Fully personalized coaching to help you reach your goals faster—strength, weight loss, performance, or
+      recovery.
+    - buttons:
+        - text: Book A Free Consultation
+          url: { type: internal, internal: /free-consultation }
+        - text: Learn About Memberships
+          url: { type: internal, internal: #memberships-options }
 - layout (Intro)
-  - variant: centered
-  - title: Train with a coach focused 100% on you
-  - richText: 1:1 training is the fastest way to move the needle. Every session is customized to your goals, schedule, and limitations.
+    - variant: centered
+    - title: Train with a coach focused 100% on you
+    - richText: 1:1 training is the fastest way to move the needle. Every session is customized to your goals, schedule,
+      and limitations.
 - layout (Benefits & Details)
-  - variant: centered
-  - title: Benefits
-  - richText: |-
+    - variant: centered
+    - title: Benefits
+    - richText: |-
       ### Train with a coach focused 100% on you
-      1:1 training is the fastest way to move the needle. Every session is customized to your goals, schedule, and limitations.
+      1:1 training is the fastest way to move the needle. Every session is customized to your goals, schedule, and
+      limitations.
 
       ### Benefits
-      - Individualized programming: Training tailored to your goals and needs.
-      - Faster feedback: Technique correction and real-time coaching.
-      - Injury-aware coaching: Scale around injuries or limitations.
-      - Flexible scheduling: Sessions that work with your life.
+        - Individualized programming: Training tailored to your goals and needs.
+        - Faster feedback: Technique correction and real-time coaching.
+        - Injury-aware coaching: Scale around injuries or limitations.
+        - Flexible scheduling: Sessions that work with your life.
 - layout (Program Details & What To Expect)
-  - variant: centered
-  - title: Program details
-  - richText: |-
+    - variant: centered
+    - title: Program details
+    - richText: |-
       ### Program details
       Personalized assessment, customized training plan, progress tracking, and optional nutrition/lifestyle support.
 
       ### What to expect
       One coach, one athlete. Sessions tailored to your goals with clear progressions and scaling.
+
+      ### Who it’s for
+        - Busy professionals who want efficient, focused training.
+        - Athletes with specific performance goals or skill gaps.
+        - Anyone who prefers private coaching or needs injury-aware progressions.
+
+      ### Outcomes you can expect
+        - Better movement quality and confidence in training.
+        - Faster progress toward strength, performance, or fat-loss goals.
+        - A clear plan and accountability you can sustain.
 - imageLinkCards (Top Memberships)
-  - title: Top Memberships
-  - cards:
-    - title: Private Coaching
-      description: Fully personalized coaching options for focused goals.
-      url: { type: internal, internal: /memberships/private-coaching }
-    - title: Hybrid
-      description: Group classes plus personal coaching sessions (1/2/4/8 per 4 weeks).
-      url: { type: internal, internal: /memberships/hybrid }
-  - buttons:
-    - text: See All Options
-      url: { type: internal, internal: /memberships }
+    - title: Top Memberships
+    - cards:
+        - title: Private Coaching
+          description: Fully personalized coaching options for focused goals.
+          url: { type: internal, internal: /memberships/private-coaching }
+        - title: Hybrid
+          description: Group classes plus personal coaching sessions (1/2/4/8 per 4 weeks).
+          url: { type: internal, internal: /memberships/hybrid }
+    - buttons:
+        - text: See All Options
+          url: { type: internal, internal: /memberships }
 - cta
-  - title: Ready for focused coaching?
-  - richText: Book a free consultation to map out your 1:1 training plan.
-  - buttons:
-    - text: Book A Free Consultation
-      url: { type: internal, internal: /free-consultation }
-    - text: Learn About Memberships
-      url: { type: internal, internal: #memberships-options }
+    - title: Ready for focused coaching?
+    - richText: Book a free consultation to map out your 1:1 training plan.
+    - buttons:
+        - text: Book A Free Consultation
+          url: { type: internal, internal: /free-consultation }
+        - text: Learn About Memberships
+          url: { type: internal, internal: #memberships-options }
 - faqAccordion
-  - title: FAQs
-  - faqs:
-    - faq-pt1-1-best-for
-    - faq-pt1-1-injuries
-    - faq-pt1-1-scheduling
-    - faq-pt1-1-combine
+    - title: FAQs
+    - faqs:
+        - faq-pt1-1-best-for
+        - faq-pt1-1-injuries
+        - faq-pt1-1-scheduling
+        - faq-pt1-1-combine
 
 ## Hero
 

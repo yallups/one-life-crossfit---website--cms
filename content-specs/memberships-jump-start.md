@@ -32,15 +32,24 @@ image_notes: Use onboarding or small-group training imagery.
   - variant: centered
   - title: Your fast path to feeling confident in class
   - richText: Jump Start is a shorter, simplified option for people who want to get moving fast. You’ll learn foundational movements and jump into group classes with coaching and scaling.
-- featureCardsIcon (What You Get)
+- layout (What You Get)
+  - variant: centered
   - title: What You Get
-  - cards:
-    - title: Group classes with expert coaching
-      richText: Scaled options every class.
-    - title: Fundamentals (1:1 or small group)
-      richText: High-contact coaching, CrossFit methodology education, and scaling prescriptions.
-    - title: Clear next steps
-      richText: Guidance on your best follow-on membership.
+  - richText: |-
+      ### What you get
+      - Group classes with expert coaching: Scaled options every class.
+      - Fundamentals (1:1 or small group): High-contact coaching, CrossFit methodology education, and scaling prescriptions.
+      - Clear next steps: Guidance on your best follow-on membership.
+
+      ### Who it’s for
+      - New athletes who want a fast, safe start.
+      - Busy people who want structure without a long onboarding.
+      - Anyone who wants confidence before jumping into full-time classes.
+
+      ### Outcomes you can expect
+      - Better technique and confidence in class.
+      - Consistent training habits.
+      - A clear next step for your membership path.
 - cta
   - title: Ready for a strong start?
   - richText: Purchase your membership online, or book a free consultation if you want guidance first.

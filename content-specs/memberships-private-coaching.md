@@ -14,7 +14,8 @@ image_notes: Use 1:1 coaching or assessment imagery.
 ## Page Builder Blocks (ordered)
 - hero: Hero
 - layout: Intro
-- featureCardsIcon: What You Get
+- layout: What You Get
+- imageLinkCards: Purchase Options
 - cta: CTA / Next Step
 - faqAccordion: FAQs
 
@@ -32,17 +33,41 @@ image_notes: Use 1:1 coaching or assessment imagery.
   - variant: centered
   - title: Personalized coaching that fits your goals
   - richText: Private coaching is ideal if you want individualized attention, have specific performance goals, or prefer not to train in a group setting. If you want a blend of group classes and personal coaching, check out our Hybrid options.
-- featureCardsIcon (What You Get)
+- layout (What You Get)
+  - variant: centered
   - title: What You Get
+  - richText: |-
+      ### What you get
+      - 1:1 or semi-private coaching: Personalized sessions built around your goals.
+      - Personalized training plan: A plan tailored to your goals and schedule.
+      - Movement assessments: Progress tracking and focused feedback.
+      - Optional nutrition coaching: Add nutrition/lifestyle coaching if desired.
+
+      ### Who it’s for
+      - Anyone who wants individualized coaching and accountability.
+      - Athletes with performance goals or technique gaps.
+      - Members with injuries or limitations who need smarter scaling.
+
+      ### Outcomes you can expect
+      - Better movement quality and confidence.
+      - Faster progress toward specific goals.
+      - A clear plan you can sustain.
+- imageLinkCards (Purchase Options)
+  - title: Purchase Options
+  - richText: Choose the private coaching option that matches your goals and schedule. Purchase through the online sales portal.
   - cards:
-    - title: 1:1 or semi-private coaching
-      richText: Personalized coaching options built around your goals.
-    - title: Personalized training plan
-      richText: A plan tailored to your goals and schedule.
-    - title: Movement assessments
-      richText: Progress tracking and focused feedback.
-    - title: Optional nutrition coaching
-      richText: Add nutrition/lifestyle coaching if desired.
+      - title: Session packs (30 min)
+        description: 1, 4, 12, 24, or 48 sessions.
+        url: { type: external, external: https://onelifefitness.wodify.com/OnlineSalesPage/Main?q=Memberships%7CLocationId%3D9721, openInNewTab: true }
+      - title: Session packs (60 min)
+        description: 4, 12, 24, or 48 sessions.
+        url: { type: external, external: https://onelifefitness.wodify.com/OnlineSalesPage/Main?q=Memberships%7CLocationId%3D9721, openInNewTab: true }
+      - title: Monthly coaching sessions
+        description: 1, 2, 4, or 8 sessions per 4 weeks.
+        url: { type: external, external: https://onelifefitness.wodify.com/OnlineSalesPage/Main?q=Memberships%7CLocationId%3D9721, openInNewTab: true }
+      - title: Complete fitness consultation (60 min)
+        description: One deep-dive session for training, nutrition, and conditioning.
+        url: { type: external, external: https://onelifefitness.wodify.com/OnlineSalesPage/Main?q=Memberships%7CLocationId%3D9721, openInNewTab: true }
 - cta
   - title: Want a fully personalized plan?
   - richText: Purchase your membership online, or book a free consultation if you want guidance first.

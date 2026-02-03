@@ -31,7 +31,7 @@ image_notes: Use women-focused training imagery from the library.
     - text: Come Try a Free Class (Ladies Only)
       url: { type: internal, internal: /free-consultation }
     - text: View Schedule
-      url: { type: internal, internal: /schedule }
+      url: { type: internal, internal: #schedule }
 - layout (Intro)
   - variant: centered
   - title: Abs & A$$
@@ -52,7 +52,19 @@ image_notes: Use women-focused training imagery from the library.
 - layout (Program Details)
   - variant: centered
   - title: Program details
-  - richText: 2–3 programmed days per week focused on core + glutes, optional open gym access, occasional coached classes.
+  - richText: |-
+      ### Program details
+      2–3 programmed days per week focused on core + glutes, optional open gym access, occasional coached classes.
+
+      ### Who it’s for
+      - Women who want focused core + glute training.
+      - Anyone who wants a low‑cost add‑on to CrossFit or Bootcamp.
+      - Members who prefer at‑home or open‑gym flexibility.
+
+      ### Outcomes you can expect
+      - Better core strength and glute development.
+      - More confidence in training consistency.
+      - A simple program you can stick to.
 - layout (Class Format)
   - variant: centered
   - title: What to expect
@@ -80,7 +92,7 @@ image_notes: Use women-focused training imagery from the library.
     - text: Come Try a Free Class (Ladies Only)
       url: { type: internal, internal: /free-consultation }
     - text: View Schedule
-      url: { type: internal, internal: /schedule }
+      url: { type: internal, internal: #schedule }
 - faqAccordion
   - title: FAQs
   - faqs:
@@ -95,7 +107,7 @@ image_notes: Use women-focused training imagery from the library.
 - primary_cta: Come Try a Free Class (Ladies Only)
 - primary_cta_link: https://onelifecrossfit.com/free-consultation
 - secondary_cta: View Schedule
-- secondary_cta_link: https://onelifecrossfit.com/schedule
+- secondary_cta_link: #schedule
 - hero_image_notes: Women training group image.
 
 ## Intro
@@ -147,7 +159,7 @@ occasional classes.
 - primary_cta: Come Try a Free Class (Ladies Only)
 - primary_cta_link: https://onelifecrossfit.com/free-consultation
 - secondary_cta: View Schedule
-- secondary_cta_link: https://onelifecrossfit.com/schedule
+- secondary_cta_link: #schedule
 
 ## FAQs
 

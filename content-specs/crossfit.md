@@ -30,8 +30,8 @@ image_notes: Hero image: image-ff90780659f7467ec5e864167db33a85da29cc13-2001x300
   - buttons:
     - text: Book A Free Consultation
       url: { type: internal, internal: /free-consultation }
-    - text: Purchase A Membership
-      url: { type: internal, internal: #memberships-options }
+    - text: Book A Free Class
+      url: { type: internal, internal: /free-consultation }
   - media: image-ff90780659f7467ec5e864167db33a85da29cc13-2001x3000-jpg
 - layout (Intro)
   - variant: centered
@@ -77,8 +77,8 @@ image_notes: Hero image: image-ff90780659f7467ec5e864167db33a85da29cc13-2001x300
   - buttons:
     - text: Book A Free Consultation
       url: { type: internal, internal: /free-consultation }
-    - text: Purchase A Membership
-      url: { type: internal, internal: #memberships-options }
+    - text: Book A Free Class
+      url: { type: internal, internal: /free-consultation }
 - faqAccordion
   - title: FAQs
   - faqs:
@@ -96,8 +96,8 @@ image_notes: Hero image: image-ff90780659f7467ec5e864167db33a85da29cc13-2001x300
 - subheadline: Lose weight, build strength, gain confidence, and train with a community that supports you—through professionally coached CrossFit classes with unlimited access in Santa Maria.
 - primary_cta: Book A Free Consultation
 - primary_cta_link: https://onelifecrossfit.com/free-consultation
-- secondary_cta: Purchase A Membership
-- secondary_cta_link: #memberships-options
+- secondary_cta: Book A Free Class
+- secondary_cta_link: https://onelifecrossfit.com/free-consultation
 - hero_image_notes: image-ff90780659f7467ec5e864167db33a85da29cc13-2001x3000-jpg
 
 ## Intro
@@ -175,8 +175,8 @@ image_notes: Hero image: image-ff90780659f7467ec5e864167db33a85da29cc13-2001x300
 - body: Book a free consultation and we’ll map out the best path for your goals, timeline, and experience level.
 - primary_cta: Book A Free Consultation
 - primary_cta_link: https://onelifecrossfit.com/free-consultation
-- secondary_cta: Purchase A Membership
-- secondary_cta_link: #memberships-options
+- secondary_cta: Book A Free Class
+- secondary_cta_link: https://onelifecrossfit.com/free-consultation
 
 ## FAQs
 - Q: I’m new to CrossFit. Can I still join?

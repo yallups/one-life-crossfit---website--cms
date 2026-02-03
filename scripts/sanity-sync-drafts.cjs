@@ -202,7 +202,7 @@ const parseBlocksSection = (body) => {
       continue;
     }
     if (!currentBlock) continue;
-    if (indent === 2 && trimmed.startsWith("- ")) {
+    if (indent >= 2 && trimmed.startsWith("- ") && !currentCollectionKey) {
       finalizeCollection();
       const fieldLine = trimmed.slice(2).trim();
       const [rawKey, rawValue] = splitFirst(fieldLine);
@@ -220,7 +220,7 @@ const parseBlocksSection = (body) => {
       }
       continue;
     }
-    if (indent === 4 && trimmed.startsWith("- ")) {
+    if (currentCollectionKey && indent >= 4 && trimmed.startsWith("- ")) {
       if (!currentCollectionKey) continue;
       const itemLine = trimmed.slice(2).trim();
       const [rawKey, rawValue] = splitFirst(itemLine);
@@ -494,17 +494,19 @@ const buildBlock = async (block, slugMap, assetMap, randomAssetId) => {
     }
     if (key === "cards" && Array.isArray(value)) {
       if (block._type === "imageLinkCards") {
-        out.cards = value.map((card) => ({
-          _type: "imageLinkCard",
-          _key: crypto.randomUUID(),
-          title: card.title,
-          description: card.description,
-          image:
-            card.image ||
-            (randomAssetId ? buildImageField(randomAssetId()) : undefined),
-          url: buildCustomUrl(card.url, slugMap),
-          buttons: mapButtons(card.buttons, slugMap),
-        }));
+        out.cards = value
+          .filter((card) => card.title && card.description)
+          .map((card) => ({
+            _type: "imageLinkCard",
+            _key: crypto.randomUUID(),
+            title: card.title,
+            description: card.description,
+            image:
+              card.image ||
+              (randomAssetId ? buildImageField(randomAssetId()) : undefined),
+            url: buildCustomUrl(card.url, slugMap),
+            buttons: mapButtons(card.buttons, slugMap),
+          }));
       } else if (block._type === "featureCardsIcon") {
         out.cards = value.map((card) => ({
           _type: "featureCardIcon",
