@@ -22,7 +22,7 @@ image_notes: Use high-energy class or coaching imagery.
 - hero
   - variant: centered
   - title: Group Class Membership
-  - richText: Unlimited access to CrossFit and Bootcamp classes plus Open Gym—coach-led, community-driven, and results-focused.
+  - richText: Unlimited access to [CrossFit](/programs/group-training/crossfit) and [Bootcamp](/programs/group-training/bootcamp) classes plus Open Gym—coach-led, community-driven, and results-focused.
   - buttons:
     - text: Purchase Membership
       url: { type: external, external: https://onelifefitness.wodify.com/OnlineSalesPage/Main?q=Memberships%7CLocationId%3D9721 }
@@ -91,7 +91,7 @@ image_notes: Use high-energy class or coaching imagery.
 - Q: Can I start with one option and change later?
   A: Yes. As your goals or schedule change, we can move you into a different membership path.
 - Q: Is there a membership that includes private coaching?
-  A: Yes. Our Hybrid memberships include monthly personal coaching sessions.
+  A: Yes. Our [Hybrid](/memberships/hybrid) memberships include monthly personal coaching sessions.
 
 ## Internal Links
 - /memberships

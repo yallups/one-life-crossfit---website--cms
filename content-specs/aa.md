@@ -48,7 +48,7 @@ image_notes: Use women-focused training imagery from the library.
     - title: Occasional coached classes
       richText: Guidance and motivation when you need it.
     - title: Great complement
-      richText: Works alongside CrossFit or Bootcamp, or stand-alone.
+      richText: Works alongside [CrossFit](/programs/group-training/crossfit) or [Bootcamp](/programs/group-training/bootcamp), or stand-alone.
 - layout (Program Details)
   - variant: centered
   - title: Program details
@@ -58,7 +58,7 @@ image_notes: Use women-focused training imagery from the library.
 
       ### Who it’s for
       - Women who want focused core + glute training.
-      - Anyone who wants a low‑cost add‑on to CrossFit or Bootcamp.
+      - Anyone who wants a low‑cost add‑on to [CrossFit](/programs/group-training/crossfit) or [Bootcamp](/programs/group-training/bootcamp).
       - Members who prefer at‑home or open‑gym flexibility.
 
       ### Outcomes you can expect

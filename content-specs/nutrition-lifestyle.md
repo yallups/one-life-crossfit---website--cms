@@ -45,7 +45,7 @@ image_notes: Use coaching consult or healthy lifestyle imagery from the library.
         - Personalized guidance: Coaching based on your goals and lifestyle.
         - Habit-based approach: Sustainable changes you can maintain.
         - Performance + recovery support: Better fuel for training and recovery.
-        - Works with any program: Pairs well with CrossFit, Bootcamp, or private coaching.
+        - Works with any program: Pairs well with [CrossFit](/programs/group-training/crossfit), [Bootcamp](/programs/group-training/bootcamp), or private coaching.
         - Complimentary [InBody scan](/programs/inbody-scan): Free weigh‑in included with each nutrition coaching session.
 
       ### Program details

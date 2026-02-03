@@ -35,7 +35,7 @@ image_notes: Hero image: image-0ed914850a58ecf00b75107a88d739f1cbb7e210-2001x300
 - layout (Intro)
   - variant: centered
   - title: Simple movements. Big results.
-  - richText: Bootcamp is functional, high-intensity training without the complex lifts. It’s a great place to start if you’re new, and a great complement to CrossFit if you want extra metabolic conditioning. You’ll move more, sweat more, and finish in 45 minutes.
+  - richText: Bootcamp is functional, high-intensity training without the complex lifts. It’s a great place to start if you’re new, and a great complement to [CrossFit](/programs/group-training/crossfit) if you want extra metabolic conditioning. You’ll move more, sweat more, and finish in 45 minutes.
 - layout (Program Details)
   - variant: centered
   - title: Bootcamp is CrossFit - Simplified
@@ -68,7 +68,7 @@ image_notes: Hero image: image-0ed914850a58ecf00b75107a88d739f1cbb7e210-2001x300
   - showCoach: true
 - cta
   - title: Ready to get moving?
-  - richText: Book a free consultation and we’ll recommend the best path for your goals—Bootcamp, CrossFit, or both.
+  - richText: Book a free consultation and we’ll recommend the best path for your goals—Bootcamp, [CrossFit](/programs/group-training/crossfit), or both.
   - buttons:
     - text: Book A Free Consultation
       url: { type: internal, internal: /free-consultation }
@@ -153,13 +153,13 @@ image_notes: Hero image: image-0ed914850a58ecf00b75107a88d739f1cbb7e210-2001x300
 
 ## FAQs
 - Q: Is Bootcamp good for beginners?
-  A: Yes. Bootcamp uses simpler movement patterns and is a great starting point for anyone new to fitness or CrossFit.
+  A: Yes. Bootcamp uses simpler movement patterns and is a great starting point for anyone new to fitness or [CrossFit](/programs/group-training/crossfit).
 - Q: How is Bootcamp different from CrossFit?
   A: Bootcamp keeps training functional and high intensity, but removes complex lifts and focuses on continuous conditioning.
 - Q: How long is class?
   A: Bootcamp classes are 45 minutes.
 - Q: Can I do Bootcamp and CrossFit?
-  A: Absolutely. Many members use Bootcamp as extra conditioning alongside their CrossFit training.
+  A: Absolutely. Many members use Bootcamp as extra conditioning alongside their [CrossFit](/programs/group-training/crossfit) training.
 - Q: Will I still get coaching and scaling?
   A: Yes. Every class is coach-led with scaling options to match your ability and comfort.
 - Q: Is Bootcamp good for weight loss?

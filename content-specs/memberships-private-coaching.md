@@ -32,7 +32,7 @@ image_notes: Use 1:1 coaching or assessment imagery.
 - layout (Intro)
   - variant: centered
   - title: Personalized coaching that fits your goals
-  - richText: Private coaching is ideal if you want individualized attention, have specific performance goals, or prefer not to train in a group setting. If you want a blend of group classes and personal coaching, check out our Hybrid options.
+  - richText: Private coaching is ideal if you want individualized attention, have specific performance goals, or prefer not to train in a group setting. If you want a blend of group classes and personal coaching, check out our [Hybrid](/memberships/hybrid) options.
 - layout (What You Get)
   - variant: centered
   - title: What You Get

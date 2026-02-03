@@ -22,7 +22,7 @@ image_notes: Use class photo or gym interior image.
 - hero
   - variant: centered
   - title: Class Schedule
-  - richText: Find a class time that fits your life. CrossFit and Bootcamp classes run throughout the week with expert coaching in every session.
+  - richText: Find a class time that fits your life. [CrossFit](/programs/group-training/crossfit) and [Bootcamp](/programs/group-training/bootcamp) classes run throughout the week with expert coaching in every session.
   - buttons:
     - text: Book A Free Consultation
       url: { type: internal, internal: /free-consultation }

@@ -22,7 +22,7 @@ image_notes: Use onboarding or small-group training imagery.
 - hero
   - variant: centered
   - title: Jump Start
-  - richText: A streamlined on-ramp to CrossFit—learn the basics, build consistency, and start training with confidence.
+  - richText: A streamlined on-ramp to [CrossFit](/programs/group-training/crossfit)—learn the basics, build consistency, and start training with confidence.
   - buttons:
     - text: Purchase Membership
       url: { type: external, external: https://onelifefitness.wodify.com/OnlineSalesPage/Main?q=Memberships%7CLocationId%3D9721 }
@@ -38,7 +38,7 @@ image_notes: Use onboarding or small-group training imagery.
   - richText: |-
       ### What you get
       - Group classes with expert coaching: Scaled options every class.
-      - Fundamentals (1:1 or small group): High-contact coaching, CrossFit methodology education, and scaling prescriptions.
+      - Fundamentals (1:1 or small group): High-contact coaching, [CrossFit](/programs/group-training/crossfit) methodology education, and scaling prescriptions.
       - Clear next steps: Guidance on your best follow-on membership.
 
       ### Who it’s for
@@ -104,7 +104,7 @@ image_notes: Use onboarding or small-group training imagery.
 ## FAQs
 
 - Q: How is Jump Start different from New Foundations?
-  A: Jump Start is a streamlined on-ramp focused on fundamentals and group classes, while New Foundations includes more
+  A: Jump Start is a streamlined on-ramp focused on fundamentals and group classes, while [New Foundations](/memberships/new-foundations) includes more
   private coaching and assessments.
 - Q: Is this good if I’m new to CrossFit?
   A: Yes. You’ll learn the basics and get coaching each class.

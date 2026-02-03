@@ -34,22 +34,22 @@ notes: Create these FAQ documents in Sanity, then reference by _id in page FAQ b
 ## bootcamp
 - id: faq-bootcamp-beginners
   question: Is Bootcamp good for beginners?
-  answer: Yes. Bootcamp uses simpler movement patterns and is a great starting point for anyone new to fitness or CrossFit.
+  answer: Yes. [Bootcamp](/programs/group-training/bootcamp) uses simpler movement patterns and is a great starting point for anyone new to fitness or [CrossFit](/programs/group-training/crossfit).
 - id: faq-bootcamp-difference
   question: How is Bootcamp different from CrossFit?
-  answer: Bootcamp keeps training functional and high intensity, but removes complex lifts and focuses on continuous conditioning.
+  answer: [Bootcamp](/programs/group-training/bootcamp) keeps training functional and high intensity, but removes complex lifts and focuses on continuous conditioning.
 - id: faq-bootcamp-length
   question: How long is class?
-  answer: Bootcamp classes are 45 minutes.
+  answer: [Bootcamp](/programs/group-training/bootcamp) classes are 45 minutes.
 - id: faq-bootcamp-combine
   question: Can I do Bootcamp and CrossFit?
-  answer: Absolutely. Many members use Bootcamp as extra conditioning alongside their CrossFit training.
+  answer: Absolutely. Many members use [Bootcamp](/programs/group-training/bootcamp) as extra conditioning alongside their [CrossFit](/programs/group-training/crossfit) training.
 - id: faq-bootcamp-scaling
   question: Will I still get coaching and scaling?
   answer: Yes. Every class is coach-led with scaling options to match your ability and comfort.
 - id: faq-bootcamp-weight-loss
   question: Is Bootcamp good for weight loss?
-  answer: Bootcamp is designed for high-intensity conditioning, making it an excellent option for weight loss and improved fitness.
+  answer: [Bootcamp](/programs/group-training/bootcamp) is designed for high-intensity conditioning, making it an excellent option for weight loss and improved fitness.
 - id: faq-bootcamp-injuries
   question: What if I have injuries or limitations?
   answer: Coaches can scale movements for injuries, limitations, or low-impact needs.
@@ -66,7 +66,7 @@ notes: Create these FAQ documents in Sanity, then reference by _id in page FAQ b
   answer: Yes. As your goals or schedule change, we can move you into a different membership path.
 - id: faq-memberships-private
   question: Is there a membership that includes private coaching?
-  answer: Yes. Our Hybrid memberships include monthly personal coaching sessions.
+  answer: Yes. Our [Hybrid](/memberships/hybrid) memberships include monthly personal coaching sessions.
 - id: faq-memberships-private-only
   question: Do you offer private training only?
   answer: Yes. Private coaching is available for anyone who wants a fully personalized plan.
@@ -77,7 +77,7 @@ notes: Create these FAQ documents in Sanity, then reference by _id in page FAQ b
 ## group-class
 - id: faq-group-class-what-included
   question: What’s included in the Group Class Membership?
-  answer: Unlimited CrossFit and Bootcamp classes plus Open Gym access and coach-led scaling.
+  answer: Unlimited [CrossFit](/programs/group-training/crossfit) and [Bootcamp](/programs/group-training/bootcamp) classes plus Open Gym access and coach-led scaling.
 
 ## new-foundations
 - id: faq-foundations-beginners
@@ -88,18 +88,18 @@ notes: Create these FAQ documents in Sanity, then reference by _id in page FAQ b
   answer: Perfect. Fundamentals sessions teach the basics so you can train safely and confidently.
 - id: faq-foundations-length
   question: How long is the program?
-  answer: New Foundations is a 12-week start with clear milestones and a progress retest.
+  answer: [New Foundations](/memberships/new-foundations) is a 12-week start with clear milestones and a progress retest.
 - id: faq-foundations-after
   question: What happens after the 12 weeks?
-  answer: We’ll recommend your next best fit, typically a Hybrid or Group membership based on your goals.
+  answer: We’ll recommend your next best fit, typically a [Hybrid](/memberships/hybrid) or Group membership based on your goals.
 - id: faq-foundations-nutrition
   question: Do you offer nutrition guidance?
-  answer: Yes. New Foundations includes a nutrition assessment and plan to support your results.
+  answer: Yes. [New Foundations](/memberships/new-foundations) includes a nutrition assessment and plan to support your results.
 
 ## jump-start
 - id: faq-jumpstart-difference
   question: How is Jump Start different from New Foundations?
-  answer: Jump Start is a streamlined on-ramp focused on fundamentals and group classes, while New Foundations includes more private coaching and assessments.
+  answer: [Jump Start](/memberships/jump-start) is a streamlined on-ramp focused on fundamentals and group classes, while [New Foundations](/memberships/new-foundations) includes more private coaching and assessments.
 - id: faq-jumpstart-beginners
   question: Is this good if I’m new to CrossFit?
   answer: Yes. You’ll learn the basics and get coaching each class.

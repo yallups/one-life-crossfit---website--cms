@@ -179,7 +179,7 @@ image_notes: Use a community-focused group photo or coaching-in-action shot from
 - Q: Can I start with one option and change later?
   A: Yes. As your goals or schedule change, we can move you into a different membership path.
 - Q: Is there a membership that includes private coaching?
-  A: Yes. Our Hybrid memberships include monthly private coaching sessions.
+  A: Yes. Our [Hybrid](/memberships/hybrid) memberships include monthly private coaching sessions.
 - Q: Do you offer private training only?
   A: Yes. Private coaching is available for anyone who wants a fully personalized plan.
 - Q: Do you publish pricing on the website?

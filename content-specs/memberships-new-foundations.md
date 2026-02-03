@@ -32,14 +32,14 @@ image_notes: Use coaching/onboarding imagery or beginner-friendly class photos.
 - layout (Intro)
   - variant: centered
   - title: The fastest, safest way to get real results
-  - richText: New Foundations is the most effective way to get in shape at One Life CrossFit. You’ll learn the movements, build strength, and gain confidence with structured coaching, a baseline assessment, and check-ins that show exactly how you’re improving. It also includes a nutrition assessment and plan so your training is supported outside the gym.
+  - richText: New Foundations is the most effective way to get in shape at One Life [CrossFit](/programs/group-training/crossfit). You’ll learn the movements, build strength, and gain confidence with structured coaching, a baseline assessment, and check-ins that show exactly how you’re improving. It also includes a nutrition assessment and plan so your training is supported outside the gym.
 - featureCardsIcon (What You Get)
   - title: What You Get
   - cards:
     - title: 12-week group class membership
       richText: Consistent training with expert coaching and scaling.
     - title: Fundamentals (1:1 or small group)
-      richText: High-contact coaching, CrossFit methodology education, and scaling prescriptions so you feel confident in class.
+      richText: High-contact coaching, [CrossFit](/programs/group-training/crossfit) methodology education, and scaling prescriptions so you feel confident in class.
     - title: Private coaching sessions
       richText: Technique-focused sessions to accelerate progress.
     - title: Baseline + 90-day retest
@@ -123,7 +123,7 @@ image_notes: Use coaching/onboarding imagery or beginner-friendly class photos.
 - Q: How long is the program?
   A: New Foundations is a 12-week start with clear milestones and a progress retest.
 - Q: What happens after the 12 weeks?
-  A: We’ll recommend your next best fit, typically a Hybrid or Group membership based on your goals.
+  A: We’ll recommend your next best fit, typically a [Hybrid](/memberships/hybrid) or Group membership based on your goals.
 - Q: Do you offer nutrition guidance?
   A: Yes. New Foundations includes a nutrition assessment and plan to support your results.
 
