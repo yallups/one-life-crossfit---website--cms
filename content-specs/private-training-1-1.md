@@ -51,7 +51,7 @@ image_notes: Use assessment or one-on-one coaching imagery.
         - Faster feedback: Technique correction and real-time coaching.
         - Injury-aware coaching: Scale around injuries or limitations.
         - Flexible scheduling: Sessions that work with your life.
-        - Complimentary InBody scan: Free weigh‑in included with each private training session.
+        - Complimentary [InBody scan](/programs/inbody-scan): Free weigh‑in included with each private training session.
 - layout (Program Details & What To Expect)
     - variant: centered
     - title: Program details

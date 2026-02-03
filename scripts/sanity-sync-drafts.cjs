@@ -252,7 +252,104 @@ const parseTitle = (body) => {
   return match ? match[1].trim() : null;
 };
 
-const toPortableText = (value) => {
+const buildInlineCustomUrl = (value, slugMap) => {
+  if (!value) return null;
+  const raw = String(value).trim();
+  if (!raw) return null;
+  if (raw.startsWith("#")) {
+    return {
+      _type: "customUrl",
+      type: "external",
+      external: raw,
+      openInNewTab: false,
+    };
+  }
+  if (raw.startsWith("https://onelifecrossfit.com")) {
+    const path = raw.replace("https://onelifecrossfit.com", "") || "/";
+    const ref = slugMap.get(path);
+    if (ref) {
+      return {
+        _type: "customUrl",
+        type: "internal",
+        internal: { _type: "reference", _ref: ref },
+        openInNewTab: false,
+      };
+    }
+  }
+  if (raw.startsWith("/")) {
+    const ref = slugMap.get(raw);
+    if (ref) {
+      return {
+        _type: "customUrl",
+        type: "internal",
+        internal: { _type: "reference", _ref: ref },
+        openInNewTab: false,
+      };
+    }
+    return {
+      _type: "customUrl",
+      type: "external",
+      external: raw,
+      openInNewTab: false,
+    };
+  }
+  return {
+    _type: "customUrl",
+    type: "external",
+    external: raw,
+    openInNewTab: raw.startsWith("http"),
+  };
+};
+
+const parseInlineMarkdownLinks = (text, slugMap) => {
+  const markDefs = [];
+  const children = [];
+  const regex = /\[([^\]]+)\]\(([^)]+)\)/g;
+  let lastIndex = 0;
+  let match = null;
+  while ((match = regex.exec(text)) !== null) {
+    const [full, label, url] = match;
+    const start = match.index;
+    if (start > lastIndex) {
+      children.push({
+        _type: "span",
+        _key: crypto.randomUUID(),
+        text: text.slice(lastIndex, start),
+        marks: [],
+      });
+    }
+    const link = buildInlineCustomUrl(url, slugMap);
+    if (link) {
+      const markKey = crypto.randomUUID();
+      markDefs.push({ _type: "customLink", _key: markKey, customLink: link });
+      children.push({
+        _type: "span",
+        _key: crypto.randomUUID(),
+        text: label,
+        marks: [markKey],
+      });
+    } else {
+      children.push({
+        _type: "span",
+        _key: crypto.randomUUID(),
+        text: label,
+        marks: [],
+      });
+    }
+    lastIndex = start + full.length;
+  }
+  if (lastIndex < text.length) {
+    children.push({
+      _type: "span",
+      _key: crypto.randomUUID(),
+      text: text.slice(lastIndex),
+      marks: [],
+    });
+  }
+  return { children, markDefs };
+};
+
+const toPortableText = (value, slugMap) => {
   if (!value) return [];
   if (Array.isArray(value)) return value;
   const text = String(value);
@@ -262,72 +359,59 @@ const toPortableText = (value) => {
     const trimmed = line.trim();
     if (!trimmed) return;
     if (trimmed.startsWith("### ")) {
+      const content = trimmed.replace(/^###\s+/, "");
+      const { children, markDefs } = parseInlineMarkdownLinks(
+        content,
+        slugMap,
+      );
       blocks.push({
         _type: "block",
         _key: crypto.randomUUID(),
         style: "h3",
-        markDefs: [],
-        children: [
-          {
-            _type: "span",
-            _key: crypto.randomUUID(),
-            text: trimmed.replace(/^###\s+/, ""),
-            marks: [],
-          },
-        ],
+        markDefs,
+        children,
       });
       return;
     }
     if (trimmed.startsWith("## ")) {
+      const content = trimmed.replace(/^##\s+/, "");
+      const { children, markDefs } = parseInlineMarkdownLinks(
+        content,
+        slugMap,
+      );
       blocks.push({
         _type: "block",
         _key: crypto.randomUUID(),
         style: "h2",
-        markDefs: [],
-        children: [
-          {
-            _type: "span",
-            _key: crypto.randomUUID(),
-            text: trimmed.replace(/^##\s+/, ""),
-            marks: [],
-          },
-        ],
+        markDefs,
+        children,
       });
       return;
     }
     if (trimmed.startsWith("- ")) {
       const cleaned = trimmed.replace(/^[-*•–]+\s+/, "");
+      const { children, markDefs } = parseInlineMarkdownLinks(
+        cleaned,
+        slugMap,
+      );
       blocks.push({
         _type: "block",
         _key: crypto.randomUUID(),
         style: "normal",
         listItem: "bullet",
         level: 1,
-        markDefs: [],
-        children: [
-          {
-            _type: "span",
-            _key: crypto.randomUUID(),
-            text: cleaned,
-            marks: [],
-          },
-        ],
+        markDefs,
+        children,
       });
       return;
     }
+    const { children, markDefs } = parseInlineMarkdownLinks(trimmed, slugMap);
     blocks.push({
       _type: "block",
       _key: crypto.randomUUID(),
       style: "normal",
-      markDefs: [],
-      children: [
-        {
-          _type: "span",
-          _key: crypto.randomUUID(),
-          text: trimmed,
-          marks: [],
-        },
-      ],
+      markDefs,
+      children,
     });
   });
   return blocks;
@@ -368,18 +452,18 @@ const headingBlock = (text, style = "h3") => ({
   ],
 });
 
-const normalizeRichText = (value) => {
+const normalizeRichText = (value, slugMap) => {
   if (!value) return [];
   if (Array.isArray(value)) return value;
-  return toPortableText(value);
+  return toPortableText(value, slugMap);
 };
 
-const mergeLayoutBlocks = (target, source) => {
-  const combined = [...normalizeRichText(target.richText)];
+const mergeLayoutBlocks = (target, source, slugMap) => {
+  const combined = [...normalizeRichText(target.richText, slugMap)];
   if (source.title) {
     combined.push(headingBlock(source.title));
   }
-  combined.push(...normalizeRichText(source.richText));
+  combined.push(...normalizeRichText(source.richText, slugMap));
   target.richText = combined;
   return target;
 };
@@ -472,11 +556,11 @@ const buildBlock = async (block, slugMap, assetMap, randomAssetId) => {
   for (const [key, value] of Object.entries(block)) {
     if (key === "_type") continue;
     if (key === "richText") {
-      out.richText = toPortableText(value);
+      out.richText = toPortableText(value, slugMap);
       continue;
     }
     if (key === "subTitle" || key === "helperText") {
-      out[key] = toPortableText(value);
+      out[key] = toPortableText(value, slugMap);
       continue;
     }
     if (key === "buttons") {
@@ -512,7 +596,10 @@ const buildBlock = async (block, slugMap, assetMap, randomAssetId) => {
           _type: "featureCardIcon",
           _key: crypto.randomUUID(),
           title: card.title,
-          richText: toPortableText(card.richText || card.description || ""),
+          richText: toPortableText(
+            card.richText || card.description || "",
+            slugMap,
+          ),
           image:
             card.image ||
             (randomAssetId ? buildImageField(randomAssetId()) : undefined),
@@ -594,7 +681,7 @@ const buildPageDoc = async (filePath, slugMap, assetMap, randomAssetId) => {
       const target = pageBuilder[lastIndex];
       const source = pageBuilder[index];
       if (target && source) {
-        mergeLayoutBlocks(target, source);
+        mergeLayoutBlocks(target, source, slugMap);
       }
     });
     // Remove extra layouts (reverse order to keep indexes stable)
@@ -746,7 +833,7 @@ const main = async () => {
         _id: draftId,
         _type: "faq",
         title: faq.question,
-        richText: toPortableText(faq.answer),
+        richText: toPortableText(faq.answer, slugMap),
       });
     }
     console.log(`Upserted ${faqs.length} FAQ drafts.`);

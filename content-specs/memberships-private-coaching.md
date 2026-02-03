@@ -41,7 +41,7 @@ image_notes: Use 1:1 coaching or assessment imagery.
       - 1:1 or semi-private coaching: Personalized sessions built around your goals.
       - Personalized training plan: A plan tailored to your goals and schedule.
       - Movement assessments: Progress tracking and focused feedback.
-      - Complimentary InBody scan: Free weigh‑in with each private training or nutrition coaching session.
+      - Complimentary [InBody scan](/programs/inbody-scan): Free weigh‑in with each private training or nutrition coaching session.
       - Optional nutrition coaching: Add nutrition/lifestyle coaching if desired.
 
       ### Who it’s for

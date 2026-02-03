@@ -92,7 +92,7 @@ image_notes: Use a community-focused group photo or coaching-in-action shot from
     - Beginner-friendly options with clear onboarding
     - Hybrid memberships that blend group classes with private coaching
     - Private coaching for focused goals, injuries, or added accountability
-    - Complimentary InBody scans with private training or nutrition coaching sessions
+    - Complimentary [InBody scans](/programs/inbody-scan) with private training or nutrition coaching sessions
 
 ## Membership Options
 
