@@ -180,6 +180,17 @@ notes: Create these FAQ documents in Sanity, then reference by _id in page FAQ b
   question: Can I do nutrition coaching without joining the gym?
   answer: Ask us during your consultation—we’ll recommend the best path based on your goals.
 
+## inbody
+- id: faq-inbody-what-is
+  question: What is an InBody scan?
+  answer: A fast, non‑invasive body composition scan that measures lean mass, body fat, and hydration.
+- id: faq-inbody-how-often
+  question: How often should I scan?
+  answer: Most people scan every 4–8 weeks to track trends without overreacting to daily fluctuations.
+- id: faq-inbody-free
+  question: Are InBody scans free?
+  answer: You can purchase scans in the gym, and you get a free weigh‑in with any private training or nutrition coaching session.
+
 ## sports-massage
 - id: faq-massage-membership
   question: Do I need to be a member to book massage therapy?

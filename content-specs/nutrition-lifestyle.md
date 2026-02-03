@@ -46,6 +46,7 @@ image_notes: Use coaching consult or healthy lifestyle imagery from the library.
         - Habit-based approach: Sustainable changes you can maintain.
         - Performance + recovery support: Better fuel for training and recovery.
         - Works with any program: Pairs well with CrossFit, Bootcamp, or private coaching.
+        - Complimentary InBody scan: Free weigh‑in included with each nutrition coaching session.
 
       ### Program details
       1:1 coaching, progress tracking, and strategies tailored to your goals. Options for short-term starts or longer

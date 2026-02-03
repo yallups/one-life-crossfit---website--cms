@@ -12,6 +12,7 @@ notes: Draft the Sanity `navbar` document. Provide columns and links with intern
 - Bootcamp — /programs/group-training/bootcamp
 - Abs & A$$ — /programs/group-training/aa
 - Nutrition — /programs/nutrition-lifestyle
+- InBody Scan — /programs/inbody-scan
 - Private Training — /programs/private-training/1-1
 - Semi-Private Training — /programs/private-training/semi-private
 - Sports Massage Therapy — /programs/sports-massage-therapy (external / recovery partner allowed)
