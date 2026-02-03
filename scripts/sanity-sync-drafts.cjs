@@ -301,6 +301,96 @@ const buildInlineCustomUrl = (value, slugMap) => {
   };
 };
 
+const AUTO_LINK_PATTERNS = [
+  { pattern: /\bInBody scans?\b/gi, slug: "/programs/inbody-scan" },
+  { pattern: /\bInBody Scan(s)?\b/gi, slug: "/programs/inbody-scan" },
+  { pattern: /\bCrossFit\b/gi, slug: "/programs/group-training/crossfit" },
+  { pattern: /\bBootcamp\b/gi, slug: "/programs/group-training/bootcamp" },
+  { pattern: /\bAbs & A\$\$\b/gi, slug: "/programs/group-training/aa" },
+  { pattern: /\bNutrition & Lifestyle Coaching\b/gi, slug: "/programs/nutrition-lifestyle" },
+  { pattern: /\bNutrition coaching\b/gi, slug: "/programs/nutrition-lifestyle" },
+  { pattern: /\bNutrition\b/gi, slug: "/programs/nutrition-lifestyle" },
+  { pattern: /\bPrivate Training\b/gi, slug: "/programs/private-training/1-1" },
+  { pattern: /\bSemi-Private Training\b/gi, slug: "/programs/private-training/semi-private" },
+  { pattern: /\bPrivate Coaching\b/gi, slug: "/memberships/private-coaching" },
+  { pattern: /\bHybrid\b/gi, slug: "/memberships/hybrid" },
+  { pattern: /\bGroup Class Membership\b/gi, slug: "/memberships/group-class" },
+  { pattern: /\bGroup Class\b/gi, slug: "/memberships/group-class" },
+  { pattern: /\bNew Foundations\b/gi, slug: "/memberships/new-foundations" },
+  { pattern: /\bJump Start\b/gi, slug: "/memberships/jump-start" },
+  { pattern: /\bSports Massage Therapy\b/gi, slug: "/programs/sports-massage-therapy" },
+];
+
+const buildAutoLinkChildren = (text, slugMap) => {
+  const children = [];
+  const markDefs = [];
+  let index = 0;
+  const length = text.length;
+
+  while (index < length) {
+    let best = null;
+    for (const entry of AUTO_LINK_PATTERNS) {
+      entry.pattern.lastIndex = index;
+      const match = entry.pattern.exec(text);
+      if (!match) continue;
+      const found = {
+        entry,
+        index: match.index,
+        text: match[0],
+      };
+      if (
+        !best ||
+        found.index < best.index ||
+        (found.index === best.index && found.text.length > best.text.length)
+      ) {
+        best = found;
+      }
+    }
+
+    if (!best) {
+      children.push({
+        _type: "span",
+        _key: crypto.randomUUID(),
+        text: text.slice(index),
+        marks: [],
+      });
+      break;
+    }
+
+    if (best.index > index) {
+      children.push({
+        _type: "span",
+        _key: crypto.randomUUID(),
+        text: text.slice(index, best.index),
+        marks: [],
+      });
+    }
+
+    const link = buildInlineCustomUrl(best.entry.slug, slugMap);
+    if (link) {
+      const markKey = crypto.randomUUID();
+      markDefs.push({ _type: "customLink", _key: markKey, customLink: link });
+      children.push({
+        _type: "span",
+        _key: crypto.randomUUID(),
+        text: best.text,
+        marks: [markKey],
+      });
+    } else {
+      children.push({
+        _type: "span",
+        _key: crypto.randomUUID(),
+        text: best.text,
+        marks: [],
+      });
+    }
+
+    index = best.index + best.text.length;
+  }
+
+  return { children, markDefs };
+};
+
 const parseInlineMarkdownLinks = (text, slugMap) => {
   const markDefs = [];
   const children = [];
@@ -349,6 +439,24 @@ const parseInlineMarkdownLinks = (text, slugMap) => {
   return { children, markDefs };
 };
 
+const applyAutoLinks = (children, markDefs, slugMap) => {
+  const nextChildren = [];
+  const nextMarkDefs = [...markDefs];
+
+  for (const child of children) {
+    if (child.marks && child.marks.length > 0) {
+      nextChildren.push(child);
+      continue;
+    }
+    const { children: autoChildren, markDefs: autoDefs } =
+      buildAutoLinkChildren(child.text || "", slugMap);
+    nextMarkDefs.push(...autoDefs);
+    nextChildren.push(...autoChildren);
+  }
+
+  return { children: nextChildren, markDefs: nextMarkDefs };
+};
+
 const toPortableText = (value, slugMap) => {
   if (!value) return [];
   if (Array.isArray(value)) return value;
@@ -364,12 +472,13 @@ const toPortableText = (value, slugMap) => {
         content,
         slugMap,
       );
+      const linked = applyAutoLinks(children, markDefs, slugMap);
       blocks.push({
         _type: "block",
         _key: crypto.randomUUID(),
         style: "h3",
-        markDefs,
-        children,
+        markDefs: linked.markDefs,
+        children: linked.children,
       });
       return;
     }
@@ -379,12 +488,13 @@ const toPortableText = (value, slugMap) => {
         content,
         slugMap,
       );
+      const linked = applyAutoLinks(children, markDefs, slugMap);
       blocks.push({
         _type: "block",
         _key: crypto.randomUUID(),
         style: "h2",
-        markDefs,
-        children,
+        markDefs: linked.markDefs,
+        children: linked.children,
       });
       return;
     }
@@ -394,24 +504,26 @@ const toPortableText = (value, slugMap) => {
         cleaned,
         slugMap,
       );
+      const linked = applyAutoLinks(children, markDefs, slugMap);
       blocks.push({
         _type: "block",
         _key: crypto.randomUUID(),
         style: "normal",
         listItem: "bullet",
         level: 1,
-        markDefs,
-        children,
+        markDefs: linked.markDefs,
+        children: linked.children,
       });
       return;
     }
     const { children, markDefs } = parseInlineMarkdownLinks(trimmed, slugMap);
+    const linked = applyAutoLinks(children, markDefs, slugMap);
     blocks.push({
       _type: "block",
       _key: crypto.randomUUID(),
       style: "normal",
-      markDefs,
-      children,
+      markDefs: linked.markDefs,
+      children: linked.children,
     });
   });
   return blocks;
