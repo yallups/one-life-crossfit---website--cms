@@ -26,6 +26,9 @@ const imageLinkCard = defineField({
       title: "Card Image",
       type: "image",
       description: "Add an image or illustration for this card",
+      options: {
+        hotspot: true,
+      },
     }),
     defineField({
       name: "url",
