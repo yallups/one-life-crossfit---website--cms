@@ -2,7 +2,15 @@
 const fs = require("fs");
 const path = require("path");
 const crypto = require("crypto");
-const { createClient } = require("@sanity/client");
+let createClient = null;
+try {
+  ({ createClient } = require("@sanity/client"));
+} catch {
+  ({ createClient } = require(path.join(
+    __dirname,
+    "../apps/studio/node_modules/@sanity/client",
+  )));
+}
 
 const loadEnvFile = (filePath) => {
   if (!fs.existsSync(filePath)) return;
@@ -63,6 +71,14 @@ const client = createClient({
   token,
   useCdn: false,
 });
+
+const args = new Set(process.argv.slice(2));
+const SYNC_OPTIONS = {
+  dryRun: args.has("--dry-run") || args.has("--dry"),
+  skipFaqs: args.has("--skip-faqs"),
+  skipPages: args.has("--skip-pages"),
+  skipNavbar: args.has("--skip-navbar"),
+};
 
 const contentDir = path.join(rootDir, "content-specs");
 
@@ -480,42 +496,44 @@ const buildCustomUrl = (value, slugMap) => {
       _type: "customUrl",
       type: "external",
       external: value,
-      openInNewTab: false,
     };
   }
+  const withOpenInNewTab = (urlValue, target) =>
+    urlValue.openInNewTab === undefined
+      ? target
+      : {
+          ...target,
+          openInNewTab: Boolean(urlValue.openInNewTab),
+        };
   const type = value.type === "internal" ? "internal" : "external";
   if (type === "internal") {
     const internal = value.internal;
     if (typeof internal === "string" && internal.startsWith("#")) {
-      return {
+      return withOpenInNewTab(value, {
         _type: "customUrl",
         type: "external",
         external: internal,
-        openInNewTab: false,
-      };
+      });
     }
     const ref = slugMap.get(internal);
     if (ref) {
-      return {
+      return withOpenInNewTab(value, {
         _type: "customUrl",
         type: "internal",
         internal: { _type: "reference", _ref: ref },
-        openInNewTab: Boolean(value.openInNewTab),
-      };
+      });
     }
-    return {
+    return withOpenInNewTab(value, {
       _type: "customUrl",
       type: "external",
       external: internal,
-      openInNewTab: Boolean(value.openInNewTab),
-    };
+    });
   }
-  return {
+  return withOpenInNewTab(value, {
     _type: "customUrl",
     type: "external",
     external: value.external || value.url || value.href || "",
-    openInNewTab: Boolean(value.openInNewTab),
-  };
+  });
 };
 
 const resolveVariant = (variant, index) => {
@@ -550,10 +568,91 @@ const buildMediaArray = (assetId) => {
   return [buildImageField(assetId)];
 };
 
+const buildFileField = (assetId, itemType = "video") => {
+  if (!assetId) return undefined;
+  return {
+    _type: itemType,
+    _key: crypto.randomUUID(),
+    asset: { _type: "reference", _ref: assetId },
+  };
+};
+
+const isSanityAssetId = (value) => {
+  if (typeof value !== "string") return false;
+  return (
+    /^image-[a-f0-9]+-\d+x\d+-[a-z0-9]+$/i.test(value) ||
+    /^file-[a-f0-9]+-[a-z0-9]+$/i.test(value)
+  );
+};
+
+const resolveAssetReference = (value, assetMap) => {
+  if (typeof value !== "string") return null;
+  const token = value.trim();
+  if (!token) return null;
+
+  if (isSanityAssetId(token)) {
+    if (token.startsWith("image-")) {
+      return { id: token, type: "image", originalFilename: token };
+    }
+    return { id: token, type: "file", originalFilename: token };
+  }
+
+  return assetMap.get(token) || null;
+};
+
+const buildImageFieldFromValue = (value, assetMap) => {
+  if (!value) return undefined;
+  if (typeof value === "object") return value;
+
+  const asset = resolveAssetReference(value, assetMap);
+  if (!asset || asset.type !== "image") return undefined;
+  return buildImageField(asset.id);
+};
+
+const buildMediaArrayFromValue = (value, assetMap) => {
+  if (!value) return undefined;
+  if (Array.isArray(value)) return value;
+
+  const asset = resolveAssetReference(value, assetMap);
+  if (!asset) return undefined;
+  if (asset.type === "image") return buildMediaArray(asset.id);
+  if (asset.type === "file") {
+    const itemType = asset.mimeType?.startsWith("video/") ? "video" : "file";
+    return [buildFileField(asset.id, itemType)];
+  }
+  return undefined;
+};
+
+const ASSET_TOKEN_PATTERN =
+  /(?:image|file)-[^,\s)]+|[A-Za-z0-9._-]+\.(?:jpg|jpeg|png|webp|gif|avif|heic|mp4|mov|webm|m4v|svg|pdf)/gi;
+
+const extractAssetTokens = (value) => {
+  if (typeof value !== "string") return [];
+  const matches = value.match(ASSET_TOKEN_PATTERN);
+  if (!matches) return [];
+  return matches
+    .map((match) => match.trim().replace(/[.,;:!?]+$/, ""))
+    .filter(Boolean);
+};
+
 const parseImageNotes = (notes) => {
   if (!notes) return null;
-  const match = String(notes).match(/image-[^,\s]+/);
-  return match ? match[0] : null;
+  return extractAssetTokens(String(notes))[0] || null;
+};
+
+const collectAssetTokensFromValue = (value, tokens) => {
+  if (!value) return;
+  if (typeof value === "string") {
+    extractAssetTokens(value).forEach((token) => tokens.add(token));
+    return;
+  }
+  if (Array.isArray(value)) {
+    value.forEach((item) => collectAssetTokensFromValue(item, tokens));
+    return;
+  }
+  if (typeof value === "object") {
+    Object.values(value).forEach((item) => collectAssetTokensFromValue(item, tokens));
+  }
 };
 
 const buildBlock = async (block, slugMap, assetMap, randomAssetId) => {
@@ -573,9 +672,18 @@ const buildBlock = async (block, slugMap, assetMap, randomAssetId) => {
       continue;
     }
     if (key === "media") {
-      const filename = value;
-      if (filename && assetMap.has(filename)) {
-        out.media = buildMediaArray(assetMap.get(filename));
+      const mediaValue = buildMediaArrayFromValue(value, assetMap);
+      if (mediaValue) {
+        out.media = mediaValue;
+      }
+      continue;
+    }
+    if (key === "image") {
+      const imageValue = buildImageFieldFromValue(value, assetMap);
+      if (imageValue) {
+        out.image = imageValue;
+      } else if (value && typeof value === "object") {
+        out.image = value;
       }
       continue;
     }
@@ -588,7 +696,7 @@ const buildBlock = async (block, slugMap, assetMap, randomAssetId) => {
             _key: crypto.randomUUID(),
             title: card.title,
             description: card.description,
-            image: card.image,
+            image: buildImageFieldFromValue(card.image, assetMap) || card.image,
             url: buildCustomUrl(card.url, slugMap),
             buttons: mapButtons(card.buttons, slugMap),
           }));
@@ -601,7 +709,7 @@ const buildBlock = async (block, slugMap, assetMap, randomAssetId) => {
             card.richText || card.description || "",
             slugMap,
           ),
-          image: card.image,
+          image: buildImageFieldFromValue(card.image, assetMap) || card.image,
           icon: card.icon,
         }));
       } else {
@@ -693,23 +801,51 @@ const buildPageDoc = async (filePath, slugMap, assetMap, randomAssetId) => {
       layoutIndex += 1;
     }
   });
-  const heroImageFilename = parseImageNotes(data.image_notes);
+  const heroImageToken = parseImageNotes(data.image_notes);
   let pageImage = null;
-  if (heroImageFilename && assetMap.has(heroImageFilename)) {
-    pageImage = buildImageField(assetMap.get(heroImageFilename));
+  const heroAsset = resolveAssetReference(heroImageToken, assetMap);
+  if (heroAsset?.type === "image") {
+    pageImage = buildImageField(heroAsset.id);
   }
-  return {
+  const toOptionalText = (value) =>
+    typeof value === "string" && value.trim().length > 0
+      ? value.trim()
+      : undefined;
+
+  const pageDoc = {
     slug,
     title,
-    description: data.seo_description || data.seoDescription || "",
-    seoTitle: data.seo_title || undefined,
-    seoDescription: data.seo_description || undefined,
-    ogTitle: data.og_title || undefined,
-    ogDescription: data.og_description || undefined,
-    image: pageImage || undefined,
-    seoImage: pageImage || undefined,
     pageBuilder,
   };
+
+  const description =
+    toOptionalText(data.seo_description) || toOptionalText(data.seoDescription);
+  if (description) {
+    pageDoc.description = description;
+  }
+
+  const seoTitle = toOptionalText(data.seo_title);
+  if (seoTitle) {
+    pageDoc.seoTitle = seoTitle;
+  }
+  const seoDescription = toOptionalText(data.seo_description);
+  if (seoDescription) {
+    pageDoc.seoDescription = seoDescription;
+  }
+  const ogTitle = toOptionalText(data.og_title);
+  if (ogTitle) {
+    pageDoc.ogTitle = ogTitle;
+  }
+  const ogDescription = toOptionalText(data.og_description);
+  if (ogDescription) {
+    pageDoc.ogDescription = ogDescription;
+  }
+  if (pageImage) {
+    pageDoc.image = pageImage;
+    pageDoc.seoImage = pageImage;
+  }
+
+  return pageDoc;
 };
 
 const parseFaqDocs = (filePath) => {
@@ -816,15 +952,371 @@ const urlToCustomUrlInput = (url) => {
   return { type: "internal", internal: url };
 };
 
+const getImageAssetRef = (imageField) => imageField?.asset?._ref;
+
+const preserveImageTransforms = (generatedImage, existingImage) => {
+  if (!generatedImage || !existingImage) return generatedImage;
+  const generatedRef = getImageAssetRef(generatedImage);
+  const existingRef = getImageAssetRef(existingImage);
+  if (!generatedRef || !existingRef || generatedRef !== existingRef) {
+    return generatedImage;
+  }
+
+  const mergedImage = { ...generatedImage };
+  if (!mergedImage.crop && existingImage.crop) {
+    mergedImage.crop = existingImage.crop;
+  }
+  if (!mergedImage.hotspot && existingImage.hotspot) {
+    mergedImage.hotspot = existingImage.hotspot;
+  }
+  return mergedImage;
+};
+
+const preserveMediaTransforms = (generatedMedia, existingMedia) => {
+  if (!Array.isArray(generatedMedia) || !Array.isArray(existingMedia)) {
+    return generatedMedia;
+  }
+
+  const existingByAssetAndType = new Map();
+  existingMedia.forEach((item) => {
+    const assetRef = item?.asset?._ref;
+    if (!assetRef || !item?._type) return;
+    existingByAssetAndType.set(`${item._type}:${assetRef}`, item);
+  });
+
+  return generatedMedia.map((item) => {
+    if (!item || item._type !== "image") return item;
+    const assetRef = item?.asset?._ref;
+    if (!assetRef) return item;
+    const existingItem = existingByAssetAndType.get(`${item._type}:${assetRef}`);
+    if (!existingItem) return item;
+    return preserveImageTransforms(item, existingItem);
+  });
+};
+
+const normalizeMatchValue = (value) =>
+  typeof value === "string" ? value.trim().toLowerCase() : "";
+
+const findBestBlockMatch = (generatedBlock, existingBlocks, usedIndexes, index) => {
+  if (!Array.isArray(existingBlocks)) return null;
+  const generatedType = generatedBlock?._type;
+  const generatedTitle = normalizeMatchValue(generatedBlock?.title);
+
+  const sameIndex = existingBlocks[index];
+  if (
+    sameIndex &&
+    !usedIndexes.has(index) &&
+    sameIndex._type === generatedType &&
+    (generatedTitle ? normalizeMatchValue(sameIndex.title) === generatedTitle : true)
+  ) {
+    usedIndexes.add(index);
+    return sameIndex;
+  }
+
+  const preferred = existingBlocks.find((block, candidateIndex) => {
+    if (usedIndexes.has(candidateIndex)) return false;
+    if (!block || block._type !== generatedType) return false;
+    if (!generatedTitle) return true;
+    return normalizeMatchValue(block.title) === generatedTitle;
+  });
+
+  if (preferred) {
+    const preferredIndex = existingBlocks.indexOf(preferred);
+    usedIndexes.add(preferredIndex);
+    return preferred;
+  }
+
+  return null;
+};
+
+const findBestCardMatch = (generatedCard, existingCards, usedIndexes, index) => {
+  if (!Array.isArray(existingCards)) return null;
+  const generatedTitle = normalizeMatchValue(generatedCard?.title);
+
+  const sameIndex = existingCards[index];
+  if (
+    sameIndex &&
+    !usedIndexes.has(index) &&
+    (generatedTitle ? normalizeMatchValue(sameIndex.title) === generatedTitle : true)
+  ) {
+    usedIndexes.add(index);
+    return sameIndex;
+  }
+
+  const preferred = existingCards.find((card, candidateIndex) => {
+    if (usedIndexes.has(candidateIndex)) return false;
+    if (!generatedTitle) return true;
+    return normalizeMatchValue(card?.title) === generatedTitle;
+  });
+  if (!preferred) return null;
+  const preferredIndex = existingCards.indexOf(preferred);
+  usedIndexes.add(preferredIndex);
+  return preferred;
+};
+
+const mergeGeneratedBlockWithExisting = (generatedBlock, existingBlock) => {
+  if (!existingBlock) return generatedBlock;
+
+  const mergedBlock = {
+    ...existingBlock,
+    ...generatedBlock,
+    _type: generatedBlock._type,
+    _key: generatedBlock._key,
+  };
+
+  if (
+    generatedBlock.media === undefined &&
+    Array.isArray(existingBlock.media) &&
+    existingBlock.media.length
+  ) {
+    mergedBlock.media = existingBlock.media;
+  } else if (generatedBlock.media && existingBlock.media) {
+    mergedBlock.media = preserveMediaTransforms(generatedBlock.media, existingBlock.media);
+  }
+
+  if (generatedBlock.image === undefined && existingBlock.image) {
+    mergedBlock.image = existingBlock.image;
+  } else if (generatedBlock.image && existingBlock.image) {
+    mergedBlock.image = preserveImageTransforms(generatedBlock.image, existingBlock.image);
+  }
+
+  if (Array.isArray(mergedBlock.cards) && Array.isArray(existingBlock.cards)) {
+    const usedCardIndexes = new Set();
+    mergedBlock.cards = mergedBlock.cards.map((generatedCard, cardIndex) => {
+      const existingCard = findBestCardMatch(
+        generatedCard,
+        existingBlock.cards,
+        usedCardIndexes,
+        cardIndex,
+      );
+      if (!existingCard) return generatedCard;
+
+      const mergedCard = {
+        ...existingCard,
+        ...generatedCard,
+        _type: generatedCard._type,
+        _key: generatedCard._key,
+      };
+      if (generatedCard.image === undefined && existingCard.image) {
+        mergedCard.image = existingCard.image;
+      } else if (generatedCard.image && existingCard.image) {
+        mergedCard.image = preserveImageTransforms(generatedCard.image, existingCard.image);
+      }
+      return mergedCard;
+    });
+  }
+
+  return mergedBlock;
+};
+
+const mergeGeneratedPageWithExisting = (generatedPage, existingDraft) => {
+  if (!existingDraft) return generatedPage;
+
+  const mergedPage = { ...existingDraft, ...generatedPage };
+  if (generatedPage.image === undefined && existingDraft.image) {
+    mergedPage.image = existingDraft.image;
+  } else if (generatedPage.image && existingDraft.image) {
+    mergedPage.image = preserveImageTransforms(generatedPage.image, existingDraft.image);
+  }
+
+  if (generatedPage.seoImage === undefined && existingDraft.seoImage) {
+    mergedPage.seoImage = existingDraft.seoImage;
+  } else if (generatedPage.seoImage && existingDraft.seoImage) {
+    mergedPage.seoImage = preserveImageTransforms(
+      generatedPage.seoImage,
+      existingDraft.seoImage,
+    );
+  }
+
+  const existingBlocks = Array.isArray(existingDraft.pageBuilder)
+    ? existingDraft.pageBuilder
+    : [];
+  const usedBlockIndexes = new Set();
+  mergedPage.pageBuilder = (mergedPage.pageBuilder || []).map(
+    (generatedBlock, blockIndex) => {
+      const existingBlock = findBestBlockMatch(
+        generatedBlock,
+        existingBlocks,
+        usedBlockIndexes,
+        blockIndex,
+      );
+      return mergeGeneratedBlockWithExisting(generatedBlock, existingBlock);
+    },
+  );
+
+  return mergedPage;
+};
+
+const pickExistingNavbarLink = (existingLinks, name, index) => {
+  if (!Array.isArray(existingLinks)) return null;
+  const normalizedName = normalizeMatchValue(name);
+
+  const sameIndex = existingLinks[index];
+  if (
+    sameIndex &&
+    normalizeMatchValue(sameIndex.name) === normalizedName
+  ) {
+    return sameIndex;
+  }
+
+  return (
+    existingLinks.find(
+      (link) => normalizeMatchValue(link?.name) === normalizedName,
+    ) || null
+  );
+};
+
+const pickExistingNavbarColumn = (existingColumns, title, index) => {
+  if (!Array.isArray(existingColumns)) return null;
+  const normalizedTitle = normalizeMatchValue(title);
+
+  const sameIndex = existingColumns[index];
+  if (
+    sameIndex &&
+    normalizeMatchValue(sameIndex.title) === normalizedTitle
+  ) {
+    return sameIndex;
+  }
+
+  return (
+    existingColumns.find(
+      (column) => normalizeMatchValue(column?.title) === normalizedTitle,
+    ) || null
+  );
+};
+
+const pickExistingButton = (existingButtons, text, index) => {
+  if (!Array.isArray(existingButtons)) return null;
+  const normalizedText = normalizeMatchValue(text);
+
+  const sameIndex = existingButtons[index];
+  if (
+    sameIndex &&
+    normalizeMatchValue(sameIndex.text) === normalizedText
+  ) {
+    return sameIndex;
+  }
+
+  return (
+    existingButtons.find(
+      (button) => normalizeMatchValue(button?.text) === normalizedText,
+    ) || null
+  );
+};
+
+const stripSystemFields = (doc) => {
+  if (!doc || typeof doc !== "object") return {};
+  const cleaned = {};
+  Object.entries(doc).forEach(([key, value]) => {
+    if (key.startsWith("_")) return;
+    cleaned[key] = value;
+  });
+  return cleaned;
+};
+
+const mergeCustomUrlWithExisting = (generatedUrl, existingUrl) => {
+  if (!generatedUrl) return existingUrl;
+  if (!existingUrl) return generatedUrl;
+  const mergedUrl = { ...existingUrl, ...generatedUrl };
+  if (generatedUrl.openInNewTab === undefined && existingUrl.openInNewTab !== undefined) {
+    mergedUrl.openInNewTab = existingUrl.openInNewTab;
+  }
+  return mergedUrl;
+};
+
+const mergeGeneratedNavbarWithExisting = (generatedNavbar, existingNavbar) => {
+  if (!existingNavbar) return generatedNavbar;
+
+  const existingColumns = Array.isArray(existingNavbar.columns)
+    ? existingNavbar.columns
+    : [];
+  const mergedColumns = (generatedNavbar.columns || []).map((generatedColumn, columnIndex) => {
+    const existingColumn = pickExistingNavbarColumn(
+      existingColumns,
+      generatedColumn?.title,
+      columnIndex,
+    );
+    if (!existingColumn) return generatedColumn;
+
+    const existingLinks = Array.isArray(existingColumn.links) ? existingColumn.links : [];
+    const mergedLinks = (generatedColumn.links || []).map((generatedLink, linkIndex) => {
+      const existingLink = pickExistingNavbarLink(
+        existingLinks,
+        generatedLink?.name,
+        linkIndex,
+      );
+      if (!existingLink) return generatedLink;
+
+      const mergedLink = {
+        ...existingLink,
+        ...generatedLink,
+        _type: generatedLink._type,
+        _key: generatedLink._key,
+      };
+      mergedLink.url = mergeCustomUrlWithExisting(generatedLink.url, existingLink.url);
+      const description = normalizeOptionalText(mergedLink.description);
+      if (description) {
+        mergedLink.description = description;
+      } else {
+        delete mergedLink.description;
+      }
+      return mergedLink;
+    });
+
+    return {
+      ...existingColumn,
+      ...generatedColumn,
+      _type: generatedColumn._type,
+      _key: generatedColumn._key,
+      links: mergedLinks,
+    };
+  });
+
+  const existingButtons = Array.isArray(existingNavbar.buttons) ? existingNavbar.buttons : [];
+  const mergedButtons = (generatedNavbar.buttons || []).map((generatedButton, buttonIndex) => {
+    const existingButton = pickExistingButton(
+      existingButtons,
+      generatedButton?.text,
+      buttonIndex,
+    );
+    if (!existingButton) return generatedButton;
+    return {
+      ...existingButton,
+      ...generatedButton,
+      _type: generatedButton._type,
+      _key: generatedButton._key,
+      url: mergeCustomUrlWithExisting(generatedButton.url, existingButton.url),
+    };
+  });
+
+  return {
+    ...existingNavbar,
+    ...generatedNavbar,
+    columns: mergedColumns,
+    buttons: mergedButtons,
+  };
+};
+
 const main = async () => {
+  const draftsClient = client.withConfig({ perspective: "drafts" });
+  const upsertDoc = async (doc, label) => {
+    if (SYNC_OPTIONS.dryRun) {
+      console.log(`[dry-run] Would upsert ${label}: ${doc._id}`);
+      return;
+    }
+    await client.createOrReplace(doc);
+  };
+
+  if (SYNC_OPTIONS.dryRun) {
+    console.log("Running in dry-run mode. No Sanity writes will be made.");
+  }
+
   const slugDocs = await client.fetch(
     `*[_type in ["page","blogIndex","blog"]]{_id, "slug": slug.current}`,
   );
-  const draftSlugDocs = await client
-    .withConfig({ perspective: "drafts" })
-    .fetch(
-      `*[_id match "drafts.*" && _type in ["page","blogIndex","blog"]]{_id, "slug": slug.current}`,
-    );
+  const draftSlugDocs = await draftsClient.fetch(
+    `*[_id match "drafts.*" && _type in ["page","blogIndex","blog"]]{_id, "slug": slug.current}`,
+  );
   const slugMap = new Map();
   slugDocs.forEach((doc) => {
     if (doc.slug) slugMap.set(doc.slug, doc._id);
@@ -834,18 +1326,37 @@ const main = async () => {
   });
 
   const faqPath = path.join(contentDir, "faqs.md");
-  if (fs.existsSync(faqPath)) {
+  if (SYNC_OPTIONS.skipFaqs) {
+    console.log("Skipping FAQ sync (--skip-faqs).");
+  } else if (fs.existsSync(faqPath)) {
     const faqs = parseFaqDocs(faqPath);
+    const existingFaqDocs = await draftsClient.fetch(`*[_type == "faq"]{...}`);
+    const existingFaqById = new Map();
+    existingFaqDocs.forEach((doc) => {
+      existingFaqById.set(doc._id, doc);
+      if (String(doc._id).startsWith("drafts.")) {
+        existingFaqById.set(String(doc._id).replace(/^drafts\./, ""), doc);
+      } else {
+        existingFaqById.set(`drafts.${doc._id}`, doc);
+      }
+    });
+
     for (const faq of faqs) {
       const draftId = `drafts.${faq.id}`;
-      await client.createOrReplace({
+      const existingFaq =
+        existingFaqById.get(draftId) || existingFaqById.get(faq.id) || null;
+      const faqDoc = {
+        ...stripSystemFields(existingFaq),
         _id: draftId,
         _type: "faq",
         title: faq.question,
         richText: toPortableText(faq.answer, slugMap),
-      });
+      };
+      await upsertDoc(faqDoc, `faq ${faq.id}`);
     }
-    console.log(`Upserted ${faqs.length} FAQ drafts.`);
+    console.log(
+      `${SYNC_OPTIONS.dryRun ? "Would upsert" : "Upserted"} ${faqs.length} FAQ drafts.`,
+    );
   }
 
   const files = fs
@@ -858,82 +1369,118 @@ const main = async () => {
   const filenames = new Set();
   for (const file of files) {
     const raw = fs.readFileSync(path.join(contentDir, file), "utf8");
-    const { data } = parseFrontmatter(raw);
-    const hero = parseImageNotes(data.image_notes);
-    if (hero) filenames.add(hero);
-    const blocks = parseBlocksSection(raw);
-    blocks.forEach((block) => {
-      if (block.media && typeof block.media === "string") {
-        filenames.add(block.media);
-      }
-    });
+    const { data, body } = parseFrontmatter(raw);
+    collectAssetTokensFromValue(data.image_notes, filenames);
+    collectAssetTokensFromValue(data.hero_image_notes, filenames);
+    const blocks = parseBlocksSection(body);
+    blocks.forEach((block) => collectAssetTokensFromValue(block, filenames));
   }
 
   const assetMap = new Map();
-  if (filenames.size > 0) {
+  const filenameTokens = Array.from(filenames).filter(
+    (token) => !isSanityAssetId(token),
+  );
+  if (filenameTokens.length > 0) {
     const assetDocs = await client.fetch(
-      `*[_type == "sanity.imageAsset" && originalFilename in $filenames]{_id, originalFilename}`,
-      { filenames: Array.from(filenames) },
+      `*[_type in ["sanity.imageAsset","sanity.fileAsset"] && originalFilename in $filenames]{
+        _id,
+        _type,
+        originalFilename,
+        mimeType
+      }`,
+      { filenames: filenameTokens },
     );
     assetDocs.forEach((doc) => {
-      assetMap.set(doc.originalFilename, doc._id);
+      assetMap.set(doc.originalFilename, {
+        id: doc._id,
+        type: doc._type === "sanity.imageAsset" ? "image" : "file",
+        mimeType: doc.mimeType,
+        originalFilename: doc.originalFilename,
+      });
+    });
+  }
+  const unresolvedTokens = filenameTokens.filter((token) => !assetMap.has(token));
+  if (unresolvedTokens.length > 0) {
+    console.log(
+      `Warning: ${unresolvedTokens.length} media token(s) did not match an asset filename.`,
+    );
+    unresolvedTokens.slice(0, 10).forEach((token) => {
+      console.log(`  - ${token}`);
     });
   }
 
-  const taggedAssetIds = await client.fetch(
-    `*[_type == "sanity.imageAsset" &&
-      defined(opt.media.tags) &&
-      count(opt.media.tags[]->name.current[lower(@) in ["members","gym"]]) > 0
-    ]{_id}`,
-  );
-  const allAssetIds = taggedAssetIds.length
-    ? taggedAssetIds
-    : await client.fetch(`*[_type == "sanity.imageAsset"]{_id}`);
-  const assetIdList = allAssetIds.map((asset) => asset._id);
-  const randomAssetId =
-    assetIdList.length > 0
-      ? () => assetIdList[Math.floor(Math.random() * assetIdList.length)]
-      : null;
-
-  let updated = 0;
-  for (const file of files) {
-    const fullPath = path.join(contentDir, file);
-    const page = await buildPageDoc(fullPath, slugMap, assetMap, randomAssetId);
-    if (!page) continue;
-    const existingId = slugMap.get(page.slug);
-    const baseId =
-      existingId || `page-${page.slug.replace(/\//g, "-").replace(/^-/, "")}`;
-    const draftId = `drafts.${baseId}`;
-    console.log(`Upserting ${page.slug} -> ${draftId}`);
-    await client.createOrReplace({
-      _id: draftId,
-      _type: "page",
-      title: page.title,
-      description: page.description,
-      slug: { _type: "slug", current: page.slug },
-      image: page.image,
-      seoTitle: page.seoTitle,
-      seoDescription: page.seoDescription,
-      seoImage: page.seoImage,
-      ogTitle: page.ogTitle,
-      ogDescription: page.ogDescription,
-      pageBuilder: page.pageBuilder,
+  if (SYNC_OPTIONS.skipPages) {
+    console.log("Skipping page sync (--skip-pages).");
+  } else {
+    const existingPageDocs = await draftsClient.fetch(
+      `*[_type == "page"]{..., "slug": slug.current}`,
+    );
+    const existingPagesBySlug = new Map();
+    const existingPagesById = new Map();
+    existingPageDocs.forEach((doc) => {
+      if (doc.slug) {
+        existingPagesBySlug.set(doc.slug, doc);
+      }
+      existingPagesById.set(doc._id, doc);
+      if (String(doc._id).startsWith("drafts.")) {
+        existingPagesById.set(String(doc._id).replace(/^drafts\./, ""), doc);
+      } else {
+        existingPagesById.set(`drafts.${doc._id}`, doc);
+      }
     });
-    updated += 1;
-  }
 
-  console.log(`Upserted ${updated} page drafts.`);
+    let updated = 0;
+    for (const file of files) {
+      const fullPath = path.join(contentDir, file);
+      const page = await buildPageDoc(fullPath, slugMap, assetMap, null);
+      if (!page) continue;
+
+      const existingId = slugMap.get(page.slug);
+      const baseId =
+        existingId || `page-${page.slug.replace(/\//g, "-").replace(/^-/, "")}`;
+      const normalizedBaseId = String(baseId).replace(/^drafts\./, "");
+      const draftId = `drafts.${normalizedBaseId}`;
+      const existingPage =
+        existingPagesById.get(draftId) ||
+        existingPagesById.get(normalizedBaseId) ||
+        existingPagesBySlug.get(page.slug) ||
+        null;
+
+      const mergedPage = mergeGeneratedPageWithExisting(page, existingPage);
+      const pageDoc = {
+        ...stripSystemFields(existingPage),
+        _id: draftId,
+        _type: "page",
+        title: mergedPage.title,
+        description: mergedPage.description,
+        slug: { _type: "slug", current: page.slug },
+        image: mergedPage.image,
+        seoTitle: mergedPage.seoTitle,
+        seoDescription: mergedPage.seoDescription,
+        seoImage: mergedPage.seoImage,
+        ogTitle: mergedPage.ogTitle,
+        ogDescription: mergedPage.ogDescription,
+        pageBuilder: mergedPage.pageBuilder,
+      };
+      await upsertDoc(pageDoc, `page ${page.slug}`);
+      updated += 1;
+    }
+
+    console.log(
+      `${SYNC_OPTIONS.dryRun ? "Would upsert" : "Upserted"} ${updated} page drafts.`,
+    );
+  }
 
   const navPath = path.join(contentDir, "navigation.md");
-  if (fs.existsSync(navPath)) {
+  if (SYNC_OPTIONS.skipNavbar) {
+    console.log("Skipping navbar sync (--skip-navbar).");
+  } else if (fs.existsSync(navPath)) {
     const updatedSlugDocs = await client.fetch(
       `*[_type in ["page","blogIndex","blog"]]{_id, "slug": slug.current}`,
     );
-    const updatedDraftSlugDocs = await client
-      .withConfig({ perspective: "drafts" })
-      .fetch(
-        `*[_id match "drafts.*" && _type in ["page","blogIndex","blog"]]{_id, "slug": slug.current}`,
-      );
+    const updatedDraftSlugDocs = await draftsClient.fetch(
+      `*[_id match "drafts.*" && _type in ["page","blogIndex","blog"]]{_id, "slug": slug.current}`,
+    );
     const updatedSlugMap = new Map();
     updatedSlugDocs.forEach((doc) => {
       if (doc.slug) updatedSlugMap.set(doc.slug, doc._id);
@@ -983,14 +1530,32 @@ const main = async () => {
         .filter(Boolean),
       updatedSlugMap,
     );
-    await client.createOrReplace({
+
+    const existingNavbar =
+      (await draftsClient.fetch(`*[_id in ["navbar","drafts.navbar"]][0]{...}`)) ||
+      null;
+    const generatedNavbar = {
       _id: "drafts.navbar",
       _type: "navbar",
-      label: "Navbar",
       columns,
       buttons: navButtons,
-    });
-    console.log("Upserted navbar draft.");
+    };
+    const mergedNavbar = mergeGeneratedNavbarWithExisting(
+      generatedNavbar,
+      existingNavbar,
+    );
+    const navbarDoc = {
+      ...stripSystemFields(existingNavbar),
+      ...mergedNavbar,
+      _id: "drafts.navbar",
+      _type: "navbar",
+      label:
+        normalizeOptionalText(mergedNavbar.label) ||
+        normalizeOptionalText(existingNavbar?.label) ||
+        "Navbar",
+    };
+    await upsertDoc(navbarDoc, "navbar");
+    console.log(`${SYNC_OPTIONS.dryRun ? "Would upsert" : "Upserted"} navbar draft.`);
   }
 };
 
