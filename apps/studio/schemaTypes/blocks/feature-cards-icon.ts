@@ -15,6 +15,9 @@ const featureCardIcon = defineField({
       title: "Image",
       type: "image",
       description: "Add an image or illustration for this card (replaces icon)",
+      options: {
+        hotspot: true,
+      },
     }),
     defineField({
       name: "title",

@@ -37,6 +37,9 @@ export const logos = defineType({
               type: "image",
               title: "Image",
               description: "Image of the logo",
+              options: {
+                hotspot: true,
+              },
             }),
             defineField({
               name: "url",
