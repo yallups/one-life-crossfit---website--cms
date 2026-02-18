@@ -15,75 +15,72 @@ image_notes: Use coaching consult or healthy lifestyle imagery from the library.
 
 - hero: Hero
 - layout: Intro
-- featureCardsIcon: Value Props / Benefits
-- layout: Program Details / Offering
+- layout: Benefits
+- layout: Outcomes
 - imageLinkCards: Top Memberships
 - cta: CTA / Next Step
 - faqAccordion: FAQs
 
 ## Blocks (config-ready)
 
-- hero
-    - variant: centered
+- hero (Nutrition & Lifestyle Coaching)
+    - variant: background
     - title: Nutrition & Lifestyle Coaching
     - richText: Build sustainable habits that match your training—simple, personalized coaching that works in real life.
     - buttons:
         - text: Book A Free Consultation
+          variant: default
           url: { type: internal, internal: /free-consultation }
         - text: Learn About Memberships
-          url: { type: internal, internal: /memberships }
-- layout (Intro)
-    - variant: centered
+          variant: secondary
+          url: { type: external, external: /memberships }
+- layout (Get results faster with a plan you can stick to)
+    - variant: imageRight
     - title: Get results faster with a plan you can stick to
     - richText: Training works best when your nutrition supports it. Our coaching focuses on simple, sustainable
-      habits—so you lose fat, gain energy, and feel better without extreme dieting.
-- layout (Benefits & Details)
-    - variant: centered
+- layout (Benefits)
+    - variant: imageLeft
     - title: Benefits
     - richText: |-
       ### Benefits
-        - Personalized guidance: Coaching based on your goals and lifestyle.
-        - Habit-based approach: Sustainable changes you can maintain.
-        - Performance + recovery support: Better fuel for training and recovery.
-        - Works with any program: Pairs well with [CrossFit](/programs/group-training/crossfit), [Bootcamp](/programs/group-training/bootcamp), or private coaching.
-        - Complimentary [InBody scan](/programs/inbody-scan): Free weigh‑in included with each nutrition coaching session.
-
+      - Personalized guidance: Coaching based on your goals and lifestyle.
+      - Habit-based approach: Sustainable changes you can maintain.
+      - Performance + recovery support: Better fuel for training and recovery.
+      - Works with any program: Pairs well with [CrossFit](/programs/group-training/crossfit), [Bootcamp](/programs/group-training/bootcamp), or private coaching.
+      - Complimentary [InBody scan](/programs/inbody-scan): Free weigh‑in included with each nutrition coaching session.
       ### Program details
-      1:1 coaching, progress tracking, and strategies tailored to your goals. Options for short-term starts or longer
-      cycles.
-
+      1:1 coaching, progress tracking, and strategies tailored to your goals. Options for short-term starts or longer cycles.
       ### Who it’s for
-        - Anyone who wants fat loss, more energy, or better recovery.
-        - Athletes who want performance-focused nutrition support.
-        - Busy people who need a simple, sustainable plan.
-- layout (Outcomes)
-    - variant: centered
+      - Anyone who wants fat loss, more energy, or better recovery.
+      - Athletes who want performance-focused nutrition support.
+      - Busy people who need a simple, sustainable plan.
+- layout (Outcomes you can expect)
+    - variant: imageRight
     - title: Outcomes you can expect
     - richText: |-
-        - Consistent habits you can stick to.
-        - Better energy and recovery.
-        - Clear, realistic progress over time.
+      - Consistent habits you can stick to.
+      - Better energy and recovery.
+      - Clear, realistic progress over time.
 - imageLinkCards (Top Memberships)
     - title: Top Memberships
     - cards:
         - title: Private Coaching
           description: Personalized coaching with the option to include nutrition support.
-          url: { type: internal, internal: /memberships/private-coaching }
+          url: { type: external, external: /memberships/private-coaching }
         - title: Hybrid
           description: Group training plus coaching sessions you can use for nutrition.
-          url: { type: internal, internal: /memberships/hybrid }
-    - buttons:
-        - text: See All Options
-          url: { type: internal, internal: /memberships }
-- cta
+          url: { type: external, external: /memberships/hybrid }
+- cta (Ready to level up your results?)
     - title: Ready to level up your results?
     - richText: Book a free consultation and we’ll outline the best nutrition coaching path for you.
     - buttons:
         - text: Book A Free Consultation
+          variant: default
           url: { type: internal, internal: /free-consultation }
         - text: Learn About Memberships
-          url: { type: internal, internal: /memberships }
-- faqAccordion
+          variant: secondary
+          url: { type: external, external: /memberships }
+- faqAccordion (FAQs)
     - title: FAQs
     - faqs:
         - faq-nutrition-need

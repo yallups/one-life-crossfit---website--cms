@@ -8,6 +8,7 @@ notes: Draft the Sanity `navbar` document. Provide columns and links with intern
 ## Columns (left to right)
 
 ### Column: Programs
+
 - CrossFit — /programs/group-training/crossfit
 - Bootcamp — /programs/group-training/bootcamp
 - Abs & A$$ — /programs/group-training/aa
@@ -15,9 +16,10 @@ notes: Draft the Sanity `navbar` document. Provide columns and links with intern
 - InBody Scan — /programs/inbody-scan
 - Private Training — /programs/private-training/1-1
 - Semi-Private Training — /programs/private-training/semi-private
-- Sports Massage Therapy — /programs/sports-massage-therapy (external / recovery partner allowed)
+- Sports Massage Therapy — /programs/sports-massage-therapy
 
 ### Column: Memberships
+
 - Memberships Overview — /memberships
 - New Foundations — /memberships/new-foundations
 - Jump Start — /memberships/jump-start
@@ -26,11 +28,14 @@ notes: Draft the Sanity `navbar` document. Provide columns and links with intern
 - Private Coaching — /memberships/private-coaching
 
 ### Column: About
+
 - About — /about
 - Schedule — /schedule
 - Gallery — /gallery
 - Blog — /blog
 
 ## Header Buttons (right side)
+
 - Book A Free Consultation — /free-consultation (internal)
-- Purchase Membership — https://onelifefitness.wodify.com/OnlineSalesPage/Main?q=Memberships%7CLocationId%3D9721 (external)
+- Purchase Membership — https://onelifefitness.wodify.com/OnlineSalesPage/Main?q=Memberships%7CLocationId%3D9721 (
+  external)

@@ -40,7 +40,10 @@ const dataset =
   process.env.NEXT_PUBLIC_SANITY_DATASET ||
   "production";
 const apiVersion = process.env.NEXT_PUBLIC_SANITY_API_VERSION || "2025-02-10";
-const token = process.env.SANITY_API_TOKEN || process.env.SANITY_WRITE_TOKEN;
+const token =
+  process.env.SANITY_API_WRITE_TOKEN ||
+  process.env.SANITY_WRITE_TOKEN ||
+  process.env.SANITY_API_TOKEN;
 
 if (!projectId) {
   throw new Error(
@@ -48,7 +51,9 @@ if (!projectId) {
   );
 }
 if (!token) {
-  throw new Error("Missing SANITY_API_TOKEN/SANITY_WRITE_TOKEN.");
+  throw new Error(
+    "Missing SANITY_API_WRITE_TOKEN/SANITY_WRITE_TOKEN/SANITY_API_TOKEN.",
+  );
 }
 
 const client = createClient({
@@ -571,8 +576,6 @@ const buildBlock = async (block, slugMap, assetMap, randomAssetId) => {
       const filename = value;
       if (filename && assetMap.has(filename)) {
         out.media = buildMediaArray(assetMap.get(filename));
-      } else if (!filename && randomAssetId) {
-        out.media = buildMediaArray(randomAssetId());
       }
       continue;
     }
@@ -585,9 +588,7 @@ const buildBlock = async (block, slugMap, assetMap, randomAssetId) => {
             _key: crypto.randomUUID(),
             title: card.title,
             description: card.description,
-            image:
-              card.image ||
-              (randomAssetId ? buildImageField(randomAssetId()) : undefined),
+            image: card.image,
             url: buildCustomUrl(card.url, slugMap),
             buttons: mapButtons(card.buttons, slugMap),
           }));
@@ -600,9 +601,7 @@ const buildBlock = async (block, slugMap, assetMap, randomAssetId) => {
             card.richText || card.description || "",
             slugMap,
           ),
-          image:
-            card.image ||
-            (randomAssetId ? buildImageField(randomAssetId()) : undefined),
+          image: card.image,
           icon: card.icon,
         }));
       } else {
@@ -614,7 +613,7 @@ const buildBlock = async (block, slugMap, assetMap, randomAssetId) => {
       out.faqs = value.map((id) => ({
         _type: "reference",
         _key: crypto.randomUUID(),
-        _ref: id.startsWith("drafts.") ? id : `drafts.${id}`,
+        _ref: String(id).replace(/^drafts\./, ""),
       }));
       continue;
     }
@@ -624,13 +623,7 @@ const buildBlock = async (block, slugMap, assetMap, randomAssetId) => {
     }
     out[key] = value;
   }
-  if (
-    (block._type === "hero" || block._type === "layout") &&
-    !out.media &&
-    randomAssetId
-  ) {
-    out.media = buildMediaArray(randomAssetId());
-  }
+  // Do not auto-fill media; images are managed manually.
   return out;
 };
 
@@ -662,7 +655,6 @@ const buildPageDoc = async (filePath, slugMap, assetMap, randomAssetId) => {
           _key: crypto.randomUUID(),
           title,
           richText: toBulletList(lines),
-          media: randomAssetId ? buildMediaArray(randomAssetId()) : undefined,
         });
       });
       continue;
@@ -743,11 +735,21 @@ const parseFaqDocs = (filePath) => {
   return faqs.filter((faq) => faq.id && faq.question && faq.answer);
 };
 
+const stripInvisibleCharacters = (value) =>
+  String(value).replace(/[\u200B-\u200D\u2060\uFEFF]/g, "");
+
+const normalizeOptionalText = (value) => {
+  if (typeof value !== "string") return undefined;
+  const sanitizedValue = stripInvisibleCharacters(value).trim();
+  return sanitizedValue.length > 0 ? sanitizedValue : undefined;
+};
+
 const cleanUrl = (value) => {
-  if (!value) return value;
-  const trimmed = value.trim();
-  const noNote = trimmed.split("(")[0].trim();
-  return noNote.split(/\s+/)[0].trim();
+  const normalized = normalizeOptionalText(value);
+  if (!normalized) return undefined;
+  const noNote = normalized.split("(")[0].trim();
+  const firstToken = noNote.split(/\s+/)[0]?.trim();
+  return firstToken || undefined;
 };
 
 const parseNavigation = (filePath) => {
@@ -779,16 +781,23 @@ const parseNavigation = (filePath) => {
     }
     if (mode === "columns" && trimmed.startsWith("- ")) {
       const entry = trimmed.slice(2).trim();
-      const [name, rawUrl] = entry.split("—").map((part) => part.trim());
+      const [rawName, rawUrl, ...rawDescription] = entry
+        .split(/[—–]/)
+        .map((part) => part.trim());
+      const name = normalizeOptionalText(rawName);
       const url = cleanUrl(rawUrl);
+      const description = normalizeOptionalText(rawDescription.join(" — "));
       if (currentColumn && name && url) {
-        currentColumn.links.push({ name, url });
+        currentColumn.links.push(
+          description ? { name, url, description } : { name, url },
+        );
       }
       continue;
     }
     if (mode === "buttons" && trimmed.startsWith("- ")) {
       const entry = trimmed.slice(2).trim();
-      const [text, rawUrl] = entry.split("—").map((part) => part.trim());
+      const [rawText, rawUrl] = entry.split(/[—–]/).map((part) => part.trim());
+      const text = normalizeOptionalText(rawText);
       const url = cleanUrl(rawUrl);
       if (text && url) {
         buttons.push({ text, url });
@@ -937,20 +946,41 @@ const main = async () => {
     const columns = nav.columns.map((column) => ({
       _type: "navbarColumn",
       _key: crypto.randomUUID(),
-      title: column.title,
-      links: column.links.map((link) => ({
-        _type: "navbarColumnLink",
-        _key: crypto.randomUUID(),
-        name: link.name,
-        description: "",
-        url: buildCustomUrl(urlToCustomUrlInput(link.url), updatedSlugMap),
-      })),
+      title: normalizeOptionalText(column.title) || "Untitled",
+      links: column.links
+        .map((link) => {
+          const name = normalizeOptionalText(link.name);
+          const url = cleanUrl(link.url);
+          if (!name || !url) {
+            return null;
+          }
+
+          const description = normalizeOptionalText(link.description);
+          return {
+            _type: "navbarColumnLink",
+            _key: crypto.randomUUID(),
+            name,
+            ...(description ? { description } : {}),
+            url: buildCustomUrl(urlToCustomUrlInput(url), updatedSlugMap),
+          };
+        })
+        .filter(Boolean),
     }));
     const navButtons = mapButtons(
-      nav.buttons.map((button) => ({
-        text: button.text,
-        url: urlToCustomUrlInput(button.url),
-      })),
+      nav.buttons
+        .map((button) => {
+          const text = normalizeOptionalText(button.text);
+          const url = cleanUrl(button.url);
+          if (!text || !url) {
+            return null;
+          }
+
+          return {
+            text,
+            url: urlToCustomUrlInput(url),
+          };
+        })
+        .filter(Boolean),
       updatedSlugMap,
     );
     await client.createOrReplace({

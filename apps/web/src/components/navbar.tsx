@@ -7,10 +7,7 @@ import Link from "next/link";
 import { useState } from "react";
 import useSWR from "swr";
 
-import type {
-  QueryGlobalSeoSettingsResult,
-  QueryNavbarDataResult,
-} from "@/lib/sanity/sanity.types";
+import type { QueryGlobalSeoSettingsResult, QueryNavbarDataResult, } from "@/lib/sanity/sanity.types";
 
 import { SanityButtons } from "./elements/sanity-buttons";
 import { SanityIcon } from "./elements/sanity-icon";
@@ -28,18 +25,30 @@ type NavColumn = NonNullable<
 >[number];
 
 type ColumnLink = Extract<NavColumn, { type: "column" }>["links"] extends Array<
-  infer T
->
+    infer T
+  >
   ? T
   : never;
 
 type MenuLinkProps = {
   name: string;
   href: string;
-  description?: string;
+  description?: string | null;
   icon?: any;
   onClick?: () => void;
 };
+
+function normalizeOptionalText(value?: string | null): string | undefined {
+  if (typeof value !== "string") {
+    return;
+  }
+
+  const sanitizedValue = value
+    .replace(/[\u200B-\u200D\u2060\uFEFF]/g, "")
+    .trim();
+
+  return sanitizedValue.length > 0 ? sanitizedValue : undefined;
+}
 
 // Fetcher function
 const fetcher = async (url: string): Promise<NavigationData> => {
@@ -51,6 +60,8 @@ const fetcher = async (url: string): Promise<NavigationData> => {
 };
 
 function MenuLink({ name, href, description, icon, onClick }: MenuLinkProps) {
+  const normalizedDescription = normalizeOptionalText(description);
+
   return (
     <Link
       className="group flex items-start gap-3 rounded-lg p-3 transition-colors hover:bg-accent"
@@ -67,9 +78,9 @@ function MenuLink({ name, href, description, icon, onClick }: MenuLinkProps) {
         <div className="font-medium leading-none group-hover:text-accent-foreground">
           {name}
         </div>
-        {description && (
+        {normalizedDescription && (
           <div className="line-clamp-2 text-muted-foreground text-sm">
-            {description}
+            {normalizedDescription}
           </div>
         )}
       </div>
@@ -115,7 +126,7 @@ function DesktopColumnDropdown({
           <div className="grid gap-1">
             {column.links?.map((link: ColumnLink) => (
               <MenuLink
-                description={link.description || ""}
+                description={link.description}
                 href={link.href || ""}
                 icon={link.icon}
                 key={link._key}
@@ -176,7 +187,8 @@ function MobileMenu({ navbarData, settingsData }: NavigationData) {
       {/* Mobile menu overlay */}
       {isOpen && (
         <div className="fixed inset-0 top-16 z-50 bg-background/80 backdrop-blur-sm md:hidden">
-          <div className="fixed top-0 left-0 h-[calc(100vh-4rem)] w-full overflow-auto border-r bg-background p-6 shadow-lg">
+          <div
+            className="fixed top-0 left-0 h-[calc(100vh-4rem)] w-full overflow-auto border-r bg-background p-6 shadow-lg">
             <div className="grid gap-6">
               {/* Logo for mobile */}
               {/*{logo && (*/}
@@ -227,7 +239,7 @@ function MobileMenu({ navbarData, settingsData }: NavigationData) {
                           <div className="grid gap-1 border-border border-l-2 pl-4">
                             {column.links?.map((link: ColumnLink) => (
                               <MenuLink
-                                description={link.description || ""}
+                                description={link.description}
                                 href={link.href || ""}
                                 icon={link.icon}
                                 key={link._key}
