@@ -50,6 +50,9 @@ image_notes: Use a community-focused group photo or coaching-in-action shot from
     - title: Private Coaching
       description: One-on-one or semi-private coaching built around your goals.
       url: { type: internal, internal: /memberships/private-coaching }
+    - title: Nutrition Memberships
+      description: Nutrition-focused memberships and session plans for fat loss, performance, and accountability.
+      url: { type: internal, internal: /memberships/nutrition }
   - buttons:
     - text: Purchase Membership
       url: { type: external, external: https://onelifefitness.wodify.com/OnlineSalesPage/Main?q=Memberships%7CLocationId%3D9721 }
@@ -119,6 +122,10 @@ image_notes: Use a community-focused group photo or coaching-in-action shot from
     summary: One-on-one or semi-private coaching built around your goals and schedule.
     best_for: Injury considerations, focused performance goals, or preference for individualized training.
     link: /memberships/private-coaching
+  - name: Nutrition Memberships
+    summary: Nutrition-specific membership and session options including Start, Stride, and monthly plans.
+    best_for: Members focused on body composition, recovery, accountability, or nutrition coaching support.
+    link: /memberships/nutrition
 
 ## Membership Components (Cross-References)
 
@@ -192,6 +199,7 @@ image_notes: Use a community-focused group photo or coaching-in-action shot from
 - /memberships/hybrid
 - /memberships/group-class
 - /memberships/private-coaching
+- /memberships/nutrition
 
 ## Notes
 

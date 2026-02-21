@@ -21,6 +21,7 @@ notes: Draft the Sanity `navbar` document. Provide columns and links with intern
 ### Column: Memberships
 
 - Memberships Overview — /memberships
+- Nutrition Memberships — /memberships/nutrition
 - New Foundations — /memberships/new-foundations
 - Jump Start — /memberships/jump-start
 - Hybrid — /memberships/hybrid
