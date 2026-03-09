@@ -8,7 +8,11 @@
     "lint": "npx ultracite check",
     "format": "npx ultracite fix",
     "check-types": "turbo check-types",
-    "wodify:test": "npx tsx apps/web/scripts/run-wodify-tests.ts"
+    "wodify:test": "npx tsx apps/web/scripts/run-wodify-tests.ts",
+    "content:normalize-links": "node scripts/normalize-content-spec-internal-links.cjs --apply",
+    "sanity:normalize-links": "node scripts/sanity-normalize-internal-links.cjs",
+    "sanity:prepare-sync": "node scripts/sanity-review-sync-workflow.cjs prepare",
+    "sanity:apply-sync": "node scripts/sanity-review-sync-workflow.cjs apply"
   },
   "devDependencies": {
     "@biomejs/biome": "2.3.2",

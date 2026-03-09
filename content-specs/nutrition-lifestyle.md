@@ -1,9 +1,9 @@
 ---
 slug: /programs/nutrition-lifestyle
-seo_title:
+seo_title: 
 seo_description: Nutrition and lifestyle coaching with assessments, habit-based plans, and accountability to support fat loss, performance, and energy in real life.
-og_title:
-og_description:
+og_title: 
+og_description: 
 primary_keyword: nutrition coaching Santa Maria
 secondary_keywords: [ "nutrition coach Santa Maria", "lifestyle coaching Santa Maria", "weight loss coaching Santa Maria" ]
 image_notes: Use coaching consult or healthy lifestyle imagery from the library.
@@ -12,82 +12,88 @@ image_notes: Use coaching consult or healthy lifestyle imagery from the library.
 # Nutrition & Lifestyle
 
 ## Page Builder Blocks (ordered)
-
-- hero: Hero
-- layout: Intro
+- hero: Nutrition & Lifestyle Coaching
+- layout: Get results faster with a plan you can stick to
 - layout: Benefits
-- layout: Outcomes
+- layout: Outcomes you can expect
 - imageLinkCards: Top Memberships
-- cta: CTA / Next Step
+- cta: Ready to level up your results?
 - faqAccordion: FAQs
-
 ## Blocks (config-ready)
-
 - hero (Nutrition & Lifestyle Coaching)
-    - variant: background
-    - title: Nutrition & Lifestyle Coaching
-    - richText: Build sustainable habits that match your training—simple, personalized coaching that works in real life.
-    - buttons:
-        - text: Book A Free Consultation
-          variant: default
-          url: { type: internal, internal: /free-consultation }
-        - text: Learn About Memberships
-          variant: secondary
-          url: { type: external, external: /memberships }
+  - variant: background
+  - title: Nutrition & Lifestyle Coaching
+  - richText: Build sustainable habits that match your training—simple, personalized coaching that works in real life.
+  - media: image-bc526110e058b8ac005271f360a253fbeef68fe9-6000x4000-jpg
+  - buttons:
+    - text: Book A Free Consultation
+      variant: default
+      url: { type: internal, internal: /free-consultation }
+    - text: Learn About Memberships
+      variant: secondary
+      url: { type: internal, internal: /memberships }
 - layout (Get results faster with a plan you can stick to)
-    - variant: imageRight
-    - title: Get results faster with a plan you can stick to
-    - richText: Training works best when your nutrition supports it. Our coaching focuses on simple, sustainable
+  - variant: imageRight
+  - title: Get results faster with a plan you can stick to
+  - richText: Training works best when your nutrition supports it. Our coaching focuses on simple, sustainable
+  - media: file-7ca88a0525add108a88342d6dfbff021b5ae3204-mov
 - layout (Benefits)
-    - variant: imageLeft
-    - title: Benefits
-    - richText: |-
-      ### Benefits
-      - Personalized guidance: Coaching based on your goals and lifestyle.
-      - Habit-based approach: Sustainable changes you can maintain.
-      - Performance + recovery support: Better fuel for training and recovery.
-      - Works with any program: Pairs well with [CrossFit](/programs/group-training/crossfit), [Bootcamp](/programs/group-training/bootcamp), or private coaching.
-      - Complimentary [InBody scan](/programs/inbody-scan): Free weigh‑in included with each nutrition coaching session.
-      ### Program details
-      1:1 coaching, progress tracking, and strategies tailored to your goals. Options for short-term starts or longer cycles.
-      ### Who it’s for
-      - Anyone who wants fat loss, more energy, or better recovery.
-      - Athletes who want performance-focused nutrition support.
-      - Busy people who need a simple, sustainable plan.
+  - variant: imageLeft
+  - title: Benefits
+  - richText: |-
+    ### Benefits
+    - Personalized guidance: Coaching based on your goals and lifestyle.
+    - Habit-based approach: Sustainable changes you can maintain.
+    - Performance + recovery support: Better fuel for training and recovery.
+    - Works with any program: Pairs well with [CrossFit](/programs/group-training/crossfit), [Bootcamp](/programs/group-training/bootcamp), or private coaching.
+    - Complimentary [InBody scan](/programs/inbody-scan): Free weigh‑in included with each nutrition coaching session.
+    ### Program details
+    1:1 coaching, progress tracking, and strategies tailored to your goals. Options for short-term starts or longer cycles.
+    ### Who it’s for
+    - Anyone who wants fat loss, more energy, or better recovery.
+    - Athletes who want performance-focused nutrition support.
+    - Busy people who need a simple, sustainable plan.
+  - media: image-a7330c0bd21fd7930cf02ee9fe2bf207ec4200f1-2001x3000-jpg
 - layout (Outcomes you can expect)
-    - variant: imageRight
-    - title: Outcomes you can expect
-    - richText: |-
-      - Consistent habits you can stick to.
-      - Better energy and recovery.
-      - Clear, realistic progress over time.
+  - variant: imageRight
+  - title: Outcomes you can expect
+  - richText: |-
+    - Consistent habits you can stick to.
+    - Better energy and recovery.
+    - Clear, realistic progress over time.
+  - media: image-4ad5754de9a09284c6d4c3372b6a55fe96892316-3000x2001-jpg
 - imageLinkCards (Top Memberships)
-    - title: Top Memberships
-    - cards:
-        - title: Private Coaching
-          description: Personalized coaching with the option to include nutrition support.
-          url: { type: external, external: /memberships/private-coaching }
-        - title: Hybrid
-          description: Group training plus coaching sessions you can use for nutrition.
-          url: { type: external, external: /memberships/hybrid }
+  - title: Top Memberships
+  - cards:
+    - title: Private Coaching
+      description: One-on-one or semi-private coaching built around your goals.
+      image: image-9435d355e5fc5ef307bb96dd75a6b3333bc9d0c1-3000x2001-jpg
+      url: { type: internal, internal: /memberships/private-coaching }
+    - title: New Foundations
+      description: A guided start for anyone new to fitness or CrossFit.
+      image: image-22237f80ead00c28576dc7982875dd754336ec96-2001x3000-jpg
+      url: { type: internal, internal: /memberships/new-foundations }
+    - title: Hybrid
+      description: Group classes plus personal coaching sessions (1/2/4/8 per 4 weeks).
+      image: image-0ed914850a58ecf00b75107a88d739f1cbb7e210-2001x3000-jpg
+      url: { type: internal, internal: /memberships/hybrid }
 - cta (Ready to level up your results?)
-    - title: Ready to level up your results?
-    - richText: Book a free consultation and we’ll outline the best nutrition coaching path for you.
-    - buttons:
-        - text: Book A Free Consultation
-          variant: default
-          url: { type: internal, internal: /free-consultation }
-        - text: Learn About Memberships
-          variant: secondary
-          url: { type: external, external: /memberships }
+  - title: Ready to level up your results?
+  - richText: Book a free consultation and we’ll outline the best nutrition coaching path for you.
+  - buttons:
+    - text: Book A Free Consultation
+      variant: default
+      url: { type: internal, internal: /free-consultation }
+    - text: Learn About Memberships
+      variant: secondary
+      url: { type: internal, internal: /memberships }
 - faqAccordion (FAQs)
-    - title: FAQs
-    - faqs:
-        - faq-nutrition-need
-        - faq-nutrition-meal-plan
-        - faq-nutrition-weight-loss
-        - faq-nutrition-only
-
+  - title: FAQs
+  - faqs:
+    - faq-nutrition-need
+    - faq-nutrition-meal-plan
+    - faq-nutrition-weight-loss
+    - faq-nutrition-only
 ## Hero
 
 - headline: Nutrition & Lifestyle Coaching
@@ -125,12 +131,15 @@ image_notes: Use coaching consult or healthy lifestyle imagery from the library.
 
 - description: Highlight the best-fit memberships for nutrition coaching.
 - options:
-    - name: Hybrid
-      summary: Group training plus coaching sessions you can use for nutrition.
-      link: /memberships/hybrid
     - name: Private Coaching
-      summary: Personalized coaching with the option to include nutrition support.
+      summary: One-on-one or semi-private coaching built around your goals.
       link: /memberships/private-coaching
+    - name: New Foundations
+      summary: A guided start for anyone new to fitness or CrossFit.
+      link: /memberships/new-foundations
+    - name: Hybrid
+      summary: Group classes plus personal coaching sessions (1/2/4/8 per 4 weeks).
+      link: /memberships/hybrid
 - see_all_options_link: /memberships
 
 ## CTA / Next Step

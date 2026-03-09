@@ -6,75 +6,81 @@ og_title:
 og_description: 
 primary_keyword: bootcamp Santa Maria
 secondary_keywords: ["bootcamp classes Santa Maria", "metabolic conditioning Santa Maria", "45 minute bootcamp Santa Maria", "CrossFit bootcamp Santa Maria"]
-image_notes: Hero image: image-0ed914850a58ecf00b75107a88d739f1cbb7e210-2001x3000-jpg. Additional images: image-ed21c624692f116c0fd409004566f40ef0a84bd9-2001x3000-jpg, image-b31862a0ea5a1220cfeb397ef7689e7b19c50401-2001x3000-jpg
+image_notes: image-0ed914850a58ecf00b75107a88d739f1cbb7e210-2001x3000-jpg
 ---
 
 # Bootcamp
 
 ## Page Builder Blocks (ordered)
-- hero: Hero
-- layout: Intro
-- layout: Program Details / Offering
-- layout: Class Format / What To Expect
+- hero: The Bootcamp Membership
+- layout: Simple movements. Big results.
+- layout: Bootcamp is CrossFit - Simplified
+- layout: How it works
+- wodifySchedule: Schedule
 - imageLinkCards: Top Memberships
-- wodifySchedule: WOD / Schedule (programs ["93813"])
-- cta: CTA / Next Step
+- cta: Ready to get moving?
 - faqAccordion: FAQs
-
 ## Blocks (config-ready)
-- hero
-  - variant: centered
+- hero (The Bootcamp Membership)
+  - variant: background
   - title: The Bootcamp Membership
   - richText: A fast-paced, coach-led 45-minute class with simpler movement patterns—perfect for conditioning, weight loss, and getting moving.
+  - media: image-8a2d149a0947643e5a5451919c2ece7692e6a3fe-3000x2001-jpg
   - buttons:
     - text: Book A Free Consultation
+      variant: default
       url: { type: internal, internal: /free-consultation }
     - text: Book A Free Class
+      variant: secondary
       url: { type: internal, internal: /free-consultation }
-  - media: image-0ed914850a58ecf00b75107a88d739f1cbb7e210-2001x3000-jpg
-- layout (Intro)
-  - variant: centered
+- layout (Simple movements. Big results.)
+  - variant: imageRight
   - title: Simple movements. Big results.
   - richText: Bootcamp is functional, high-intensity training without the complex lifts. It’s a great place to start if you’re new, and a great complement to [CrossFit](/programs/group-training/crossfit) if you want extra metabolic conditioning. You’ll move more, sweat more, and finish in 45 minutes.
-- layout (Program Details)
-  - variant: centered
+  - media: image-767075e49a369321282641651287baf7dcdd06bf-2001x3000-jpg
+- layout (Bootcamp is CrossFit - Simplified)
+  - variant: imageLeft
   - title: Bootcamp is CrossFit - Simplified
   - richText: Coach-led conditioning classes with accessible movements. Bootcamp removes Olympic lifting complexity while keeping intensity and results. Expect longer continuous workouts and functional movements at a higher pace.
-- layout (Class Format)
-  - variant: centered
+  - media: image-5dd3204c1816049edfbc459e3e7ac635abc66807-2001x3000-jpg
+- layout (How it works)
+  - variant: imageRight
   - title: How it works
   - richText: Warm-up & movement prep; coach-led continuous workout; cool down & recovery. Class length is 45 minutes. Coaches provide scaling for all levels.
-- imageLinkCards (Top Memberships)
-  - title: Top Memberships
-  - cards:
-    - title: Bootcamp
-      description: Unlimited Bootcamp classes for conditioning-focused training.
-      url: { type: external, external: https://onelifefitness.wodify.com/OnlineSalesPage/Main?q=PurchaseByKey%7cKey%3drndZU6TZhI1C2Zyu5K8ereOcR }
-    - title: Jump Start
-      description: Fundamentals + group training for a strong start.
-      url: { type: internal, internal: /memberships/jump-start }
-    - title: Hybrid
-      description: Group classes plus personal coaching sessions (1/2/4/8 per 4 weeks).
-      url: { type: internal, internal: /memberships/hybrid }
-  - buttons:
-    - text: See All Options
-      url: { type: internal, internal: /memberships }
-- wodifySchedule
+  - media: image-0c88277b78ec3518d8f6cf1d42aefa23177b4684-3000x2001-jpg
+- wodifySchedule (Schedule)
   - title: Schedule
   - programs: ["93813"]
   - daysToShow: 7
   - showAvailability: true
   - groupByDay: true
   - showCoach: true
-- cta
+- imageLinkCards (Top Memberships)
+  - title: Top Memberships
+  - cards:
+    - title: New Foundations
+      description: A guided start for anyone new to fitness or CrossFit.
+      image: image-22237f80ead00c28576dc7982875dd754336ec96-2001x3000-jpg
+      url: { type: internal, internal: /memberships/new-foundations }
+    - title: Hybrid
+      description: Group classes plus personal coaching sessions (1/2/4/8 per 4 weeks).
+      image: image-0ed914850a58ecf00b75107a88d739f1cbb7e210-2001x3000-jpg
+      url: { type: internal, internal: /memberships/hybrid }
+    - title: Group Class
+      description: Unlimited CrossFit + Bootcamp classes with Open Gym access.
+      image: image-0961aebe0cb2ceef019cca13d747804b68bdd3a6-2001x3000-jpg
+      url: { type: internal, internal: /memberships/group-class }
+- cta (Ready to get moving?)
   - title: Ready to get moving?
   - richText: Book a free consultation and we’ll recommend the best path for your goals—Bootcamp, [CrossFit](/programs/group-training/crossfit), or both.
   - buttons:
     - text: Book A Free Consultation
+      variant: default
       url: { type: internal, internal: /free-consultation }
     - text: Book A Free Class
+      variant: secondary
       url: { type: internal, internal: /free-consultation }
-- faqAccordion
+- faqAccordion (FAQs)
   - title: FAQs
   - faqs:
     - faq-bootcamp-beginners
@@ -84,7 +90,6 @@ image_notes: Hero image: image-0ed914850a58ecf00b75107a88d739f1cbb7e210-2001x300
     - faq-bootcamp-scaling
     - faq-bootcamp-weight-loss
     - faq-bootcamp-injuries
-
 ## Hero
 - headline: The Bootcamp Membership
 - subheadline: A fast-paced, coach-led 45-minute class with simpler movement patterns—perfect for conditioning, weight loss, and getting moving.
@@ -132,15 +137,15 @@ image_notes: Hero image: image-0ed914850a58ecf00b75107a88d739f1cbb7e210-2001x300
 ## Top Memberships (anchor: memberships-options)
 - description: Highlight the 3 best-fit memberships for Bootcamp and link to the full list.
 - options:
-  - name: Bootcamp
-    summary: Unlimited Bootcamp classes for conditioning-focused training.
-    link: https://onelifefitness.wodify.com/OnlineSalesPage/Main?q=PurchaseByKey%7cKey%3drndZU6TZhI1C2Zyu5K8ereOcR
-  - name: Jump Start
-    summary: Fundamentals + group training for a strong start.
-    link: /memberships/jump-start
+  - name: New Foundations
+    summary: A guided start for anyone new to fitness or CrossFit.
+    link: /memberships/new-foundations
   - name: Hybrid
     summary: Group classes plus personal coaching sessions (1/2/4/8 per 4 weeks).
     link: /memberships/hybrid
+  - name: Group Class
+    summary: Unlimited CrossFit + Bootcamp classes with Open Gym access.
+    link: /memberships/group-class
 - see_all_options_link: /memberships
 
 ## CTA / Next Step

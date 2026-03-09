@@ -12,79 +12,86 @@ image_notes: Use 1:1 coaching or assessment imagery.
 # Private Coaching
 
 ## Page Builder Blocks (ordered)
-- hero: Hero
-- layout: Intro
+- hero: Private Coaching
+- layout: Personalized coaching that fits your goals
 - layout: What You Get
 - imageLinkCards: Purchase Options
-- cta: CTA / Next Step
+- cta: Want a fully personalized plan?
 - faqAccordion: FAQs
-
 ## Blocks (config-ready)
-- hero
-  - variant: centered
+- hero (Private Coaching)
+  - variant: background
   - title: Private Coaching
   - richText: Fully personalized training for focused goals, injuries, or a more individual approach.
+  - media: image-f01ace8174bf66037be3ed3d6aa6e75f54ca5ec9-3000x2001-jpg
   - buttons:
     - text: Purchase Membership
+      variant: default
       url: { type: external, external: https://onelifefitness.wodify.com/OnlineSalesPage/Main?q=Memberships%7CLocationId%3D9721 }
     - text: Book A Free Consultation
+      variant: secondary
       url: { type: internal, internal: /free-consultation }
-- layout (Intro)
-  - variant: centered
+- layout (Personalized coaching that fits your goals)
+  - variant: imageRight
   - title: Personalized coaching that fits your goals
   - richText: Private coaching is ideal if you want individualized attention, have specific performance goals, or prefer not to train in a group setting. If you want a blend of group classes and personal coaching, check out our [Hybrid](/memberships/hybrid) options.
+  - media: image-351fb2a27c9613f3739b5efb85b2bcc456c9fad3-3000x2001-jpg
 - layout (What You Get)
-  - variant: centered
+  - variant: imageLeft
   - title: What You Get
   - richText: |-
-      ### What you get
-      - 1:1 or semi-private coaching: Personalized sessions built around your goals.
-      - Personalized training plan: A plan tailored to your goals and schedule.
-      - Movement assessments: Progress tracking and focused feedback.
-      - Complimentary [InBody scan](/programs/inbody-scan): Free weigh‑in with each private training or nutrition coaching session.
-      - Optional nutrition coaching: Add nutrition/lifestyle coaching if desired.
-
-      ### Who it’s for
-      - Anyone who wants individualized coaching and accountability.
-      - Athletes with performance goals or technique gaps.
-      - Members with injuries or limitations who need smarter scaling.
-
-      ### Outcomes you can expect
-      - Better movement quality and confidence.
-      - Faster progress toward specific goals.
-      - A clear plan you can sustain.
+    ### What you get
+    - 1:1 or semi-private coaching: Personalized sessions built around your goals.
+    - Personalized training plan: A plan tailored to your goals and schedule.
+    - Movement assessments: Progress tracking and focused feedback.
+    - Complimentary [InBody scan](/programs/inbody-scan): Free weigh‑in with each private training or nutrition coaching session.
+    - Optional nutrition coaching: Add nutrition/lifestyle coaching if desired.
+    ### Who it’s for
+    - Anyone who wants individualized coaching and accountability.
+    - Athletes with performance goals or technique gaps.
+    - Members with injuries or limitations who need smarter scaling.
+    ### Outcomes you can expect
+    - Better movement quality and confidence.
+    - Faster progress toward specific goals.
+    - A clear plan you can sustain.
+  - media: image-c7aab6d708357e906b1d18657673acd572cd96f1-3000x2001-jpg
 - imageLinkCards (Purchase Options)
   - title: Purchase Options
   - richText: Choose the private coaching option that matches your goals and schedule. Purchase through the online sales portal.
   - cards:
-      - title: Session packs (30 min)
-        description: 1, 4, 12, 24, or 48 sessions.
-        url: { type: external, external: https://onelifefitness.wodify.com/OnlineSalesPage/Main?q=Memberships%7CLocationId%3D9721, openInNewTab: true }
-      - title: Session packs (60 min)
-        description: 4, 12, 24, or 48 sessions.
-        url: { type: external, external: https://onelifefitness.wodify.com/OnlineSalesPage/Main?q=Memberships%7CLocationId%3D9721, openInNewTab: true }
-      - title: Monthly coaching sessions
-        description: 1, 2, 4, or 8 sessions per 4 weeks.
-        url: { type: external, external: https://onelifefitness.wodify.com/OnlineSalesPage/Main?q=Memberships%7CLocationId%3D9721, openInNewTab: true }
-      - title: Complete fitness consultation (60 min)
-        description: One deep-dive session for training, nutrition, and conditioning.
-        url: { type: external, external: https://onelifefitness.wodify.com/OnlineSalesPage/Main?q=Memberships%7CLocationId%3D9721, openInNewTab: true }
-- cta
+    - title: Session packs (30 min)
+      description: 1, 4, 12, 24, or 48 sessions.
+      image: image-34d68f4cdaf24018c756589761bcc4cfefcfb267-3000x2001-jpg
+      url: { type: external, external: https://onelifefitness.wodify.com/OnlineSalesPage/Main?q=Memberships%7CLocationId%3D9721, openInNewTab: true }
+    - title: Session packs (60 min)
+      description: 4, 12, 24, or 48 sessions.
+      image: image-1221b8c1c40911cd976c7518e27084cfb813075b-2001x3000-jpg
+      url: { type: external, external: https://onelifefitness.wodify.com/OnlineSalesPage/Main?q=Memberships%7CLocationId%3D9721, openInNewTab: true }
+    - title: Monthly coaching sessions
+      description: 1, 2, 4, or 8 sessions per 4 weeks.
+      image: image-cde1af1aaf1b921dc29a113624c5c3407e760b1c-3000x2001-jpg
+      url: { type: external, external: https://onelifefitness.wodify.com/OnlineSalesPage/Main?q=Memberships%7CLocationId%3D9721, openInNewTab: true }
+    - title: Complete fitness consultation (60 min)
+      description: One deep-dive session for training, nutrition, and conditioning.
+      image: image-c7aab6d708357e906b1d18657673acd572cd96f1-3000x2001-jpg
+      url: { type: external, external: https://onelifefitness.wodify.com/OnlineSalesPage/Main?q=Memberships%7CLocationId%3D9721, openInNewTab: true }
+- cta (Want a fully personalized plan?)
   - title: Want a fully personalized plan?
   - richText: Purchase your membership online, or book a free consultation if you want guidance first.
   - buttons:
     - text: Purchase Membership
+      variant: default
       url: { type: external, external: https://onelifefitness.wodify.com/OnlineSalesPage/Main?q=Memberships%7CLocationId%3D9721 }
     - text: Book A Free Consultation
+      variant: secondary
       url: { type: internal, internal: /free-consultation }
-- faqAccordion
+- faqAccordion (FAQs)
   - title: FAQs
   - faqs:
     - faq-private-best-for
     - faq-private-combine
     - faq-private-semi
     - faq-private-nutrition
-
 ## Hero
 - headline: Private Coaching
 - subheadline: Fully personalized training for focused goals, injuries, or a more individual approach.

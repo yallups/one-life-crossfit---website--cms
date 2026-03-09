@@ -6,57 +6,58 @@ og_title:
 og_description: 
 primary_keyword: 
 secondary_keywords: []
-image_notes: Hero image: image-a7429ece50a153186e9aa2cc3e208360ec6706f2-3000x2001-jpg
+image_notes: image-a7429ece50a153186e9aa2cc3e208360ec6706f2-3000x2001-jpg
 ---
 
 # About / Team
 
 ## Page Builder Blocks (ordered)
-- hero: Hero
-- layout: Intro
-- wodifyCoaches: Team / Coaches
-- googleReviews: Social Proof
-- contactUs: Contact
-- cta: CTA / Next Step
+- hero: About
+- layout: Coaching that makes training the best hour of your day
+- wodifyCoaches: Meet Our Team
+- googleReviews: We've got great reviews!
+- contactUs: Connect with us
+- cta: Ready to meet the team?
 - faqAccordion: FAQs
-
 ## Blocks (config-ready)
-- hero
-  - variant: centered
+- hero (About)
+  - variant: background
   - title: About
   - richText: What sets our gym apart in Santa Maria is our fitness coaching.
+  - media: image-f01ace8174bf66037be3ed3d6aa6e75f54ca5ec9-3000x2001-jpg
   - buttons:
     - text: Book A Free Consultation
+      variant: default
       url: { type: internal, internal: /free-consultation }
-  - media: image-a7429ece50a153186e9aa2cc3e208360ec6706f2-3000x2001-jpg
-- layout (Intro)
-  - variant: centered
+- layout (Coaching that makes training the best hour of your day)
+  - variant: imageRight
   - title: Coaching that makes training the best hour of your day
   - richText: We have the fittest and most passionate coaches. We are fun and engaging, we push you when you need it and scale back as necessary.
-- wodifyCoaches
+  - media: image-ffda2b74dde5cfab4e9d162463989bee3104d378-3000x2001-jpg
+- wodifyCoaches (Meet Our Team)
   - title: Meet Our Team
   - layout: cards
   - itemsPerRow: 3
   - showLinks: true
-- googleReviews
+- googleReviews (We've got great reviews!)
   - title: We've got great reviews!
   - layout: carousel
   - reviewsNumber: 100
-- contactUs
+- contactUs (Connect with us)
   - title: Connect with us
   - showMap: true
-- cta
+- cta (Ready to meet the team?)
   - title: Ready to meet the team?
   - richText: Book a free consultation and we’ll help you get started.
   - buttons:
     - text: Book A Free Consultation
+      variant: default
       url: { type: internal, internal: /free-consultation }
-- faqAccordion
+- faqAccordion (FAQs)
   - title: FAQs
   - faqs:
     - faq-about-different
     - faq-about-meet-coaches
-
 ## Hero
 - headline: About
 - subheadline: What sets our gym apart in Santa Maria is our fitness coaching.

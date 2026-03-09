@@ -1,9 +1,9 @@
 ---
 slug: /programs/private-training/1-1
-seo_title:
+seo_title: 
 seo_description: 1:1 personal training with individualized programming, technique coaching, and flexible scheduling to hit your goals faster and stay accountable.
-og_title:
-og_description:
+og_title: 
+og_description: 
 primary_keyword: personal training Santa Maria
 secondary_keywords: [ "1:1 training Santa Maria", "private coaching Santa Maria", "personal trainer Santa Maria" ]
 image_notes: Use assessment or one-on-one coaching imagery.
@@ -12,93 +12,94 @@ image_notes: Use assessment or one-on-one coaching imagery.
 # 1:1 Training
 
 ## Page Builder Blocks (ordered)
-
-- hero: Hero
-- layout: Intro
-- layout: Benefits & Details
-- layout: Program Details & What To Expect
+- hero: 1:1 Personal Training
+- layout: Train with a coach focused 100% on you
+- layout: Benefits
+- layout: Program details
 - imageLinkCards: Top Memberships
-- cta: CTA / Next Step
+- cta: Ready for focused coaching?
 - faqAccordion: FAQs
-
 ## Blocks (config-ready)
-
-- hero
-    - variant: centered
-    - title: 1:1 Personal Training
-    - richText: Fully personalized coaching to help you reach your goals faster—strength, weight loss, performance, or
-      recovery.
-    - buttons:
-        - text: Book A Free Consultation
-          url: { type: internal, internal: /free-consultation }
-        - text: Learn About Memberships
-          url: { type: internal, internal: #memberships-options }
-- layout (Intro)
-    - variant: centered
-    - title: Train with a coach focused 100% on you
-    - richText: 1:1 training is the fastest way to move the needle. Every session is customized to your goals, schedule,
-      and limitations.
-- layout (Benefits & Details)
-    - variant: centered
-    - title: Benefits
-    - richText: |-
-      ### Train with a coach focused 100% on you
-      1:1 training is the fastest way to move the needle. Every session is customized to your goals, schedule, and
-      limitations.
-
-      ### Benefits
-        - Individualized programming: Training tailored to your goals and needs.
-        - Faster feedback: Technique correction and real-time coaching.
-        - Injury-aware coaching: Scale around injuries or limitations.
-        - Flexible scheduling: Sessions that work with your life.
-        - Complimentary [InBody scan](/programs/inbody-scan): Free weigh‑in included with each private training session.
-- layout (Program Details & What To Expect)
-    - variant: centered
-    - title: Program details
-    - richText: |-
-      ### Program details
-      Personalized assessment, customized training plan, progress tracking, and optional nutrition/lifestyle support.
-
-      ### What to expect
-      One coach, one athlete. Sessions tailored to your goals with clear progressions and scaling.
-
-      ### Who it’s for
-        - Busy professionals who want efficient, focused training.
-        - Athletes with specific performance goals or skill gaps.
-        - Anyone who prefers private coaching or needs injury-aware progressions.
-
-      ### Outcomes you can expect
-        - Better movement quality and confidence in training.
-        - Faster progress toward strength, performance, or fat-loss goals.
-        - A clear plan and accountability you can sustain.
+- hero (1:1 Personal Training)
+  - variant: background
+  - title: 1:1 Personal Training
+  - richText: Fully personalized coaching to help you reach your goals faster—strength, weight loss, performance, or
+  - media: image-e12e5d220331e50e310ea7dc183be325acfc88df-5184x3456-jpg
+  - buttons:
+    - text: Book A Free Consultation
+      variant: default
+      url: { type: internal, internal: /free-consultation }
+    - text: Learn About Memberships
+      variant: secondary
+      url: { type: external, external: #memberships-options }
+- layout (Train with a coach focused 100% on you)
+  - variant: imageRight
+  - title: Train with a coach focused 100% on you
+  - richText: 1:1 training is the fastest way to move the needle. Every session is customized to your goals, schedule,
+  - media: file-78d95221a1104c47f199d073b5e145f0be6057b5-mov
+- layout (Benefits)
+  - variant: imageLeft
+  - title: Benefits
+  - richText: |-
+    ### Train with a coach focused 100% on you
+    1:1 training is the fastest way to move the needle. Every session is customized to your goals, schedule, and
+    limitations.
+    ### Benefits
+    - Individualized programming: Training tailored to your goals and needs.
+    - Faster feedback: Technique correction and real-time coaching.
+    - Injury-aware coaching: Scale around injuries or limitations.
+    - Flexible scheduling: Sessions that work with your life.
+    - Complimentary [InBody scan](/programs/inbody-scan): Free weigh‑in included with each private training session.
+  - media: image-240ed68b31cde9f738c43cd763475dfc8c73aca8-3000x2000-jpg
+- layout (Program details)
+  - variant: imageRight
+  - title: Program details
+  - richText: |-
+    ### Program details
+    Personalized assessment, customized training plan, progress tracking, and optional nutrition/lifestyle support.
+    ### What to expect
+    One coach, one athlete. Sessions tailored to your goals with clear progressions and scaling.
+    ### Who it’s for
+    - Busy professionals who want efficient, focused training.
+    - Athletes with specific performance goals or skill gaps.
+    - Anyone who prefers private coaching or needs injury-aware progressions.
+    ### Outcomes you can expect
+    - Better movement quality and confidence in training.
+    - Faster progress toward strength, performance, or fat-loss goals.
+    - A clear plan and accountability you can sustain.
+  - media: image-6905cc02bcfa22c611b70ab3da8597a624071bc9-2001x3000-jpg
 - imageLinkCards (Top Memberships)
-    - title: Top Memberships
-    - cards:
-        - title: Private Coaching
-          description: Fully personalized coaching options for focused goals.
-          url: { type: internal, internal: /memberships/private-coaching }
-        - title: Hybrid
-          description: Group classes plus personal coaching sessions (1/2/4/8 per 4 weeks).
-          url: { type: internal, internal: /memberships/hybrid }
-    - buttons:
-        - text: See All Options
-          url: { type: internal, internal: /memberships }
-- cta
-    - title: Ready for focused coaching?
-    - richText: Book a free consultation to map out your 1:1 training plan.
-    - buttons:
-        - text: Book A Free Consultation
-          url: { type: internal, internal: /free-consultation }
-        - text: Learn About Memberships
-          url: { type: internal, internal: #memberships-options }
-- faqAccordion
-    - title: FAQs
-    - faqs:
-        - faq-pt1-1-best-for
-        - faq-pt1-1-injuries
-        - faq-pt1-1-scheduling
-        - faq-pt1-1-combine
-
+  - title: Top Memberships
+  - cards:
+    - title: Private Coaching
+      description: One-on-one or semi-private coaching built around your goals.
+      image: image-9435d355e5fc5ef307bb96dd75a6b3333bc9d0c1-3000x2001-jpg
+      url: { type: internal, internal: /memberships/private-coaching }
+    - title: New Foundations
+      description: A guided start for anyone new to fitness or CrossFit.
+      image: image-22237f80ead00c28576dc7982875dd754336ec96-2001x3000-jpg
+      url: { type: internal, internal: /memberships/new-foundations }
+    - title: Hybrid
+      description: Group classes plus personal coaching sessions (1/2/4/8 per 4 weeks).
+      image: image-0ed914850a58ecf00b75107a88d739f1cbb7e210-2001x3000-jpg
+      url: { type: internal, internal: /memberships/hybrid }
+- cta (Ready for focused coaching?)
+  - title: Ready for focused coaching?
+  - richText: Book a free consultation to map out your 1:1 training plan.
+  - buttons:
+    - text: Book A Free Consultation
+      variant: default
+      url: { type: internal, internal: /free-consultation }
+    - text: Learn About Memberships
+      variant: secondary
+      url: { type: external, external: #memberships-options }
+- faqAccordion (FAQs)
+  - title: FAQs
+  - faqs:
+    - faq-pt1-1-best-for
+    - faq-pt1-1-injuries
+    - faq-pt1-1-scheduling
+    - faq-pt1-1-combine
 ## Hero
 
 - headline: 1:1 Personal Training
@@ -140,12 +141,15 @@ image_notes: Use assessment or one-on-one coaching imagery.
 
 - description: Highlight the best-fit memberships for 1:1 training.
 - options:
+    - name: Private Coaching
+      summary: One-on-one or semi-private coaching built around your goals.
+      link: /memberships/private-coaching
+    - name: New Foundations
+      summary: A guided start for anyone new to fitness or CrossFit.
+      link: /memberships/new-foundations
     - name: Hybrid
       summary: Group classes plus personal coaching sessions (1/2/4/8 per 4 weeks).
       link: /memberships/hybrid
-    - name: Private Coaching
-      summary: Fully personalized coaching options for focused goals.
-      link: /memberships/private-coaching
 - see_all_options_link: /memberships
 
 ## CTA / Next Step

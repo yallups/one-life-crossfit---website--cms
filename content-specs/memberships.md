@@ -12,59 +12,63 @@ image_notes: Use a community-focused group photo or coaching-in-action shot from
 # Memberships Overview
 
 ## Page Builder Blocks (ordered)
-- hero: Hero
-- layout: Intro
+- hero: Memberships That Meet You Where You Are
+- layout: We prescribe the right plan—not a one-size-fits-all price list
 - imageLinkCards: Membership Options
-- cta: CTA / Next Step
+- cta: Not sure which membership is right?
 - faqAccordion: FAQs
-
 ## Blocks (config-ready)
-- hero
-  - variant: centered
+- hero (Memberships That Meet You Where You Are)
+  - variant: background
   - title: Memberships That Meet You Where You Are
   - richText: Choose from beginner-friendly foundations, hybrid coaching, or private training—each designed to deliver real results with expert guidance and a supportive community.
+  - media: image-f01ace8174bf66037be3ed3d6aa6e75f54ca5ec9-3000x2001-jpg
   - buttons:
     - text: Book A Free Consultation
+      variant: default
       url: { type: internal, internal: /free-consultation }
     - text: Purchase Membership
+      variant: secondary
       url: { type: external, external: https://onelifefitness.wodify.com/OnlineSalesPage/Main?q=Memberships%7CLocationId%3D9721 }
-- layout (Intro)
-  - variant: centered
+- layout (We prescribe the right plan—not a one-size-fits-all price list)
+  - variant: imageRight
   - title: We prescribe the right plan—not a one-size-fits-all price list
   - richText: Every member has different goals, schedules, and experience levels. We start with a conversation, then recommend the minimum effective dose of training, coaching, and accountability to get results.
+  - media: image-a0b4e927981ec4ff00c79444c7f220e1052c28d1-3000x2001-jpg
 - imageLinkCards (Membership Options)
   - title: Membership Options
   - cards:
     - title: New Foundations
       description: A guided start for anyone new to fitness or CrossFit.
+      image: image-22237f80ead00c28576dc7982875dd754336ec96-2001x3000-jpg
       url: { type: internal, internal: /memberships/new-foundations }
     - title: Jump Start
       description: A streamlined on-ramp with fundamentals and group classes.
+      image: image-e9f66d729a95f0ab0b5ee84642a480dbb24b834b-3000x2001-jpg
       url: { type: internal, internal: /memberships/jump-start }
     - title: Hybrid
       description: Group classes plus personal coaching sessions (1/2/4/8 per 4 weeks).
+      image: image-0ed914850a58ecf00b75107a88d739f1cbb7e210-2001x3000-jpg
       url: { type: internal, internal: /memberships/hybrid }
     - title: Group Class
       description: Unlimited CrossFit + Bootcamp classes with Open Gym access.
+      image: image-0961aebe0cb2ceef019cca13d747804b68bdd3a6-2001x3000-jpg
       url: { type: internal, internal: /memberships/group-class }
     - title: Private Coaching
       description: One-on-one or semi-private coaching built around your goals.
+      image: image-9435d355e5fc5ef307bb96dd75a6b3333bc9d0c1-3000x2001-jpg
       url: { type: internal, internal: /memberships/private-coaching }
-    - title: Nutrition Memberships
-      description: Nutrition-focused memberships and session plans for fat loss, performance, and accountability.
-      url: { type: internal, internal: /memberships/nutrition }
-  - buttons:
-    - text: Purchase Membership
-      url: { type: external, external: https://onelifefitness.wodify.com/OnlineSalesPage/Main?q=Memberships%7CLocationId%3D9721 }
-- cta
+- cta (Not sure which membership is right?)
   - title: Not sure which membership is right?
   - richText: Book a free consultation and we’ll recommend the best path for your goals, experience, and schedule.
   - buttons:
     - text: Book A Free Consultation
+      variant: default
       url: { type: internal, internal: /free-consultation }
     - text: Purchase Membership
+      variant: secondary
       url: { type: external, external: https://onelifefitness.wodify.com/OnlineSalesPage/Main?q=Memberships%7CLocationId%3D9721 }
-- faqAccordion
+- faqAccordion (FAQs)
   - title: FAQs
   - faqs:
     - faq-memberships-choose
@@ -73,7 +77,6 @@ image_notes: Use a community-focused group photo or coaching-in-action shot from
     - faq-memberships-private
     - faq-memberships-private-only
     - faq-memberships-pricing
-
 ## Hero
 
 - headline: Memberships That Meet You Where You Are

@@ -273,40 +273,55 @@ const parseTitle = (body) => {
   return match ? match[1].trim() : null;
 };
 
+const INTERNAL_HOSTS = new Set(["onelifecrossfit.com", "www.onelifecrossfit.com"]);
+
+const normalizeInternalSlug = (value) => {
+  const raw = String(value || "").trim();
+  if (!raw) return null;
+  if (raw === "/") return raw;
+  const normalized = raw.replace(/\/+$/, "");
+  return normalized || "/";
+};
+
+const getInternalSlugCandidate = (value) => {
+  const raw = String(value || "").trim();
+  if (!raw || raw.startsWith("#") || raw.startsWith("?")) return null;
+  if (raw.startsWith("/")) {
+    if (raw.includes("?") || raw.includes("#")) return null;
+    return normalizeInternalSlug(raw);
+  }
+  try {
+    const url = new URL(raw);
+    if (!INTERNAL_HOSTS.has(url.hostname)) return null;
+    if (url.search || url.hash) return null;
+    return normalizeInternalSlug(url.pathname || "/");
+  } catch {
+    return null;
+  }
+};
+
+const resolveInternalLinkRef = (value, slugMap) => {
+  const slug = getInternalSlugCandidate(value);
+  if (!slug) return null;
+  const ref = slugMap.get(slug);
+  if (!ref) return null;
+  return { slug, ref };
+};
+
 const buildInlineCustomUrl = (value, slugMap) => {
   if (!value) return null;
   const raw = String(value).trim();
   if (!raw) return null;
-  if (raw.startsWith("#")) {
+  const resolved = resolveInternalLinkRef(raw, slugMap);
+  if (resolved) {
     return {
       _type: "customUrl",
-      type: "external",
-      external: raw,
+      type: "internal",
+      internal: { _type: "reference", _ref: resolved.ref },
       openInNewTab: false,
     };
   }
-  if (raw.startsWith("https://onelifecrossfit.com")) {
-    const path = raw.replace("https://onelifecrossfit.com", "") || "/";
-    const ref = slugMap.get(path);
-    if (ref) {
-      return {
-        _type: "customUrl",
-        type: "internal",
-        internal: { _type: "reference", _ref: ref },
-        openInNewTab: false,
-      };
-    }
-  }
-  if (raw.startsWith("/")) {
-    const ref = slugMap.get(raw);
-    if (ref) {
-      return {
-        _type: "customUrl",
-        type: "internal",
-        internal: { _type: "reference", _ref: ref },
-        openInNewTab: false,
-      };
-    }
+  if (raw.startsWith("#")) {
     return {
       _type: "customUrl",
       type: "external",
@@ -491,13 +506,6 @@ const mergeLayoutBlocks = (target, source, slugMap) => {
 
 const buildCustomUrl = (value, slugMap) => {
   if (!value) return undefined;
-  if (typeof value === "string") {
-    return {
-      _type: "customUrl",
-      type: "external",
-      external: value,
-    };
-  }
   const withOpenInNewTab = (urlValue, target) =>
     urlValue.openInNewTab === undefined
       ? target
@@ -505,35 +513,50 @@ const buildCustomUrl = (value, slugMap) => {
           ...target,
           openInNewTab: Boolean(urlValue.openInNewTab),
         };
+  const buildInternal = (ref, urlValue) =>
+    withOpenInNewTab(urlValue, {
+      _type: "customUrl",
+      type: "internal",
+      internal: { _type: "reference", _ref: ref },
+    });
+  const buildExternal = (external, urlValue) =>
+    withOpenInNewTab(urlValue, {
+      _type: "customUrl",
+      type: "external",
+      external,
+    });
+  if (typeof value === "string") {
+    const resolved = resolveInternalLinkRef(value, slugMap);
+    return resolved
+      ? buildInternal(resolved.ref, {})
+      : {
+          _type: "customUrl",
+          type: "external",
+          external: value,
+        };
+  }
   const type = value.type === "internal" ? "internal" : "external";
   if (type === "internal") {
     const internal = value.internal;
     if (typeof internal === "string" && internal.startsWith("#")) {
-      return withOpenInNewTab(value, {
-        _type: "customUrl",
-        type: "external",
-        external: internal,
-      });
+      return buildExternal(internal, value);
     }
-    const ref = slugMap.get(internal);
-    if (ref) {
-      return withOpenInNewTab(value, {
-        _type: "customUrl",
-        type: "internal",
-        internal: { _type: "reference", _ref: ref },
-      });
+    if (internal?._ref) {
+      return buildInternal(internal._ref, value);
     }
-    return withOpenInNewTab(value, {
-      _type: "customUrl",
-      type: "external",
-      external: internal,
-    });
+    const resolved = resolveInternalLinkRef(internal, slugMap);
+    if (resolved) {
+      return buildInternal(resolved.ref, value);
+    }
+    const fallback = typeof internal === "string" ? internal : "";
+    return buildExternal(fallback, value);
   }
-  return withOpenInNewTab(value, {
-    _type: "customUrl",
-    type: "external",
-    external: value.external || value.url || value.href || "",
-  });
+  const external = value.external || value.url || value.href || "";
+  const resolved = resolveInternalLinkRef(external, slugMap);
+  if (resolved) {
+    return buildInternal(resolved.ref, value);
+  }
+  return buildExternal(external, value);
 };
 
 const resolveVariant = (variant, index) => {

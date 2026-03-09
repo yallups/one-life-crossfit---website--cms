@@ -8,6 +8,20 @@ const allLinkableTypes = [
   { type: "page" },
 ];
 
+const INTERNAL_HOSTS = new Set(["onelifecrossfit.com", "www.onelifecrossfit.com"]);
+
+const looksLikeInternalPageLink = (value: string) => {
+  if (value.startsWith("/")) {
+    return true;
+  }
+  try {
+    const url = new URL(value);
+    return INTERNAL_HOSTS.has(url.hostname);
+  } catch (_error) {
+    return false;
+  }
+};
+
 export const customUrl = defineType({
   name: "customUrl",
   type: "object",
@@ -36,7 +50,7 @@ export const customUrl = defineType({
       type: "string",
       title: "URL",
       description:
-        "Enter either a full web address (URL) starting with https:// for external sites, or a relative path like /about for internal pages",
+        "Enter a full external URL, an anchor like #section, or a query string like ?tab=hours. Use Internal for site pages.",
       hidden: ({ parent }) => parent?.type !== "external",
       validation: (Rule) => [
         Rule.custom((value, { parent }) => {
@@ -44,6 +58,9 @@ export const customUrl = defineType({
           if (type === "external") {
             if (!value) {
               return "URL can't be empty";
+            }
+            if (looksLikeInternalPageLink(value)) {
+              return "Use Internal for site pages instead of entering a site-relative URL here";
             }
             const isValid = isValidUrl(value);
             if (!isValid) {

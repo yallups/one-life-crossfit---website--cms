@@ -1,9 +1,9 @@
 ---
 slug: /programs/group-training/aa
-seo_title:
+seo_title: 
 seo_description: AA is a women-only abs & glutes program with 2–3 programmed days, optional classes, and affordable 4-week pricing for stand-alone or extra training.
-og_title:
-og_description:
+og_title: 
+og_description: 
 primary_keyword: women's fitness Santa Maria
 secondary_keywords: [ "women-only fitness Santa Maria", "abs and glutes class Santa Maria", "ladies only workout Santa Maria" ]
 image_notes: Use women-focused training imagery from the library.
@@ -12,94 +12,89 @@ image_notes: Use women-focused training imagery from the library.
 # AA
 
 ## Page Builder Blocks (ordered)
-- hero: Hero
-- layout: Intro
-- featureCardsIcon: Value Props / Benefits
-- layout: Program Details / Offering
-- layout: Class Format / What To Expect
-- wodifySchedule: WOD / Schedule (programs ["124903"])
-- imageLinkCards: Top Memberships
-- cta: CTA / Next Step
+- hero: Abs & A$$ Programming
+- layout: Abs & A$$
+- layout: Benefits
+- layout: Benefits
+- wodifySchedule: Schedule
+- imageLinkCards: Membership Options
+- cta: Ready to try AA?
 - faqAccordion: FAQs
-
 ## Blocks (config-ready)
-- hero
-  - variant: centered
+- hero (Abs & A$$ Programming)
+  - variant: background
   - title: Abs & A$$ Programming
   - richText: An affordable abs and glutes program you can do at home or in open gym—plus occasional coached classes.
   - buttons:
     - text: Come Try a Free Class (Ladies Only)
+      variant: default
       url: { type: internal, internal: /free-consultation }
     - text: View Schedule
-      url: { type: internal, internal: #schedule }
-- layout (Intro)
-  - variant: centered
+      variant: secondary
+      url: { type: external, external: #schedule }
+- layout (Abs & A$$)
+  - variant: imageRight
   - title: Abs & A$$
   - richText: A focused, women-only program that blends strength and conditioning with targeted core and glute work. Affordable, flexible, and designed for home or open gym plus occasional classes.
-- featureCardsIcon (Benefits)
+  - media: image-99414819c4a42c93296e2b4606fafcf73cfd0a45-2001x3000-jpg
+- layout (Benefits)
+  - variant: imageLeft
   - title: Benefits
-  - cards:
-    - title: Affordable 4-week program
-      richText: Consistent, budget-friendly training.
-    - title: 2–3 programmed days
-      richText: Structured training you can follow each week.
-    - title: Home or open gym
-      richText: Flexible options to fit your schedule.
-    - title: Occasional coached classes
-      richText: Guidance and motivation when you need it.
-    - title: Great complement
-      richText: Works alongside [CrossFit](/programs/group-training/crossfit) or [Bootcamp](/programs/group-training/bootcamp), or stand-alone.
-- layout (Program Details)
-  - variant: centered
-  - title: Program details
   - richText: |-
-      ### Program details
-      2–3 programmed days per week focused on core + glutes, optional open gym access, occasional coached classes.
-
-      ### Who it’s for
-      - Women who want focused core + glute training.
-      - Anyone who wants a low‑cost add‑on to [CrossFit](/programs/group-training/crossfit) or [Bootcamp](/programs/group-training/bootcamp).
-      - Members who prefer at‑home or open‑gym flexibility.
-
-      ### Outcomes you can expect
-      - Better core strength and glute development.
-      - More confidence in training consistency.
-      - A simple program you can stick to.
-- layout (Class Format)
-  - variant: centered
-  - title: What to expect
-  - richText: Warm-up, strength/accessory work, conditioning finisher, cool-down.
-- wodifySchedule
+    - Affordable 4-week program — Consistent, budget-friendly training.
+    - 2–3 programmed days — Structured training you can follow each week.
+    - Home or open gym — Flexible options to fit your schedule.
+  - media: image-6b3dbaf8ed3328100dd847b985d9df56763bc7f1-2001x3000-jpg
+- layout (Benefits)
+  - variant: imageRight
+  - title: Benefits
+  - richText: |-
+    - Occasional coached classes — Guidance and motivation when you need it.
+    - Great complement — Works alongside [CrossFit](/programs/group-training/crossfit) or [Bootcamp](/programs/group-training/bootcamp), or stand-alone.
+    ### Program details
+    ### Program details
+    2–3 programmed days per week focused on core + glutes, optional open gym access, occasional coached classes.
+    ### Who it’s for
+    - Women who want focused core + glute training.
+    - Anyone who wants a low‑cost add‑on to [CrossFit](/programs/group-training/crossfit) or [Bootcamp](/programs/group-training/bootcamp).
+    - Members who prefer at‑home or open‑gym flexibility.
+    ### Outcomes you can expect
+    - Better core strength and glute development.
+    - More confidence in training consistency.
+    - A simple program you can stick to.
+    ### What to expect
+    Warm-up, strength/accessory work, conditioning finisher, cool-down.
+  - media: image-033b6f2816049b9f1ed3ebea57384a1d1453e030-2001x3000-jpg
+- wodifySchedule (Schedule)
   - title: Schedule
   - programs: ["124903"]
   - daysToShow: 7
   - showAvailability: true
   - groupByDay: true
   - showCoach: true
-- imageLinkCards (Top Memberships)
+- imageLinkCards (Membership Options)
   - title: Membership Options
   - cards:
     - title: Group Class
       description: Unlimited classes, including AA, CrossFit, and Bootcamp.
+      image: image-ffda2b74dde5cfab4e9d162463989bee3104d378-3000x2001-jpg
       url: { type: internal, internal: /memberships }
-  - buttons:
-    - text: See All Options
-      url: { type: internal, internal: /memberships }
-- cta
+- cta (Ready to try AA?)
   - title: Ready to try AA?
   - richText: Come to a free class and see if it’s the right fit for you.
   - buttons:
     - text: Come Try a Free Class (Ladies Only)
+      variant: default
       url: { type: internal, internal: /free-consultation }
     - text: View Schedule
-      url: { type: internal, internal: #schedule }
-- faqAccordion
+      variant: secondary
+      url: { type: external, external: #schedule }
+- faqAccordion (FAQs)
   - title: FAQs
   - faqs:
     - faq-aa-women-only
     - faq-aa-experience
     - faq-aa-combine
-
 ## Hero
 
 - headline: Abs & A$$ Programming

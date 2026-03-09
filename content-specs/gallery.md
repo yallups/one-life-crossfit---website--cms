@@ -12,43 +12,47 @@ image_notes: Use a mix of class, coaching, community events, and gym interior im
 # Gallery
 
 ## Page Builder Blocks (ordered)
-- hero: Hero
-- layout: Intro
-- imageLinkCards: Gallery Content
-- cta: CTA / Next Step
+- hero: The One Life Community
+- layout: See what training here feels like
+- imageLinkCards: Gallery
+- cta: Want to experience it in person?
 - faqAccordion: FAQs
-
 ## Blocks (config-ready)
-- hero
-  - variant: centered
+- hero (The One Life Community)
+  - variant: background
   - title: The One Life Community
   - richText: Training, coaching, and community moments from inside the gym.
+  - media: image-a0459c166bc2e2d9f6548cb6d0fc9cc244d5c36c-2001x3000-jpg
   - buttons:
     - text: Book A Free Consultation
+      variant: default
       url: { type: internal, internal: /free-consultation }
     - text: View Schedule
+      variant: secondary
       url: { type: internal, internal: /schedule }
-- layout (Intro)
-  - variant: centered
+- layout (See what training here feels like)
+  - variant: imageRight
   - title: See what training here feels like
   - richText: From beginner wins to big PRs, our community shows up for each other. Browse the gallery and picture yourself in the next class.
-- imageLinkCards (Gallery Content)
+  - media: image-b31862a0ea5a1220cfeb397ef7689e7b19c50401-2001x3000-jpg
+- imageLinkCards (Gallery)
   - title: Gallery
   - cards: Curate a mix of class, coaching, community events, and gym interior images.
-- cta
+- cta (Want to experience it in person?)
   - title: Want to experience it in person?
   - richText: Book a free consultation and we’ll help you get started.
   - buttons:
     - text: Book A Free Consultation
+      variant: default
       url: { type: internal, internal: /free-consultation }
     - text: View Schedule
+      variant: secondary
       url: { type: internal, internal: /schedule }
-- faqAccordion
+- faqAccordion (FAQs)
   - title: FAQs
   - faqs:
     - faq-gallery-visit
     - faq-gallery-events
-
 ## Hero
 - headline: The One Life Community
 - subheadline: Training, coaching, and community moments from inside the gym.

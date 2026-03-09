@@ -1,9 +1,9 @@
 ---
 slug: /programs/private-training/semi-private
-seo_title:
+seo_title: 
 seo_description: Semi-private training for 2–4 people with customized programming, shared accountability, and coach-led sessions that fit your schedule and goals.
-og_title:
-og_description:
+og_title: 
+og_description: 
 primary_keyword: semi-private training Santa Maria
 secondary_keywords: [ "small group personal training Santa Maria", "partner training Santa Maria", "semi-private coaching" ]
 image_notes: Use small-group coaching or partner training imagery.
@@ -12,88 +12,90 @@ image_notes: Use small-group coaching or partner training imagery.
 # Semi-Private Training
 
 ## Page Builder Blocks (ordered)
-
-- hero: Hero
-- layout: Intro
-- featureCardsIcon: Value Props / Benefits
-- layout: Program Details / Offering
-- layout: Class Format / What To Expect
+- hero: Semi-Private Training
+- layout: Personal coaching with shared motivation
+- layout: Benefits
+- layout: What to expect
 - imageLinkCards: Top Memberships
-- cta: CTA / Next Step
+- cta: Want focused coaching with a partner?
 - faqAccordion: FAQs
-
 ## Blocks (config-ready)
-
-- hero
-    - variant: centered
-    - title: Semi-Private Training
-    - richText: Personalized coaching in a small-group setting—perfect for partners or friends who want focused results.
-    - buttons:
-        - text: Book A Free Consultation
-          url: { type: internal, internal: /free-consultation }
-        - text: Learn About Memberships
-          url: { type: internal, internal: #memberships-options }
-- layout (Intro)
-    - variant: centered
-    - title: Personal coaching with shared motivation
-    - richText: Semi-private training gives you individualized coaching while training alongside a partner or small
-      group.
-- layout (Benefits & Details)
-    - variant: centered
-    - title: Benefits
-    - richText: |-
-      ### Benefits
-        - Tailored coaching: Programming customized for each person.
-        - Shared accountability: Train with a partner or small group.
-        - More attention than classes: Focused feedback each session.
-        - Flexible scheduling: Sessions that fit your schedule.
-
-      ### Program details
-      Small group sessions with customized programming, individual goal reviews, and progress tracking.
-
-      ### Who it’s for
-        - Partners or friends who want coaching together.
-        - Athletes who want accountability without a 1:1 format.
-        - Anyone who prefers a small, focused environment.
-- layout (What To Expect)
-    - variant: centered
-    - title: What to expect
-    - richText: |-
-      ### What to expect
-      2–4 athletes per coach, sessions designed around shared goals and individual needs.
-
-      ### Outcomes you can expect
-        - Better technique and confidence.
-        - Consistent progress with shared accountability.
-        - A plan you can stick to.
+- hero (Semi-Private Training)
+  - variant: background
+  - title: Semi-Private Training
+  - richText: Personalized coaching in a small-group setting—perfect for partners or friends who want focused results.
+  - media: image-b42df964b2bc3e2434bcf914e6f528a9de509284-1536x2049-png
+  - buttons:
+    - text: Book A Free Consultation
+      variant: default
+      url: { type: internal, internal: /free-consultation }
+    - text: Learn About Memberships
+      variant: secondary
+      url: { type: external, external: #memberships-options }
+- layout (Personal coaching with shared motivation)
+  - variant: imageRight
+  - title: Personal coaching with shared motivation
+  - richText: Semi-private training gives you individualized coaching while training alongside a partner or small
+  - media: image-335e7d1fc337b6c3aeef8288b2af73fe20452252-3000x2001-jpg
+- layout (Benefits)
+  - variant: imageLeft
+  - title: Benefits
+  - richText: |-
+    ### Benefits
+    - Tailored coaching: Programming customized for each person.
+    - Shared accountability: Train with a partner or small group.
+    - More attention than classes: Focused feedback each session.
+    - Flexible scheduling: Sessions that fit your schedule.
+    ### Program details
+    Small group sessions with customized programming, individual goal reviews, and progress tracking.
+    ### Who it’s for
+    - Partners or friends who want coaching together.
+    - Athletes who want accountability without a 1:1 format.
+    - Anyone who prefers a small, focused environment.
+  - media: image-5b376944f6d588a28f5229cc0349b0b6590ea73c-3000x2001-jpg
+- layout (What to expect)
+  - variant: imageRight
+  - title: What to expect
+  - richText: |-
+    ### What to expect
+    2–4 athletes per coach, sessions designed around shared goals and individual needs.
+    ### Outcomes you can expect
+    - Better technique and confidence.
+    - Consistent progress with shared accountability.
+    - A plan you can stick to.
+  - media: image-58b8f55d232ba4c3c3023312fd95b1492287ca36-2001x3000-jpg
 - imageLinkCards (Top Memberships)
-    - title: Top Memberships
-    - cards:
-        - title: Private Coaching
-          description: Semi-private or 1:1 coaching tailored to your goals.
-          url: { type: internal, internal: /memberships/private-coaching }
-        - title: Hybrid
-          description: Group classes plus personal coaching sessions (1/2/4/8 per 4 weeks).
-          url: { type: internal, internal: /memberships/hybrid }
-    - buttons:
-        - text: See All Options
-          url: { type: internal, internal: /memberships }
-- cta
-    - title: Want focused coaching with a partner?
-    - richText: Book a free consultation and we’ll help you set up the right semi-private plan.
-    - buttons:
-        - text: Book A Free Consultation
-          url: { type: internal, internal: /free-consultation }
-        - text: Learn About Memberships
-          url: { type: internal, internal: #memberships-options }
-- faqAccordion
-    - title: FAQs
-    - faqs:
-        - faq-semiprivate-size
-        - faq-semiprivate-goals
-        - faq-semiprivate-schedule
-        - faq-semiprivate-nutrition
-
+  - title: Top Memberships
+  - cards:
+    - title: Private Coaching
+      description: One-on-one or semi-private coaching built around your goals.
+      image: image-9435d355e5fc5ef307bb96dd75a6b3333bc9d0c1-3000x2001-jpg
+      url: { type: internal, internal: /memberships/private-coaching }
+    - title: New Foundations
+      description: A guided start for anyone new to fitness or CrossFit.
+      image: image-22237f80ead00c28576dc7982875dd754336ec96-2001x3000-jpg
+      url: { type: internal, internal: /memberships/new-foundations }
+    - title: Hybrid
+      description: Group classes plus personal coaching sessions (1/2/4/8 per 4 weeks).
+      image: image-0ed914850a58ecf00b75107a88d739f1cbb7e210-2001x3000-jpg
+      url: { type: internal, internal: /memberships/hybrid }
+- cta (Want focused coaching with a partner?)
+  - title: Want focused coaching with a partner?
+  - richText: Book a free consultation and we’ll help you set up the right semi-private plan.
+  - buttons:
+    - text: Book A Free Consultation
+      variant: default
+      url: { type: internal, internal: /free-consultation }
+    - text: Learn About Memberships
+      variant: secondary
+      url: { type: external, external: #memberships-options }
+- faqAccordion (FAQs)
+  - title: FAQs
+  - faqs:
+    - faq-semiprivate-size
+    - faq-semiprivate-goals
+    - faq-semiprivate-schedule
+    - faq-semiprivate-nutrition
 ## Hero
 
 - headline: Semi-Private Training
@@ -134,8 +136,11 @@ image_notes: Use small-group coaching or partner training imagery.
 - description: Highlight the best-fit memberships for semi-private training.
 - options:
     - name: Private Coaching
-      summary: Semi-private or 1:1 coaching tailored to your goals.
+      summary: One-on-one or semi-private coaching built around your goals.
       link: /memberships/private-coaching
+    - name: New Foundations
+      summary: A guided start for anyone new to fitness or CrossFit.
+      link: /memberships/new-foundations
     - name: Hybrid
       summary: Group classes plus personal coaching sessions (1/2/4/8 per 4 weeks).
       link: /memberships/hybrid

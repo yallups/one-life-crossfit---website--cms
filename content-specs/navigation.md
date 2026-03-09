@@ -1,6 +1,6 @@
 ---
 type: navbar
-notes: Draft the Sanity `navbar` document. Provide columns and links with internal/external URLs.
+notes: Synced from Sanity navbar draft perspective.
 ---
 
 # Site Navigation Draft
@@ -21,7 +21,6 @@ notes: Draft the Sanity `navbar` document. Provide columns and links with intern
 ### Column: Memberships
 
 - Memberships Overview — /memberships
-- Nutrition Memberships — /memberships/nutrition
 - New Foundations — /memberships/new-foundations
 - Jump Start — /memberships/jump-start
 - Hybrid — /memberships/hybrid
@@ -37,6 +36,5 @@ notes: Draft the Sanity `navbar` document. Provide columns and links with intern
 
 ## Header Buttons (right side)
 
-- Book A Free Consultation — /free-consultation (internal)
-- Purchase Membership — https://onelifefitness.wodify.com/OnlineSalesPage/Main?q=Memberships%7CLocationId%3D9721 (
-  external)
+- Book A Free Consultation — /free-consultation
+- Purchase Membership — https://onelifefitness.wodify.com/OnlineSalesPage/Main?q=Memberships%7CLocationId%3D9721

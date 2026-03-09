@@ -12,65 +12,71 @@ image_notes: Use coaching + class imagery that shows both group training and 1:1
 # Hybrid Memberships
 
 ## Page Builder Blocks (ordered)
-- hero: Hero
-- layout: Intro
+- hero: Hybrid Memberships
+- layout: The best of both worlds
 - imageLinkCards: Hybrid Options
 - layout: How Coaching Sessions Work
-- cta: CTA / Next Step
+- cta: Not sure which hybrid option fits?
 - faqAccordion: FAQs
-
 ## Blocks (config-ready)
-- hero
-  - variant: centered
+- hero (Hybrid Memberships)
+  - variant: background
   - title: Hybrid Memberships
   - richText: Group training plus personal coaching sessions—built for faster progress and focused results.
+  - media: image-0c88277b78ec3518d8f6cf1d42aefa23177b4684-3000x2001-jpg
   - buttons:
     - text: Purchase Membership
+      variant: default
       url: { type: external, external: https://onelifefitness.wodify.com/OnlineSalesPage/Main?q=Memberships%7CLocationId%3D9721 }
     - text: Book A Free Consultation
+      variant: secondary
       url: { type: internal, internal: /free-consultation }
-- layout (Intro)
-  - variant: centered
+- layout (The best of both worlds)
+  - variant: imageRight
   - title: The best of both worlds
   - richText: Hybrid memberships combine unlimited group training with personal coaching sessions you can use for 1:1 training or nutrition coaching.
+  - media: image-8451c036437a95fa57faba4b8330c95d116830d5-2001x3000-jpg
 - imageLinkCards (Hybrid Options)
   - title: Hybrid Options
   - cards:
     - title: Hybrid 1
       description: 1 coaching session per 4 weeks.
+      image: image-07b27896ceb51dd2b87769328d834669bc4de5e1-2001x3000-jpg
       url: { type: internal, internal: /memberships/hybrid }
     - title: Hybrid 2
       description: 2 coaching sessions per 4 weeks.
+      image: image-e6c763d52131a15a1bbb036ec48c4a20402791a3-2001x3000-jpg
       url: { type: internal, internal: /memberships/hybrid }
     - title: Hybrid 4
       description: 4 coaching sessions per 4 weeks.
+      image: image-264d25c66055a40a0d5080a7d45570cd85adc977-2001x3000-jpg
       url: { type: internal, internal: /memberships/hybrid }
     - title: Hybrid 8
       description: 8 coaching sessions per 4 weeks.
+      image: image-c5a05185c3a35e33d20283d2fbc69160cc669a93-2001x3000-jpg
       url: { type: internal, internal: /memberships/hybrid }
-  - buttons:
-    - text: See All Options
-      url: { type: internal, internal: /memberships }
 - layout (How Coaching Sessions Work)
-  - variant: centered
+  - variant: imageLeft
   - title: How Coaching Sessions Work
   - richText: Sessions can be used for 1:1 personal training or nutrition/lifestyle coaching. We’ll help you decide how to allocate sessions based on your goals.
-- cta
+  - media: image-4be942f2bcf36b0e29635a1394dd12b79cede473-2001x3000-jpg
+- cta (Not sure which hybrid option fits?)
   - title: Not sure which hybrid option fits?
   - richText: Purchase your membership online, or book a free consultation if you want guidance first.
   - buttons:
     - text: Purchase Membership
+      variant: default
       url: { type: external, external: https://onelifefitness.wodify.com/OnlineSalesPage/Main?q=Memberships%7CLocationId%3D9721 }
     - text: Book A Free Consultation
+      variant: secondary
       url: { type: internal, internal: /free-consultation }
-- faqAccordion
+- faqAccordion (FAQs)
   - title: FAQs
   - faqs:
     - faq-hybrid-sessions
     - faq-hybrid-classes
     - faq-hybrid-change
     - faq-hybrid-reset
-
 ## Hero
 - headline: Hybrid Memberships
 - subheadline: Group training plus personal coaching sessions—built for faster progress and focused results.

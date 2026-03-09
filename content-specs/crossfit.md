@@ -6,80 +6,84 @@ og_title:
 og_description: 
 primary_keyword: CrossFit Santa Maria
 secondary_keywords: ["CrossFit classes Santa Maria", "coach-led CrossFit Santa Maria", "CrossFit gym Santa Maria", "beginner CrossFit Santa Maria", "RX+ CrossFit Santa Maria"]
-image_notes: Hero image: image-ff90780659f7467ec5e864167db33a85da29cc13-2001x3000-jpg. Additional images: image-528f12cc036760a2f86ab60ea5ffbccd0b5a5232-2001x3000-jpg, image-b17034fbf57deb61d11d7f7e3b7aac025cedcc45-2001x3000-jpg, image-3585a1e0ef1a05aaf78150d88f04c52b292eecfb-2001x3000-jpg, image-5e59aa0987729a4221d1937d1e2b8b4fb589b5f5-2001x3000-jpg
+image_notes: image-ff90780659f7467ec5e864167db33a85da29cc13-2001x3000-jpg
 ---
 
 # CrossFit
 
 ## Page Builder Blocks (ordered)
-- hero: Hero
-- layout: Intro
-- layout: Class Format / What To Expect
-- layout: Program Details / Offering
-- layout: Advanced Athletes
+- hero: CrossFit
+- layout: CrossFit that meets you where you are—and takes you where you want to go
+- layout: How it works
+- layout: Unlimited Access. Unlimited Success.
 - imageLinkCards: Top Memberships
-- wodifySchedule: WOD / Schedule (programs ["93798"])
-- cta: CTA / Next Step
+- wodifySchedule: Schedule
+- cta: Ready to get started?
 - faqAccordion: FAQs
-
 ## Blocks (config-ready)
-- hero
-  - variant: centered
+- hero (CrossFit)
+  - variant: background
   - title: CrossFit
   - richText: Lose weight, build strength, gain confidence, and train with a community that supports you—through professionally coached CrossFit classes with unlimited access in Santa Maria.
+  - media: image-335e7d1fc337b6c3aeef8288b2af73fe20452252-3000x2001-jpg
   - buttons:
     - text: Book A Free Consultation
+      variant: default
       url: { type: internal, internal: /free-consultation }
     - text: Book A Free Class
+      variant: secondary
       url: { type: internal, internal: /free-consultation }
-  - media: image-ff90780659f7467ec5e864167db33a85da29cc13-2001x3000-jpg
-- layout (Intro)
-  - variant: centered
+- layout (CrossFit that meets you where you are—and takes you where you want to go)
+  - variant: imageRight
   - title: CrossFit that meets you where you are—and takes you where you want to go
   - richText: Our CrossFit classes are built around expert coaching, intentional programming, and a supportive community. Whether you’re brand new or an experienced athlete, we provide clear onboarding and options that fit your level. You’ll train in cycles that are constantly evaluated and tailored to what our members need most—so you build real results, not random fatigue.
-- layout (Class Format)
-  - variant: centered
+  - media: image-93fd22921e52ff42aa2beba68ba013425dcdacfa-2001x3000-jpg
+- layout (How it works)
+  - variant: imageLeft
   - title: How it works
   - richText: Warm-Up & Movement Preparation; Strength or Skill Training; Conditioning Workout; Cool Down & Recovery. Most classes have 10–18 members (cap 20). Every workout has one goal—but how you reach it is personalized to you. Fundamentals includes 1:1 or small-group coaching, education on CrossFit methodology, and scaling prescriptions so you feel confident in class.
-- layout (Program Details)
-  - variant: centered
+  - media: file-c16d36166d7a1587802f9f255c525c7e0fdcde49-mov
+- layout (Unlimited Access. Unlimited Success.)
+  - variant: imageRight
   - title: Unlimited Access. Unlimited Success.
-  - richText: This program is a great fit if you’re new, want to lose weight, get stronger, need smart scaling, want accountability, or want performance-focused training with coaching. Results include fat loss, strength/endurance, confidence, energy, and community. We write programming for our community, run focused cycles, and offer specialty programs + gym-wide events.
-- layout (Advanced Athletes)
-  - variant: centered
-  - title: RX+ options and performance-focused training
-  - richText: Experienced athletes can train with RX+ options and advanced progressions, plus specialty cycles throughout the year. Add personal coaching sessions for targeted weaknesses or competition prep.
+  - richText: |-
+    This program is a great fit if you’re new, want to lose weight, get stronger, need smart scaling, want accountability, or want performance-focused training with coaching. Results include fat loss, strength/endurance, confidence, energy, and community. We write programming for our community, run focused cycles, and offer specialty programs + gym-wide events.
+    ### RX+ options and performance-focused training
+    Experienced athletes can train with RX+ options and advanced progressions, plus specialty cycles throughout the year. Add personal coaching sessions for targeted weaknesses or competition prep.
+  - media: image-c7aab6d708357e906b1d18657673acd572cd96f1-3000x2001-jpg
 - imageLinkCards (Top Memberships)
   - title: Top Memberships
   - cards:
     - title: New Foundations
-      description: Best for beginners or anyone returning after time off.
+      description: A guided start for anyone new to fitness or CrossFit.
+      image: image-22237f80ead00c28576dc7982875dd754336ec96-2001x3000-jpg
       url: { type: internal, internal: /memberships/new-foundations }
-    - title: Jump Start
-      description: A streamlined on-ramp with fundamentals and group classes.
-      url: { type: internal, internal: /memberships/jump-start }
     - title: Hybrid
       description: Group classes plus personal coaching sessions (1/2/4/8 per 4 weeks).
+      image: image-0ed914850a58ecf00b75107a88d739f1cbb7e210-2001x3000-jpg
       url: { type: internal, internal: /memberships/hybrid }
-  - buttons:
-    - text: See All Options
-      url: { type: internal, internal: /memberships }
-- wodifySchedule
+    - title: Group Class
+      description: Unlimited CrossFit + Bootcamp classes with Open Gym access.
+      image: image-0961aebe0cb2ceef019cca13d747804b68bdd3a6-2001x3000-jpg
+      url: { type: internal, internal: /memberships/group-class }
+- wodifySchedule (Schedule)
   - title: Schedule
   - programs: ["93798"]
   - daysToShow: 7
   - showAvailability: true
   - groupByDay: true
   - showCoach: true
-- cta
+- cta (Ready to get started?)
   - title: Ready to get started?
   - richText: Book a free consultation and we’ll map out the best path for your goals, timeline, and experience level.
   - buttons:
     - text: Book A Free Consultation
+      variant: default
       url: { type: internal, internal: /free-consultation }
     - text: Book A Free Class
+      variant: secondary
       url: { type: internal, internal: /free-consultation }
-- faqAccordion
+- faqAccordion (FAQs)
   - title: FAQs
   - faqs:
     - faq-crossfit-new-to-crossfit
@@ -90,7 +94,6 @@ image_notes: Hero image: image-ff90780659f7467ec5e864167db33a85da29cc13-2001x300
     - faq-crossfit-class-format
     - faq-crossfit-specialty
     - faq-crossfit-nutrition
-
 ## Hero
 - headline: CrossFit
 - subheadline: Lose weight, build strength, gain confidence, and train with a community that supports you—through professionally coached CrossFit classes with unlimited access in Santa Maria.
@@ -160,14 +163,14 @@ image_notes: Hero image: image-ff90780659f7467ec5e864167db33a85da29cc13-2001x300
 - description: Highlight the 3 best-fit memberships for CrossFit and link to the full list.
 - options:
   - name: New Foundations
-    summary: Best for beginners or anyone returning after time off.
+    summary: A guided start for anyone new to fitness or CrossFit.
     link: /memberships/new-foundations
-  - name: Jump Start
-    summary: A streamlined on-ramp with fundamentals and group classes.
-    link: /memberships/jump-start
   - name: Hybrid
     summary: Group classes plus personal coaching sessions (1/2/4/8 per 4 weeks).
     link: /memberships/hybrid
+  - name: Group Class
+    summary: Unlimited CrossFit + Bootcamp classes with Open Gym access.
+    link: /memberships/group-class
 - see_all_options_link: /memberships
 
 ## CTA / Next Step

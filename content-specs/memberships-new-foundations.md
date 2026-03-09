@@ -1,9 +1,9 @@
 ---
 slug: /memberships/new-foundations
-seo_title:
+seo_title: 
 seo_description: 12-week New Foundations includes fundamentals, coaching, assessments, and a nutrition plan to build confidence, habits, and results that last.
-og_title:
-og_description:
+og_title: 
+og_description: 
 primary_keyword: beginner CrossFit membership Santa Maria
 secondary_keywords: [ "CrossFit onboarding Santa Maria", "new to CrossFit membership", "fitness foundations program" ]
 image_notes: Use coaching/onboarding imagery or beginner-friendly class photos.
@@ -12,53 +12,58 @@ image_notes: Use coaching/onboarding imagery or beginner-friendly class photos.
 # New Foundations
 
 ## Page Builder Blocks (ordered)
-- hero: Hero
-- layout: Intro
-- featureCardsIcon: What You Get
-- layout: Timeline / Steps
-- cta: CTA / Next Step
+- hero: New Foundations
+- layout: The fastest, safest way to get real results
+- layout: What You Get
+- layout: What You Get
+- cta: Ready to build your foundation?
 - faqAccordion: FAQs
-
 ## Blocks (config-ready)
-- hero
-  - variant: centered
+- hero (New Foundations)
+  - variant: background
   - title: New Foundations
   - richText: Our most effective way to get in shape—this guided 12-week start builds confidence, strength, and momentum with expert coaching.
+  - media: image-2424943d17ba5ac2e601a3810a61b1f41650504a-3000x2001-jpg
   - buttons:
     - text: Purchase Membership
+      variant: default
       url: { type: external, external: https://onelifefitness.wodify.com/OnlineSalesPage/Main?q=Memberships%7CLocationId%3D9721 }
     - text: Book A Free Consultation
+      variant: secondary
       url: { type: internal, internal: /free-consultation }
-- layout (Intro)
-  - variant: centered
+- layout (The fastest, safest way to get real results)
+  - variant: imageRight
   - title: The fastest, safest way to get real results
   - richText: New Foundations is the most effective way to get in shape at One Life [CrossFit](/programs/group-training/crossfit). You’ll learn the movements, build strength, and gain confidence with structured coaching, a baseline assessment, and check-ins that show exactly how you’re improving. It also includes a nutrition assessment and plan so your training is supported outside the gym.
-- featureCardsIcon (What You Get)
+  - media: image-28ec96d563df0ddbdeb1e95a27109c0af6903c8a-3000x2001-jpg
+- layout (What You Get)
+  - variant: imageLeft
   - title: What You Get
-  - cards:
-    - title: 12-week group class membership
-      richText: Consistent training with expert coaching and scaling.
-    - title: Fundamentals (1:1 or small group)
-      richText: High-contact coaching, [CrossFit](/programs/group-training/crossfit) methodology education, and scaling prescriptions so you feel confident in class.
-    - title: Private coaching sessions
-      richText: Technique-focused sessions to accelerate progress.
-    - title: Baseline + 90-day retest
-      richText: Clear benchmarks and measurable progress.
-    - title: Nutrition assessment + plan
-      richText: A plan that supports your goals outside the gym.
-- layout (Timeline / Steps)
-  - variant: centered
-  - title: Timeline
-  - richText: Week 1 assessment + Fundamentals start; Weeks 1–12 group classes; midpoint progress check-ins; Week 12 retest + next-step recommendation.
-- cta
+  - richText: |-
+    - 12-week group class membership — Consistent training with expert coaching and scaling.
+    - Fundamentals (1:1 or small group) — High-contact coaching, [CrossFit](/programs/group-training/crossfit) methodology education, and scaling prescriptions so you feel confident in class.
+    - Private coaching sessions — Technique-focused sessions to accelerate progress.
+  - media: image-1221b8c1c40911cd976c7518e27084cfb813075b-2001x3000-jpg
+- layout (What You Get)
+  - variant: imageRight
+  - title: What You Get
+  - richText: |-
+    - Baseline + 90-day retest — Clear benchmarks and measurable progress.
+    - Nutrition assessment + plan — A plan that supports your goals outside the gym.
+    ### Timeline
+    Week 1 assessment + Fundamentals start; Weeks 1–12 group classes; midpoint progress check-ins; Week 12 retest + next-step recommendation.
+  - media: image-5e59aa0987729a4221d1937d1e2b8b4fb589b5f5-2001x3000-jpg
+- cta (Ready to build your foundation?)
   - title: Ready to build your foundation?
   - richText: Purchase your membership online, or book a free consultation if you want guidance first.
   - buttons:
     - text: Purchase Membership
+      variant: default
       url: { type: external, external: https://onelifefitness.wodify.com/OnlineSalesPage/Main?q=Memberships%7CLocationId%3D9721 }
     - text: Book A Free Consultation
+      variant: secondary
       url: { type: internal, internal: /free-consultation }
-- faqAccordion
+- faqAccordion (FAQs)
   - title: FAQs
   - faqs:
     - faq-foundations-beginners
@@ -66,7 +71,6 @@ image_notes: Use coaching/onboarding imagery or beginner-friendly class photos.
     - faq-foundations-length
     - faq-foundations-after
     - faq-foundations-nutrition
-
 ## Hero
 
 - headline: New Foundations
