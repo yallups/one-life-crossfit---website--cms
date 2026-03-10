@@ -1,7 +1,6 @@
-import type { SanityClient } from "@sanity/client";
 import { DocumentIcon, FolderIcon } from "@sanity/icons";
 import { friendlyWords } from "friendlier-words";
-import { getPublishedId } from "sanity";
+import { getPublishedId, type SanityClient } from "sanity";
 import type { ListItemBuilder, StructureBuilder } from "sanity/structure";
 import { getTitleCase } from "../utils/helper";
 
