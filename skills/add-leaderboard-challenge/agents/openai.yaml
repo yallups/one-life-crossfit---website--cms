@@ -1,0 +1,4 @@
+interface:
+  display_name: "Add Leaderboard Challenge"
+  short_description: "Create a new leaderboard challenge page"
+  default_prompt: "Use $add-leaderboard-challenge to add a new challenge leaderboard page to the One Life CrossFit CMS site."

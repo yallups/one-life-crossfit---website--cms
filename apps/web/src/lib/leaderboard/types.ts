@@ -64,6 +64,8 @@ export interface ChallengeConfig {
 
   // Optional theming/branding per challenge
   theme?: {
+    // Optional scoped theme mode for the leaderboard page container.
+    mode?: "light" | "dark";
     // Background color for web page (CSS color string)
     backgroundColor?: string;
     // Background image URL for web page (e.g., CDN/public path)
@@ -108,6 +110,16 @@ export interface ChallengeConfig {
     url: string; // Published CSV URL from Google Sheets
     // Optional: name of sheet/tab if using the gviz API or CSV query; not required for published CSV URL
     // sheet?: string;
+  };
+
+  // Optional registration roster keyed by member id (usually email). Use this when
+  // form submissions do not contain enough data to derive display names or divisions.
+  registration?: {
+    dataSource: {
+      type: "csv";
+      url: string;
+    };
+    mapCsvRow: (row: Record<string, string>) => Member | undefined;
   };
 
   // Challenge-specific mapping from raw CSV row (header:value) to normalized SubmissionRow(s)

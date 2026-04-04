@@ -159,6 +159,32 @@ Tips
 - If a row is invalid/incomplete, return `undefined` to skip it safely.
 
 
+## Optional — Join a registration roster by email
+If form responses do not include a participant name or division, add an optional
+`registration` block to the config. This lets you load a second CSV tab keyed by
+email and use it to derive display names or divisions.
+
+```ts
+registration: {
+  dataSource: { type: 'csv', url: 'https://docs.google.com/.../gviz/tq?tqx=out:csv&sheet=Registration' },
+  mapCsvRow: (row) => ({
+    id: row['Email'].trim().toLowerCase(),
+    name: row['Name'],
+    profile: { division: row['Division'] },
+  }),
+},
+divisions: {
+  keys: ['men', 'women'],
+  resolveDivisionForMember: (member) => member.profile?.division === 'women' ? 'women' : 'men',
+},
+```
+
+Notes
+- Submission rows still use `member_id` (usually email) as the primary key.
+- Registration lookups are optional and do not replace the main challenge CSV.
+- If the registration tab is unavailable, the engine falls back to the submission row name and division.
+
+
 ## Step 6 — Register the challenge in the registry
 Open `apps/web/src/lib/leaderboard/registry.ts` and add your new `ChallengeConfig`
 to the exported `registry` array. Use one of the existing entries (e.g., `flex2025` or `summerShred2025`) as a reference.

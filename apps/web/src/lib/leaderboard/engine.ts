@@ -11,6 +11,7 @@ import type {
   ChallengeConfig,
   DivisionKey,
   LeaderboardResponse,
+  Member,
   MemberScores,
   SubmissionRow,
 } from "./types";
@@ -40,6 +41,59 @@ export async function loadSubmissions(
   return out;
 }
 
+async function loadRegisteredMembers(
+  config: ChallengeConfig,
+): Promise<Map<string, Member>> {
+  const registration = config.registration;
+  if (
+    !registration ||
+    registration.dataSource.type !== "csv" ||
+    !registration.dataSource.url
+  ) {
+    return new Map();
+  }
+
+  try {
+    const text = await fetchCsvText(registration.dataSource.url);
+    const rows = parseCsv(text);
+    const out = new Map<string, Member>();
+    for (const row of rows) {
+      const mapped = registration.mapCsvRow(row);
+      if (!mapped?.id) continue;
+      out.set(mapped.id, mapped);
+    }
+    return out;
+  } catch (error) {
+    console.warn(
+      `Failed to load registration CSV for challenge ${config.id}:`,
+      error,
+    );
+    return new Map();
+  }
+}
+
+function resolveSubmissionMember(
+  submission: SubmissionRow,
+  cfg: ChallengeConfig,
+  registrations: Map<string, Member>,
+): { memberName: string; division: DivisionKey } {
+  const registered = registrations.get(submission.member_id);
+  const memberName =
+    registered?.name?.trim() ||
+    submission.member_name?.trim() ||
+    submission.member_id;
+
+  let division = submission.division;
+  if (!division && registered && cfg.divisions.resolveDivisionForMember) {
+    division = cfg.divisions.resolveDivisionForMember(registered);
+  }
+
+  return {
+    memberName,
+    division: division || "open",
+  };
+}
+
 export type DailyAggregate = {
   key: string; // member_id|date
   member_id: string;
@@ -54,6 +108,7 @@ export type DailyAggregate = {
 export function latestByBucket(
   subs: SubmissionRow[],
   cfg: ChallengeConfig,
+  registrations: Map<string, Member> = new Map(),
 ): DailyAggregate[] {
   const latest = new Map<string, DailyAggregate>();
   for (const s of subs) {
@@ -70,13 +125,13 @@ export function latestByBucket(
       )
     )
       continue;
-    const division: DivisionKey = s.division || "open";
+    const resolved = resolveSubmissionMember(s, cfg, registrations);
     const key = `${s.member_id}|${date}`;
     const rec: DailyAggregate = {
       key,
       member_id: s.member_id,
-      member_name: s.member_name,
-      division,
+      member_name: resolved.memberName,
+      division: resolved.division,
       date,
       checkins: s.checkins ?? {},
       metrics: s.metrics ?? {},
@@ -372,7 +427,10 @@ export async function computeMemberDetail(
   cfg: ChallengeConfig,
   memberId: string,
 ): Promise<MemberDetailResponse | undefined> {
-  const submissions = await loadSubmissions(cfg);
+  const [submissions, registrations] = await Promise.all([
+    loadSubmissions(cfg),
+    loadRegisteredMembers(cfg),
+  ]);
 
   // 1) Build per-day ALL submissions for this member (not just latest), within challenge window buckets
   type RawSub = {
@@ -407,7 +465,7 @@ export async function computeMemberDetail(
   if (rawMine.length === 0) return undefined;
 
   // Determine member name/division from any latestByBucket entry (fallback to first submission)
-  const allLatest = latestByBucket(submissions, cfg)
+  const allLatest = latestByBucket(submissions, cfg, registrations)
     .filter((d) => d.member_id === memberId)
     .sort((a, b) => a.date.localeCompare(b.date));
   const idMeta = allLatest.length
@@ -648,9 +706,12 @@ export async function computeLeaderboard(
   cfg: ChallengeConfig,
   division?: DivisionKey,
 ) {
-  const submissions = await loadSubmissions(cfg);
+  const [submissions, registrations] = await Promise.all([
+    loadSubmissions(cfg),
+    loadRegisteredMembers(cfg),
+  ]);
   // Latest per (member, date) within challenge window
-  const dailies = latestByBucket(submissions, cfg).sort((a, b) =>
+  const dailies = latestByBucket(submissions, cfg, registrations).sort((a, b) =>
     a.timestamp.localeCompare(b.timestamp),
   );
 

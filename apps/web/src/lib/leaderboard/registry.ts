@@ -1,6 +1,6 @@
-import { parseToZonedISOString } from "./date";
+import { parseToZonedISOString, scoringDate } from "./date";
 import { absoluteLinear, absolutePerUnit } from "./scoring";
-import type { ChallengeConfig, SubmissionRow } from "./types";
+import type { ChallengeConfig, Member, SubmissionRow } from "./types";
 
 // Helper to build a Google Sheets gviz CSV URL for a given sheet name.
 function gvizCsvUrl(sheetId: string, sheetName: string) {
@@ -603,7 +603,265 @@ export const summerShred2025: ChallengeConfig = {
   },
 };
 
-export const registry: ChallengeConfig[] = [flex2025, summerShred2025];
+const SUMMER_SHRED_2026_SHEET_ID = "1_cEs6UpI02eS1RQtsZTNGwNBajzzMSXaYToZDZZUVjk";
+const SUMMER_SHRED_2026_FORM_RESPONSES_GID = "1595997590";
+const SUMMER_SHRED_2026_REGISTRATION_TAB = "Registration";
+
+function normalizeEmail(value?: string) {
+  return (value ?? "").toString().trim().toLowerCase();
+}
+
+function normalizeDivision(value?: string): "men" | "women" | undefined {
+  const raw = (value ?? "").toString().trim().toLowerCase();
+  if (!raw) return undefined;
+  if (
+    raw === "men" ||
+    raw === "mens" ||
+    raw === "male" ||
+    raw === "m"
+  ) {
+    return "men";
+  }
+  if (
+    raw === "women" ||
+    raw === "womens" ||
+    raw === "female" ||
+    raw === "f" ||
+    raw === "woman"
+  ) {
+    return "women";
+  }
+  return undefined;
+}
+
+function summerShred2026FocusBonusDate(
+  ymd: string,
+  checkins: Record<string, boolean>,
+) {
+  if (ymd < "2026-04-05" || ymd > "2026-05-17") return false;
+  if (ymd <= "2026-04-11") return !!checkins.carbs;
+  if (ymd <= "2026-04-18") return !!checkins.protein;
+  if (ymd <= "2026-04-25") return !!checkins.sleep;
+  if (ymd <= "2026-05-02") return !!checkins.carbs;
+  if (ymd <= "2026-05-09") return !!checkins.fiber;
+  return !!checkins.fasting;
+}
+
+function mapSummerShred2026RegistrationRow(
+  row: Record<string, string>,
+): Member | undefined {
+  const id = normalizeEmail(
+    row["Email"] ||
+    row["Email Address"] ||
+    row["Member Email"] ||
+    row["member_id"],
+  );
+  if (!id) return undefined;
+
+  const firstName = (row["First Name"] || row["first_name"] || "").trim();
+  const lastName = (row["Last Name"] || row["last_name"] || "").trim();
+  const combinedName = `${firstName} ${lastName}`.trim();
+  const rawName =
+    combinedName ||
+    row["Name"] ||
+    row["Full Name"] ||
+    row["Member"] ||
+    row["member_name"] ||
+    "";
+  const name = rawName.toString().trim() || id.split("@")[0] || id;
+  const division = normalizeDivision(
+    row["Division"] ||
+    row["division"] ||
+    row["Sex"] ||
+    row["Gender"] ||
+    row["Category"] ||
+    row["Group"],
+  );
+
+  return {
+    id,
+    name,
+    profile: {
+      division,
+    },
+  };
+}
+
+export const summerShred2026: ChallengeConfig = {
+  id: "summer-shred-challenge-2026",
+  slug: "summer-shred-challenge",
+  year: 2026,
+  title: "Summer Shred Challenge 2026",
+  timezone: "America/Los_Angeles",
+  checkinWindow: { startHour: 19, durationHours: 24 },
+  challengeWindow: { start: "2026-04-05", end: "2026-05-17" },
+  theme: {
+    mode: "light",
+    backgroundColor: "#0B0F1A",
+    imageBackgroundColor: "#0B0F1A",
+    backgroundImageUrl: "/images/challenges/summer-shred-challenge-2026-bg.png",
+  },
+  divisions: {
+    keys: ["men", "women"],
+    resolveDivisionForMember: (member) =>
+      normalizeDivision(member.profile?.division as string | undefined) ||
+      "open",
+  },
+  checkins: {
+    items: [
+      { key: "carbs", label: "No processed carbs", points: 1 },
+      {
+        key: "protein",
+        label: "Protein",
+        points: 1,
+      },
+      { key: "sleep", label: "8 hours in bed", points: 1 },
+      { key: "fiber", label: "30g fiber", points: 1 },
+      { key: "fasting", label: "6-hour eating window", points: 1 },
+      { key: "weekly_focus_bonus", label: "Weekly focus bonus", points: 2 },
+      { key: "group_class", label: "Attended group class", points: 1 },
+      {
+        key: "bodybuilding",
+        label: "Completed bodybuilding session",
+        points: 2,
+      },
+      { key: "social_media", label: "Tagged OLC on social media", points: 1 },
+      {
+        key: "inbody_scan",
+        label: "Completed InBody scan",
+        points: 5,
+        limits: [{ window: "week", maxPoints: 5, weekStartsOn: "sun" }],
+      },
+    ],
+  },
+  performance: {
+    baselineWindow: { start: "2026-04-05", end: "2026-05-17" },
+    finalWindow: { start: "2026-04-05", end: "2026-05-17" },
+    liveScoring: { mode: "latest_to_date", lockAfterEnd: true },
+    metrics: [
+      {
+        key: "body_weight_lb",
+        label: "Body Weight (lb)",
+        kind: "absolute_delta",
+        direction: "down",
+        scoring: absolutePerUnit(1, 0),
+        sanityMax: 700,
+        sensitive: true,
+      },
+      {
+        key: "inbody_muscle_mass_lb",
+        label: "Muscle Mass (lb)",
+        kind: "absolute_delta",
+        direction: "up",
+        scoring: absolutePerUnit(1, 0),
+        sanityMax: 400,
+        sensitive: true,
+      },
+      {
+        key: "inbody_fat_mass_lb",
+        label: "Body Fat Mass (lb)",
+        kind: "absolute_delta",
+        direction: "down",
+        scoring: absolutePerUnit(1, 0),
+        sanityMax: 300,
+        sensitive: true,
+      },
+      {
+        key: "inbody_body_fat_pct",
+        label: "Body Fat Percentage (%)",
+        kind: "absolute_delta",
+        direction: "down",
+        scoring: absoluteLinear(80),
+        sanityMax: 100,
+        roundDisplayTo: 1,
+        sensitive: true,
+      },
+    ],
+  },
+  weights: { habits: 1, performance: 1 },
+  tieBreakers: [
+    { type: "performance" },
+    { type: "habits" },
+    { type: "stable_member_hash" },
+  ],
+  dataSource: {
+    type: "csv",
+    url: `https://docs.google.com/spreadsheets/d/${SUMMER_SHRED_2026_SHEET_ID}/export?format=csv&gid=${SUMMER_SHRED_2026_FORM_RESPONSES_GID}`,
+  },
+  registration: {
+    dataSource: {
+      type: "csv",
+      url: gvizCsvUrl(
+        SUMMER_SHRED_2026_SHEET_ID,
+        SUMMER_SHRED_2026_REGISTRATION_TAB,
+      ),
+    },
+    mapCsvRow: mapSummerShred2026RegistrationRow,
+  },
+  mapCsvRow: (row) => {
+    const timestampRaw = row["Timestamp"] || row["timestamp"];
+    const email = normalizeEmail(row["Email"] || row["Email Address"]);
+    if (!timestampRaw || !email) return undefined;
+
+    const truthy = (value?: string) => {
+      const s = (value ?? "").toString().trim().toLowerCase();
+      if (!s) return false;
+      return s !== "no" && s !== "false" && s !== "0";
+    };
+
+    const toNum = (value?: string) => {
+      const text = (value ?? "").toString().trim();
+      if (!text) return undefined;
+      const n = Number(text.replace(/[^0-9.-]/g, ""));
+      return Number.isFinite(n) ? n : undefined;
+    };
+
+    const iso =
+      parseToZonedISOString(timestampRaw, "America/Los_Angeles") ||
+      new Date(timestampRaw).toISOString();
+    const date = scoringDate(iso, "America/Los_Angeles", 19);
+
+    const checkins: Record<string, boolean> = {
+      carbs: truthy(row["Carbs 🍞 🥯 🥨 🥐"]),
+      protein: truthy(row["Protein 🥩 🍗 🍖"]),
+      sleep: truthy(row["Sleep 🛌 😴 💤"]),
+      fiber: truthy(row["Fiber 🥦 🍠 🍓"]),
+      fasting: truthy(row["Fasting 🤤"]),
+      group_class: truthy(row["Group class 🏋 🏃‍♂️ 🤸‍♂️"]),
+      bodybuilding: truthy(row["Body Building 🏋️"]),
+      social_media: truthy(row["Social media 🤳"]),
+      inbody_scan: truthy(row["Completed InBody Scan 📉"]),
+    };
+
+    if (summerShred2026FocusBonusDate(date, checkins)) {
+      checkins.weekly_focus_bonus = true;
+    }
+
+    const metrics: Record<string, number> = {};
+    const weight = toNum(row["Weight (in lbs)"]);
+    if (weight != null) metrics.body_weight_lb = weight;
+    const muscle = toNum(row["SMM (Skeletal Muscle Mass)"]);
+    if (muscle != null) metrics.inbody_muscle_mass_lb = muscle;
+    const fatMass = toNum(row["Body Fat Mass"]);
+    if (fatMass != null) metrics.inbody_fat_mass_lb = fatMass;
+    const bodyFatPct = toNum(row["PBF (Percent Body Fat)"]);
+    if (bodyFatPct != null) metrics.inbody_body_fat_pct = bodyFatPct;
+
+    return {
+      timestamp: iso,
+      member_id: email,
+      member_name: email.split("@")[0] || email,
+      checkins,
+      metrics,
+    } satisfies SubmissionRow;
+  },
+};
+
+export const registry: ChallengeConfig[] = [
+  flex2025,
+  summerShred2025,
+  summerShred2026,
+];
 
 export function getChallengeConfig(
   slug: string,

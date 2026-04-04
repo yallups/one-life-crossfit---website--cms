@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { cn } from "@workspace/ui/lib/utils";
 import { headers } from "next/headers";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -98,7 +99,10 @@ export default async function LeaderboardPage(props: {
 
   return (
     <main
-      className="mx-auto max-w-5xl bg-cover bg-center px-4 py-10"
+      className={cn(
+        "mx-auto max-w-5xl bg-cover bg-center px-4 py-10 text-foreground",
+        challengeCfg.theme?.mode,
+      )}
       style={bgStyle}
     >
       <div className="mb-6 flex items-center justify-between">

@@ -25,3 +25,18 @@ Location:
 
 Install (example):
 - `codex skills install skills/olc-sanity-content.skill`
+
+## add-leaderboard-challenge
+Purpose: Add a new leaderboard-style challenge page to the One Life CrossFit CMS site by registering a `ChallengeConfig` and CSV mapper.
+
+Location:
+- `skills/add-leaderboard-challenge/`
+- Packaged: `skills/add-leaderboard-challenge.skill`
+
+Use when:
+- Adding a new challenge page or leaderboard route under `/leaderboard/[challenge]/[year]`
+- Wiring a Google Sheet CSV into the shared challenge leaderboard system
+- Defining challenge scoring, divisions, theming, or result routes
+
+Install (example):
+- `codex skills install skills/add-leaderboard-challenge.skill`
