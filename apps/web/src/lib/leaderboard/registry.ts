@@ -699,7 +699,8 @@ export const summerShred2026: ChallengeConfig = {
     mode: "light",
     backgroundColor: "#0B0F1A",
     imageBackgroundColor: "#0B0F1A",
-    backgroundImageUrl: "/images/challenges/summer-shred-challenge-2026-bg.png",
+    backgroundImageUrl:
+      "https://onelifecrossfit.com/images/challenges/summer-shred-challenge-2026-bg.png",
   },
   divisions: {
     keys: ["men", "women"],

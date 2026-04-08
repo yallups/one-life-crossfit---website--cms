@@ -14,6 +14,16 @@ function clamp(n: number, min: number, max: number) {
   return Math.max(min, Math.min(max, n));
 }
 
+function resolveOgAssetUrl(req: NextRequest, src?: string) {
+  if (!src) return undefined;
+
+  try {
+    return new URL(src, req.url).toString();
+  } catch {
+    return undefined;
+  }
+}
+
 export async function GET(
   req: NextRequest,
   context: { params: Promise<{ challenge: string; year: string }> },
@@ -54,8 +64,8 @@ export async function GET(
       cfg.theme?.imageBackgroundColor ||
       cfg.theme?.backgroundColor ||
       "#0B0F1A";
-    const bgImg = cfg.theme?.backgroundImageUrl || undefined;
-    const logo = cfg.theme?.logoUrl;
+    const bgImg = resolveOgAssetUrl(req, cfg.theme?.backgroundImageUrl);
+    const logo = resolveOgAssetUrl(req, cfg.theme?.logoUrl);
 
     const nowStr = new Date(data.updatedAt).toLocaleString("en-US", {
       timeZone: cfg.timezone,
