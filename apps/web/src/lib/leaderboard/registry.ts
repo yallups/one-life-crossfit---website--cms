@@ -739,7 +739,7 @@ export const summerShred2026: ChallengeConfig = {
         key: "inbody_scan",
         label: "Completed InBody scan",
         points: 5,
-        limits: [{ window: "week", maxPoints: 5, weekStartsOn: "sun" }],
+        limits: [{ window: "week", maxPoints: 5, weekStartsOn: "mon" }],
       },
     ],
   },
