@@ -1,5 +1,6 @@
 import { fetchCsvText, parseCsv } from "./csv";
 import {
+  calendarDate,
   isWithinYmdRange,
   monthKeyFromYmd,
   scoringDate,
@@ -227,8 +228,24 @@ export type MetricWindows = {
   final: Record<string, number | undefined>;
 };
 
+type MetricSourceRow = Pick<SubmissionRow, "member_id" | "metrics" | "timestamp">;
+
+function normalizeMetricRows(
+  metricRows: MetricSourceRow[],
+  cfg: ChallengeConfig,
+) {
+  return metricRows
+    .map((row) => ({
+      member_id: row.member_id,
+      date: calendarDate(row.timestamp, cfg.timezone),
+      metrics: row.metrics ?? {},
+      timestamp: row.timestamp,
+    }))
+    .sort((a, b) => a.timestamp.localeCompare(b.timestamp));
+}
+
 export function extractMetricWindows(
-  dailies: DailyAggregate[],
+  metricRows: MetricSourceRow[],
   cfg: ChallengeConfig,
 ) {
   // Determine live scoring mode
@@ -240,31 +257,26 @@ export function extractMetricWindows(
   const liveCutoff =
     today < challengeEnd || !lockAfterEnd ? today : challengeEnd;
 
-  // Sort by timestamp asc so that later overwrites win for finals
-  const sorted = [...dailies].sort((a, b) =>
-    a.timestamp.localeCompare(b.timestamp),
-  );
-
   // For each member, find per-metric baseline (first in baseline window) and final
   // Final selection:
   // - live==false: latest in final window only
   // - live==true: latest with date within challengeWindow and <= liveCutoff; if also within final window, that's fine
   const byMember = new Map<string, MetricWindows>();
-  for (const d of sorted) {
+  for (const row of normalizeMetricRows(metricRows, cfg)) {
     // baseline
     if (
       isWithinYmdRange(
-        d.date,
+        row.date,
         cfg.performance.baselineWindow.start,
         cfg.performance.baselineWindow.end,
       )
     ) {
-      let mw = byMember.get(d.member_id);
+      let mw = byMember.get(row.member_id);
       if (!mw) {
         mw = { baseline: {}, final: {} };
-        byMember.set(d.member_id, mw);
+        byMember.set(row.member_id, mw);
       }
-      for (const [k, v] of Object.entries(d.metrics)) {
+      for (const [k, v] of Object.entries(row.metrics)) {
         if (mw.baseline[k] == null && isFinite(v)) {
           mw.baseline[k] = v;
         }
@@ -274,23 +286,23 @@ export function extractMetricWindows(
     // final
     const eligibleFinal = live
       ? isWithinYmdRange(
-          d.date,
+          row.date,
           cfg.challengeWindow.start,
           cfg.challengeWindow.end,
-        ) && d.date <= liveCutoff
+        ) && row.date <= liveCutoff
       : isWithinYmdRange(
-          d.date,
+          row.date,
           cfg.performance.finalWindow.start,
           cfg.performance.finalWindow.end,
         );
 
     if (eligibleFinal) {
-      let mw = byMember.get(d.member_id);
+      let mw = byMember.get(row.member_id);
       if (!mw) {
         mw = { baseline: {}, final: {} };
-        byMember.set(d.member_id, mw);
+        byMember.set(row.member_id, mw);
       }
-      for (const [k, v] of Object.entries(d.metrics)) {
+      for (const [k, v] of Object.entries(row.metrics)) {
         if (isFinite(v)) {
           mw.final[k] = v; // sorted asc, so latest value seen wins
         }
@@ -320,11 +332,11 @@ function improvementForMetric(
 }
 
 export function scorePerformance(
-  dailies: DailyAggregate[],
+  metricRows: MetricSourceRow[],
   cfg: ChallengeConfig,
   memberDivision: Map<string, DivisionKey>,
 ) {
-  const windowsByMember = extractMetricWindows(dailies, cfg);
+  const windowsByMember = extractMetricWindows(metricRows, cfg);
 
   // Precompute top improvements per division for relative metrics, if any
   const topByDivisionMetric = new Map<string, number>(); // key: division|metric
@@ -632,24 +644,8 @@ export async function computeMemberDetail(
   const habitTotal = windows.reduce((sum, w) => sum + w.dailyPointsAwarded, 0);
 
   // Build latest-by-bucket dailies for performance windows using only counted submissions
-  const dailiesForPerf: DailyAggregate[] = windows
-    .map((w) => {
-      const sub = w.submissions[w.countedIndex];
-      if (!sub) return undefined;
-      return {
-        key: `${memberId}|${w.date}`,
-        member_id: memberId,
-        member_name,
-        division,
-        date: w.date,
-        checkins: sub.checkins,
-        metrics: sub.metrics,
-        timestamp: sub.timestamp,
-      } as DailyAggregate;
-    })
-    .filter((x): x is DailyAggregate => !!x);
-
-  const windowsByMember = extractMetricWindows(dailiesForPerf, cfg);
+  const metricRows = submissions.filter((s) => s.member_id === memberId);
+  const windowsByMember = extractMetricWindows(metricRows, cfg);
   const w = windowsByMember.get(memberId) || { baseline: {}, final: {} };
   const improvements: Record<
     string,
@@ -724,7 +720,7 @@ export async function computeLeaderboard(
   }
 
   const habitByMember = scoreHabits(dailies, cfg);
-  const perfByMember = scorePerformance(dailies, cfg, memberDivision);
+  const perfByMember = scorePerformance(submissions, cfg, memberDivision);
 
   const divisions = new Set<DivisionKey>(
     cfg.divisions.keys.length

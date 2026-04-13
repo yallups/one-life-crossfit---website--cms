@@ -160,8 +160,8 @@ export async function GET(
 
     // Calculate scores
     const habitByMember = scoreHabits(dailies, cfg);
-    const perfByMember = scorePerformance(dailies, cfg, memberDivision);
-    const metricWindowsByMember = extractMetricWindows(dailies, cfg);
+    const perfByMember = scorePerformance(submissions, cfg, memberDivision);
+    const metricWindowsByMember = extractMetricWindows(submissions, cfg);
 
     // Group by division
     const divisions = new Set<DivisionKey>(

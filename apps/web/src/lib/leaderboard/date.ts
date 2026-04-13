@@ -179,6 +179,11 @@ export function scoringDate(tsIso: string, timeZone: string, startHour = 19) {
   return formatYMD(bucketDate);
 }
 
+export function calendarDate(tsIso: string, timeZone: string) {
+  const parts = getZonedParts(new Date(tsIso), timeZone);
+  return formatYMD({ year: parts.year, month: parts.month, day: parts.day });
+}
+
 export function isWithinYmdRange(
   ymd: string,
   startYmd: string,

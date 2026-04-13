@@ -634,6 +634,14 @@ function normalizeDivision(value?: string): "men" | "women" | undefined {
   return undefined;
 }
 
+function completedSummerShred2026InBodyScan(value?: string) {
+  const raw = (value ?? "").toString().trim().toLowerCase();
+  if (!raw) return false;
+  if (raw === "i did not weigh in today") return false;
+  if (raw === "i weighed in on the inbody today") return true;
+  return raw !== "no" && raw !== "false" && raw !== "0";
+}
+
 function summerShred2026FocusBonusDate(
   ymd: string,
   checkins: Record<string, boolean>,
@@ -831,7 +839,9 @@ export const summerShred2026: ChallengeConfig = {
       group_class: truthy(row["Group class 🏋 🏃‍♂️ 🤸‍♂️"]),
       bodybuilding: truthy(row["Body Building 🏋️"]),
       social_media: truthy(row["Social media 🤳"]),
-      inbody_scan: truthy(row["Completed InBody Scan 📉"]),
+      inbody_scan: completedSummerShred2026InBodyScan(
+        row["Completed weekly InBody Scan 📉"] || row["Completed InBody Scan 📉"],
+      ),
     };
 
     if (summerShred2026FocusBonusDate(date, checkins)) {
