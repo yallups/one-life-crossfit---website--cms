@@ -42,7 +42,7 @@ export async function loadSubmissions(
   return out;
 }
 
-async function loadRegisteredMembers(
+export async function loadRegisteredMembers(
   config: ChallengeConfig,
 ): Promise<Map<string, Member>> {
   const registration = config.registration;
@@ -155,33 +155,33 @@ export function scoreHabits(dailies: DailyAggregate[], cfg: ChallengeConfig) {
   );
   const cap = cfg.checkins.maxDailyPoints ?? null;
   const totalByMember = new Map<string, number>();
-  // Track per-member awarded points per habit per window key to enforce limits
   const awardedByMemberHabitWindow = new Map<
     string,
     Map<string, Map<string, number>>
-  >(); // member -> habit -> windowKey -> points
+  >();
 
   function windowKeysFor(habitKey: string, dateYmd: string) {
     const limits = limitsByKey.get(habitKey) || [];
     const keys: Array<{ key: string; max: number }> = [];
     for (const lim of limits) {
-      if (lim.window === "day")
+      if (lim.window === "day") {
         keys.push({ key: `day:${dateYmd}`, max: lim.maxPoints });
-      else if (lim.window === "week")
+      } else if (lim.window === "week") {
         keys.push({
           key: `week:${weekKeyFromYmd(dateYmd, lim.weekStartsOn || "sun")}`,
           max: lim.maxPoints,
         });
-      else if (lim.window === "month")
+      } else if (lim.window === "month") {
         keys.push({
           key: `month:${monthKeyFromYmd(dateYmd)}`,
           max: lim.maxPoints,
         });
-      else if (lim.window === "challenge")
+      } else if (lim.window === "challenge") {
         keys.push({
           key: `challenge:${cfg.challengeWindow.start}-${cfg.challengeWindow.end}`,
           max: lim.maxPoints,
         });
+      }
     }
     return keys;
   }
@@ -191,40 +191,38 @@ export function scoreHabits(dailies: DailyAggregate[], cfg: ChallengeConfig) {
     for (const [key, value] of Object.entries(d.checkins)) {
       if (!value || !pointsByKey.has(key)) continue;
       const base = pointsByKey.get(key)!;
-      // enforce limits
       const windowKeys = windowKeysFor(key, d.date);
       let allowed = base;
       for (const wk of windowKeys) {
-        const m = awardedByMemberHabitWindow.get(d.member_id) || new Map();
-        if (!awardedByMemberHabitWindow.has(d.member_id))
-          awardedByMemberHabitWindow.set(d.member_id, m);
-        const hmap = m.get(key) || new Map();
-        if (!m.has(key)) m.set(key, hmap);
-        const used = hmap.get(wk.key) ?? 0;
+        const memberWindows = awardedByMemberHabitWindow.get(d.member_id) || new Map();
+        if (!awardedByMemberHabitWindow.has(d.member_id)) {
+          awardedByMemberHabitWindow.set(d.member_id, memberWindows);
+        }
+        const habitWindows = memberWindows.get(key) || new Map();
+        if (!memberWindows.has(key)) {
+          memberWindows.set(key, habitWindows);
+        }
+        const used = habitWindows.get(wk.key) ?? 0;
         const remaining = Math.max(0, wk.max - used);
         allowed = Math.min(allowed, remaining);
       }
       if (allowed > 0) {
         dayAward += allowed;
-        // record usage across all windows
         for (const wk of windowKeys) {
-          const m = awardedByMemberHabitWindow.get(d.member_id)!;
-          const hmap = m.get(key)!;
-          hmap.set(wk.key, (hmap.get(wk.key) ?? 0) + allowed);
+          const memberWindows = awardedByMemberHabitWindow.get(d.member_id)!;
+          const habitWindows = memberWindows.get(key)!;
+          habitWindows.set(wk.key, (habitWindows.get(wk.key) ?? 0) + allowed);
         }
       }
     }
     if (cap != null) dayAward = Math.min(dayAward, cap);
-    totalByMember.set(
-      d.member_id,
-      (totalByMember.get(d.member_id) ?? 0) + dayAward,
-    );
+    totalByMember.set(d.member_id, (totalByMember.get(d.member_id) ?? 0) + dayAward);
   }
-  return totalByMember; // member_id -> habit points
+  return totalByMember;
 }
 
 export type MetricWindows = {
-  baseline: Record<string, number | undefined>; // metric -> value
+  baseline: Record<string, number | undefined>;
   final: Record<string, number | undefined>;
 };
 
@@ -248,22 +246,15 @@ export function extractMetricWindows(
   metricRows: MetricSourceRow[],
   cfg: ChallengeConfig,
 ) {
-  // Determine live scoring mode
   const live = cfg.performance.liveScoring?.mode === "latest_to_date";
   const lockAfterEnd = !!cfg.performance.liveScoring?.lockAfterEnd;
   const today = todayYmd(cfg.timezone);
   const challengeEnd = cfg.challengeWindow.end;
-  // In live mode before end (or if not locking after end), allow any date up to cutoff
   const liveCutoff =
     today < challengeEnd || !lockAfterEnd ? today : challengeEnd;
 
-  // For each member, find per-metric baseline (first in baseline window) and final
-  // Final selection:
-  // - live==false: latest in final window only
-  // - live==true: latest with date within challengeWindow and <= liveCutoff; if also within final window, that's fine
   const byMember = new Map<string, MetricWindows>();
   for (const row of normalizeMetricRows(metricRows, cfg)) {
-    // baseline
     if (
       isWithinYmdRange(
         row.date,
@@ -283,7 +274,6 @@ export function extractMetricWindows(
       }
     }
 
-    // final
     const eligibleFinal = live
       ? isWithinYmdRange(
           row.date,
@@ -304,7 +294,7 @@ export function extractMetricWindows(
       }
       for (const [k, v] of Object.entries(row.metrics)) {
         if (isFinite(v)) {
-          mw.final[k] = v; // sorted asc, so latest value seen wins
+          mw.final[k] = v;
         }
       }
     }
@@ -324,11 +314,10 @@ function improvementForMetric(
     if (baseline <= 0) return 0;
     const pct = (final - baseline) / baseline;
     return Math.max(0, pct);
-  } else {
-    const delta = final - baseline;
-    const raw = direction === "down" ? -delta : delta; // down means baseline-final
-    return Math.max(0, raw);
   }
+  const delta = final - baseline;
+  const raw = direction === "down" ? -delta : delta;
+  return Math.max(0, raw);
 }
 
 export function scorePerformance(
@@ -337,54 +326,46 @@ export function scorePerformance(
   memberDivision: Map<string, DivisionKey>,
 ) {
   const windowsByMember = extractMetricWindows(metricRows, cfg);
-
-  // Precompute top improvements per division for relative metrics, if any
-  const topByDivisionMetric = new Map<string, number>(); // key: division|metric
-
-  // First pass: compute improvements per member per metric to find tops
-  const improvements: Map<string, Map<string, number>> = new Map(); // member -> metric -> improvement
+  const topByDivisionMetric = new Map<string, number>();
+  const improvements: Map<string, Map<string, number>> = new Map();
 
   for (const [member, windows] of windowsByMember) {
     const div = memberDivision.get(member) ?? "open";
     for (const spec of cfg.performance.metrics) {
       const baseline = windows.baseline[spec.key];
       const final = windows.final[spec.key];
-      // Direction support: encoded by scoring function? We'll add a convention: if label contains "(down)", treat as down
       const direction: "up" | "down" =
-        (spec as any).direction === "down" ? "down" : "up";
+        (spec as { direction?: "up" | "down" }).direction === "down"
+          ? "down"
+          : "up";
       const imp = improvementForMetric(spec.kind, baseline, final, direction);
       if (!improvements.has(member)) improvements.set(member, new Map());
       improvements.get(member)!.set(spec.key, imp);
-      // track top per division
       const topKey = `${div}|${spec.key}`;
-      if ((spec.scoring as any)._method === "relative") {
+      if ((spec.scoring as { _method?: string })._method === "relative") {
         const prev = topByDivisionMetric.get(topKey) ?? 0;
         if (imp > prev) topByDivisionMetric.set(topKey, imp);
       }
     }
   }
 
-  // Second pass: apply scoring
   const perfPoints = new Map<string, number>();
   for (const [member, impByMetric] of improvements) {
     const div = memberDivision.get(member) ?? "open";
     let pts = 0;
     for (const spec of cfg.performance.metrics) {
       const imp = impByMetric.get(spec.key) ?? 0;
-      const topKey = `${div}|${spec.key}`;
-      const top = topByDivisionMetric.get(topKey);
-      // Try to pass top to scoring if it expects it
-      const val = spec.scoring({
+      const top = topByDivisionMetric.get(`${div}|${spec.key}`);
+      pts += spec.scoring({
         improvement: imp,
         baseline: undefined,
         final: undefined,
         topImprovementInDivision: top,
       });
-      pts += val;
     }
     perfPoints.set(member, pts);
   }
-  return perfPoints; // member_id -> performance points
+  return perfPoints;
 }
 
 export interface MemberDailyLog {
@@ -395,27 +376,27 @@ export interface MemberDailyLog {
 }
 
 export interface HabitAwardDetail {
-  attempted: boolean; // whether user checked the habit
-  basePoints: number; // raw per-habit points defined in config
-  awarded: number; // points actually awarded after applying per-habit limits
-  reasons: string[]; // explanations when awarded < basePoints
+  attempted: boolean;
+  basePoints: number;
+  awarded: number;
+  reasons: string[];
 }
 
 export interface DailySubmissionAudit {
-  timestamp: string; // ISO
+  timestamp: string;
   checkins: Record<string, boolean>;
   metrics: Record<string, number>;
-  isLatestForWindow: boolean; // only latest submission per 7pm window counts
-  notCountedReason?: string; // explanation when not counted (e.g., superseded)
+  isLatestForWindow: boolean;
+  notCountedReason?: string;
   dayOfChallenge: number;
 }
 
 export interface DailyWindowAudit {
-  date: string; // yyyy-mm-dd window bucket
-  submissions: DailySubmissionAudit[]; // all submissions for that day window, latest last
-  countedIndex: number; // index in submissions that counted (latest)
-  perHabitAwards: Record<string, HabitAwardDetail>; // based on counted submission
-  dailyPointsAwarded: number; // after applying daily cap
+  date: string;
+  submissions: DailySubmissionAudit[];
+  countedIndex: number;
+  perHabitAwards: Record<string, HabitAwardDetail>;
+  dailyPointsAwarded: number;
   dailyCapApplied?: { cap: number; before: number; after: number };
 }
 
@@ -426,8 +407,8 @@ export interface MemberDetailResponse {
   habitPoints: number;
   performancePoints: number;
   total: number;
-  dailyLogs: MemberDailyLog[]; // kept for backward-compat
-  dailyWindows?: DailyWindowAudit[]; // enhanced audit data for UI annotations
+  dailyLogs: MemberDailyLog[];
+  dailyWindows?: DailyWindowAudit[];
   improvements: Record<
     string,
     { improvement: number; points: number; baseline?: number; final?: number }
@@ -444,7 +425,6 @@ export async function computeMemberDetail(
     loadRegisteredMembers(cfg),
   ]);
 
-  // 1) Build per-day ALL submissions for this member (not just latest), within challenge window buckets
   type RawSub = {
     timestamp: string;
     date: string;
@@ -465,8 +445,9 @@ export async function computeMemberDetail(
         cfg.challengeWindow.start,
         cfg.challengeWindow.end,
       )
-    )
+    ) {
       continue;
+    }
     rawMine.push({
       timestamp: s.timestamp,
       date,
@@ -476,13 +457,10 @@ export async function computeMemberDetail(
   }
   if (rawMine.length === 0) return undefined;
 
-  // Determine member name/division from any latestByBucket entry (fallback to first submission)
   const allLatest = latestByBucket(submissions, cfg, registrations)
     .filter((d) => d.member_id === memberId)
     .sort((a, b) => a.date.localeCompare(b.date));
-  const idMeta = allLatest.length
-    ? allLatest[allLatest.length - 1]!
-    : undefined;
+  const idMeta = allLatest.length ? allLatest[allLatest.length - 1] : undefined;
   const member_name =
     idMeta?.member_name ||
     submissions.find((s) => s.member_id === memberId)?.member_name ||
@@ -493,49 +471,48 @@ export async function computeMemberDetail(
       ?.division as DivisionKey) ||
     "open";
 
-  // 2) Build daily windows with submissions and compute per-habit awards with reasons
   const byDate = new Map<string, RawSub[]>();
   for (const r of rawMine) {
     const list = byDate.get(r.date) || [];
     list.push(r);
     byDate.set(r.date, list);
   }
-  // track per-habit awarded points usage across windows for this member to enforce limits
   const limitsByKey = new Map(
     cfg.checkins.items.map((i) => [i.key, i.limits || []] as const),
   );
   const pointsByKey = new Map(
     cfg.checkins.items.map((i) => [i.key, i.points] as const),
   );
-  const awardedByHabitWindow = new Map<string, Map<string, number>>(); // habit -> windowKey -> points
+  const awardedByHabitWindow = new Map<string, Map<string, number>>();
   function windowKeysFor(habitKey: string, dateYmd: string) {
     const limits = limitsByKey.get(habitKey) || [];
     const keys: Array<{ key: string; max: number; label: string }> = [];
     for (const lim of limits) {
-      if (lim.window === "day")
+      if (lim.window === "day") {
         keys.push({
           key: `day:${dateYmd}`,
           max: lim.maxPoints,
           label: `Daily cap (${lim.maxPoints})`,
         });
-      else if (lim.window === "week")
+      } else if (lim.window === "week") {
         keys.push({
           key: `week:${weekKeyFromYmd(dateYmd, lim.weekStartsOn || "sun")}`,
           max: lim.maxPoints,
           label: `Weekly cap (${lim.maxPoints})`,
         });
-      else if (lim.window === "month")
+      } else if (lim.window === "month") {
         keys.push({
           key: `month:${monthKeyFromYmd(dateYmd)}`,
           max: lim.maxPoints,
           label: `Monthly cap (${lim.maxPoints})`,
         });
-      else if (lim.window === "challenge")
+      } else if (lim.window === "challenge") {
         keys.push({
           key: `challenge:${cfg.challengeWindow.start}-${cfg.challengeWindow.end}`,
           max: lim.maxPoints,
           label: `Challenge cap (${lim.maxPoints})`,
         });
+      }
     }
     return keys;
   }
@@ -547,16 +524,10 @@ export async function computeMemberDetail(
     const subs = (byDate.get(date) || []).sort((a, b) =>
       a.timestamp.localeCompare(b.timestamp),
     );
-    if (subs.length === 0) {
-      // Nothing submitted for this window; skip
-      continue;
-    }
+    if (subs.length === 0) continue;
     const countedIndex = Math.max(0, subs.length - 1);
     const latest = subs[countedIndex];
-    if (!latest) {
-      // Should not happen since subs.length > 0, but guard for type safety
-      continue;
-    }
+    if (!latest) continue;
     const submissionsAudit: DailySubmissionAudit[] = subs.map((s, idx) => {
       const dayOfChallenge =
         Math.round(
@@ -565,7 +536,6 @@ export async function computeMemberDetail(
             (1000 * 60 * 60 * 24),
         ) + 1;
       return {
-        // calculate the day of the challenge base on challengeWindow + checkinWindow
         dayOfChallenge,
         timestamp: s.timestamp,
         checkins: s.checkins,
@@ -594,22 +564,19 @@ export async function computeMemberDetail(
       if (attempted && basePoints > 0) {
         let allow = basePoints;
         for (const wk of windowKeysFor(key, date)) {
-          const hmap =
-            awardedByHabitWindow.get(key) || new Map<string, number>();
-          if (!awardedByHabitWindow.has(key))
+          const hmap = awardedByHabitWindow.get(key) || new Map<string, number>();
+          if (!awardedByHabitWindow.has(key)) {
             awardedByHabitWindow.set(key, hmap);
+          }
           const used = hmap.get(wk.key) ?? 0;
           const remaining = Math.max(0, wk.max - used);
-          if (remaining <= 0) {
-            reasons.push(`${wk.label} reached`);
-          }
+          if (remaining <= 0) reasons.push(`${wk.label} reached`);
           allow = Math.min(allow, remaining);
         }
         awarded = Math.max(0, allow);
         if (awarded < basePoints && reasons.length === 0) {
           reasons.push("Limited by configured cap");
         }
-        // record awarded across windows
         if (awarded > 0) {
           for (const wk of windowKeysFor(key, date)) {
             const hmap = awardedByHabitWindow.get(key)!;
@@ -640,10 +607,7 @@ export async function computeMemberDetail(
     });
   }
 
-  // Habit totals based on computed windows
   const habitTotal = windows.reduce((sum, w) => sum + w.dailyPointsAwarded, 0);
-
-  // Build latest-by-bucket dailies for performance windows using only counted submissions
   const metricRows = submissions.filter((s) => s.member_id === memberId);
   const windowsByMember = extractMetricWindows(metricRows, cfg);
   const w = windowsByMember.get(memberId) || { baseline: {}, final: {} };
@@ -655,10 +619,11 @@ export async function computeMemberDetail(
   for (const spec of cfg.performance.metrics) {
     const baseline = w.baseline[spec.key];
     const final = w.final[spec.key];
-    const direction: "up" | "down" = spec.direction === "down" ? "down" : "up";
+    const direction: "up" | "down" =
+      spec.direction === "down" ? "down" : "up";
     const imp = improvementForMetric(spec.kind, baseline, final, direction);
     const points = spec.scoring({ improvement: imp, baseline, final });
-    const hide = !!(spec as any).sensitive;
+    const hide = !!(spec as { sensitive?: boolean }).sensitive;
     improvements[spec.key] = {
       improvement: imp,
       points,
@@ -668,7 +633,6 @@ export async function computeMemberDetail(
     perfTotal += points;
   }
 
-  // Maintain backward-compatible dailyLogs derived from windows
   const dailyLogs: MemberDailyLog[] = windows
     .map((w) => {
       const sub = w.submissions[w.countedIndex];
@@ -678,7 +642,7 @@ export async function computeMemberDetail(
         dailyPoints: w.dailyPointsAwarded,
         checkins: sub.checkins,
         metrics: sub.metrics,
-      } as MemberDailyLog;
+      };
     })
     .filter((x): x is MemberDailyLog => !!x);
 
@@ -706,12 +670,10 @@ export async function computeLeaderboard(
     loadSubmissions(cfg),
     loadRegisteredMembers(cfg),
   ]);
-  // Latest per (member, date) within challenge window
   const dailies = latestByBucket(submissions, cfg, registrations).sort((a, b) =>
     a.timestamp.localeCompare(b.timestamp),
   );
 
-  // Track last known name and division per member
   const memberName = new Map<string, string>();
   const memberDivision = new Map<string, DivisionKey>();
   for (const d of dailies) {
@@ -750,16 +712,13 @@ export async function computeLeaderboard(
         rank: 0,
       };
     });
-    // sort and apply tie-breakers
     rows.sort((a, b) => {
       if (b.total !== a.total) return b.total - a.total;
-      if (b.performancePoints !== a.performancePoints)
+      if (b.performancePoints !== a.performancePoints) {
         return b.performancePoints - a.performancePoints;
+      }
       if (b.habitPoints !== a.habitPoints) return b.habitPoints - a.habitPoints;
-      // stable hash fallback
-      return (
-        (stableHash(a.member_id) % 1000) - (stableHash(b.member_id) % 1000)
-      );
+      return (stableHash(a.member_id) % 1000) - (stableHash(b.member_id) % 1000);
     });
     rows.forEach((r, i) => (r.rank = i + 1));
     return rows;
@@ -767,24 +726,21 @@ export async function computeLeaderboard(
 
   const nowIso = new Date().toISOString();
   if (division) {
-    const rows = buildDivision(division);
     return {
       challengeId: cfg.id,
       challengeTitle: cfg.title,
       division,
       updatedAt: nowIso,
-      rows,
+      rows: buildDivision(division),
     } satisfies LeaderboardResponse;
   }
 
-  // If no division specified, return the first division by default
   const first = Array.from(divisions)[0] ?? "open";
-  const rows = buildDivision(first);
   return {
     challengeId: cfg.id,
     challengeTitle: cfg.title,
     division: first,
     updatedAt: nowIso,
-    rows,
+    rows: buildDivision(first),
   } satisfies LeaderboardResponse;
 }
