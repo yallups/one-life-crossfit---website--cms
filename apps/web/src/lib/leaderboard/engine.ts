@@ -147,6 +147,13 @@ export function latestByBucket(
 }
 
 export function scoreHabits(dailies: DailyAggregate[], cfg: ChallengeConfig) {
+  return awardHabitPoints(dailies, cfg).totalByMember;
+}
+
+export function awardHabitPoints(
+  dailies: DailyAggregate[],
+  cfg: ChallengeConfig,
+) {
   const pointsByKey = new Map(
     cfg.checkins.items.map((i) => [i.key, i.points] as const),
   );
@@ -155,6 +162,8 @@ export function scoreHabits(dailies: DailyAggregate[], cfg: ChallengeConfig) {
   );
   const cap = cfg.checkins.maxDailyPoints ?? null;
   const totalByMember = new Map<string, number>();
+  const totalByMemberHabit = new Map<string, Map<string, number>>();
+  const awardedByMemberDateHabit = new Map<string, Map<string, number>>();
   const awardedByMemberHabitWindow = new Map<
     string,
     Map<string, Map<string, number>>
@@ -188,6 +197,7 @@ export function scoreHabits(dailies: DailyAggregate[], cfg: ChallengeConfig) {
 
   for (const d of dailies) {
     let dayAward = 0;
+    const perHabitAward = new Map<string, number>();
     for (const [key, value] of Object.entries(d.checkins)) {
       if (!value || !pointsByKey.has(key)) continue;
       const base = pointsByKey.get(key)!;
@@ -206,8 +216,12 @@ export function scoreHabits(dailies: DailyAggregate[], cfg: ChallengeConfig) {
         const remaining = Math.max(0, wk.max - used);
         allowed = Math.min(allowed, remaining);
       }
+      if (cap != null) {
+        allowed = Math.min(allowed, Math.max(0, cap - dayAward));
+      }
       if (allowed > 0) {
         dayAward += allowed;
+        perHabitAward.set(key, (perHabitAward.get(key) ?? 0) + allowed);
         for (const wk of windowKeys) {
           const memberWindows = awardedByMemberHabitWindow.get(d.member_id)!;
           const habitWindows = memberWindows.get(key)!;
@@ -215,10 +229,27 @@ export function scoreHabits(dailies: DailyAggregate[], cfg: ChallengeConfig) {
         }
       }
     }
-    if (cap != null) dayAward = Math.min(dayAward, cap);
     totalByMember.set(d.member_id, (totalByMember.get(d.member_id) ?? 0) + dayAward);
+    if (perHabitAward.size > 0) {
+      const memberHabitTotals =
+        totalByMemberHabit.get(d.member_id) ?? new Map<string, number>();
+      if (!totalByMemberHabit.has(d.member_id)) {
+        totalByMemberHabit.set(d.member_id, memberHabitTotals);
+      }
+      for (const [habitKey, habitAward] of perHabitAward) {
+        memberHabitTotals.set(
+          habitKey,
+          (memberHabitTotals.get(habitKey) ?? 0) + habitAward,
+        );
+      }
+      awardedByMemberDateHabit.set(d.key, perHabitAward);
+    }
   }
-  return totalByMember;
+  return {
+    totalByMember,
+    totalByMemberHabit,
+    awardedByMemberDateHabit,
+  };
 }
 
 export type MetricWindows = {
