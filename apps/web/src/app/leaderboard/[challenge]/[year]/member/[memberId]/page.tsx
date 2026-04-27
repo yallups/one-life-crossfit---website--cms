@@ -132,15 +132,27 @@ export default async function MemberDetailPage(props: {
                               const award = counted
                                 ? w.perHabitAwards?.[h.key]
                                 : undefined;
+                              const awardedPoints =
+                                counted && award
+                                  ? Number(award.awarded ?? 0)
+                                  : attempted
+                                    ? h.points
+                                    : 0;
                               const zeroed =
                                 counted &&
                                 attempted &&
                                 award &&
                                 Number(award.awarded) === 0;
+                              const reduced =
+                                counted &&
+                                attempted &&
+                                award &&
+                                Number(award.awarded) > 0 &&
+                                Number(award.awarded) < Number(award.basePoints);
                               const reasons = zeroed ? award.reasons || [] : [];
                               const title = counted
-                                ? zeroed
-                                  ? `${h.label} — not counted: ${reasons.join("; ")}`
+                                ? zeroed || reduced
+                                  ? `${h.label} — awarded ${awardedPoints} of ${Number(award?.basePoints ?? h.points)}: ${(award?.reasons || []).join("; ")}`
                                   : h.label
                                 : rowTitle || h.label;
                               const baseClasses = [
@@ -154,6 +166,10 @@ export default async function MemberDetailPage(props: {
                                     "line-through opacity-70",
                                     "bg-transparent text-muted-foreground border-dashed border-border",
                                   ])
+                                : reduced
+                                  ? baseClasses.concat([
+                                      "bg-amber-500/15 text-amber-200 border-amber-400",
+                                    ])
                                 : baseClasses;
                               return (
                                 <td
@@ -168,7 +184,9 @@ export default async function MemberDetailPage(props: {
                                   >
                                     {attempted ? "✓" : ""}
                                   </span>
-                                  {attempted ? ` +${h.points}` : ""}
+                                  {attempted
+                                    ? ` +${counted ? awardedPoints : h.points}`
+                                    : ""}
                                 </td>
                               );
                             })}

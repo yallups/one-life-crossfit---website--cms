@@ -1,5 +1,5 @@
 import { DocumentIcon, FolderIcon } from "@sanity/icons";
-import { friendlyWords } from "friendlier-words";
+import { humanId } from "human-id";
 import { getPublishedId, type SanityClient } from "sanity";
 import type { ListItemBuilder, StructureBuilder } from "sanity/structure";
 import { getTitleCase } from "../utils/helper";
@@ -201,7 +201,7 @@ const createFolderListItem = (
   uniqueId: string,
   listItems: SanityListItem[],
 ): ListItemBuilder => {
-  const pageSlug = friendlyWords();
+  const pageSlug = humanId({ separator: "-", capitalize: false });
   const pageTitle = getTitleCase(pageSlug);
 
   return S.listItem()
