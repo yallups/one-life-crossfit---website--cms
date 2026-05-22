@@ -1,5 +1,5 @@
-import type { Metadata } from "next";
 import { cn } from "@workspace/ui/lib/utils";
+import type { Metadata } from "next";
 import { headers } from "next/headers";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -73,6 +73,7 @@ export async function generateMetadata(props: {
 
 export default async function LeaderboardPage(props: {
   params: Promise<{ challenge: string; year: string }>;
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
 }): Promise<ReactElement> {
   const { challenge, year } = await props.params;
   const yearNum = Number(year);

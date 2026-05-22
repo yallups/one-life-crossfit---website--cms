@@ -5,6 +5,7 @@ import { queryRedirects } from "@/lib/sanity/query";
 const nextConfig: NextConfig = {
   transpilePackages: ["@workspace/ui"],
   reactCompiler: true,
+  allowedDevOrigins: ["127.0.0.1"],
   experimental: {
     inlineCss: true,
   },

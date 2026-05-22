@@ -84,6 +84,12 @@ export interface ChallengeConfig {
   checkins: {
     items: CheckinItem[];
     maxDailyPoints?: number | null;
+    creditWindows?: Array<{
+      key: string;
+      start: string;
+      end: string;
+      creditDate?: string;
+    }>;
   };
 
   performance: {

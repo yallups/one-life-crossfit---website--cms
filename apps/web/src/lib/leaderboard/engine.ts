@@ -1,3 +1,7 @@
+import {
+  type BodyCompositionParticipantAnalysis,
+  buildBodyCompositionParticipantAnalyses,
+} from "./body-composition-normalization";
 import { fetchCsvText, parseCsv } from "./csv";
 import {
   calendarDate,
@@ -106,41 +110,89 @@ export type DailyAggregate = {
   timestamp: string; // latest per bucket
 };
 
+function creditCheckinWindow(
+  submission: SubmissionRow,
+  cfg: ChallengeConfig,
+  scoredDate: string,
+) {
+  const checkins = submission.checkins ?? {};
+  if (
+    isWithinYmdRange(
+      scoredDate,
+      cfg.challengeWindow.start,
+      cfg.challengeWindow.end,
+    )
+  ) {
+    return {
+      date: scoredDate,
+      checkins,
+      preserveCheckins: {},
+    };
+  }
+
+  const calendar = calendarDate(submission.timestamp, cfg.timezone);
+  const creditedCheckins: Record<string, boolean> = {};
+  let creditDate: string | undefined;
+
+  for (const window of cfg.checkins.creditWindows ?? []) {
+    if (!checkins[window.key]) continue;
+    if (!isWithinYmdRange(calendar, window.start, window.end)) continue;
+    creditedCheckins[window.key] = true;
+    creditDate = window.creditDate ?? cfg.challengeWindow.start;
+  }
+
+  if (!Object.keys(creditedCheckins).length || !creditDate) return undefined;
+
+  return {
+    date: creditDate,
+    checkins: creditedCheckins,
+    preserveCheckins: creditedCheckins,
+  };
+}
+
 export function latestByBucket(
   subs: SubmissionRow[],
   cfg: ChallengeConfig,
   registrations: Map<string, Member> = new Map(),
 ): DailyAggregate[] {
   const latest = new Map<string, DailyAggregate>();
+  const preservedCheckinsByBucket = new Map<string, Record<string, boolean>>();
   for (const s of subs) {
-    const date = scoringDate(
+    const scoredDate = scoringDate(
       s.timestamp,
       cfg.timezone,
       cfg.checkinWindow.startHour,
     );
-    if (
-      !isWithinYmdRange(
-        date,
-        cfg.challengeWindow.start,
-        cfg.challengeWindow.end,
-      )
-    )
-      continue;
+    const credited = creditCheckinWindow(s, cfg, scoredDate);
+    if (!credited) continue;
     const resolved = resolveSubmissionMember(s, cfg, registrations);
-    const key = `${s.member_id}|${date}`;
+    const key = `${s.member_id}|${credited.date}`;
+    const preserved = preservedCheckinsByBucket.get(key) ?? {};
+    if (Object.keys(credited.preserveCheckins).length > 0) {
+      for (const [checkinKey, value] of Object.entries(
+        credited.preserveCheckins,
+      )) {
+        if (value) preserved[checkinKey] = true;
+      }
+      preservedCheckinsByBucket.set(key, preserved);
+    }
     const rec: DailyAggregate = {
       key,
       member_id: s.member_id,
       member_name: resolved.memberName,
       division: resolved.division,
-      date,
-      checkins: s.checkins ?? {},
+      date: credited.date,
+      checkins: { ...credited.checkins, ...preserved },
       metrics: s.metrics ?? {},
       timestamp: s.timestamp,
     };
     const prev = latest.get(key);
     if (!prev || new Date(s.timestamp) > new Date(prev.timestamp)) {
+      rec.metrics = { ...(prev?.metrics ?? {}), ...rec.metrics };
       latest.set(key, rec);
+    } else if (Object.keys(credited.preserveCheckins).length > 0) {
+      prev.checkins = { ...prev.checkins, ...credited.preserveCheckins };
+      prev.metrics = { ...rec.metrics, ...prev.metrics };
     }
   }
   return Array.from(latest.values());
@@ -204,7 +256,8 @@ export function awardHabitPoints(
       const windowKeys = windowKeysFor(key, d.date);
       let allowed = base;
       for (const wk of windowKeys) {
-        const memberWindows = awardedByMemberHabitWindow.get(d.member_id) || new Map();
+        const memberWindows =
+          awardedByMemberHabitWindow.get(d.member_id) || new Map();
         if (!awardedByMemberHabitWindow.has(d.member_id)) {
           awardedByMemberHabitWindow.set(d.member_id, memberWindows);
         }
@@ -229,7 +282,10 @@ export function awardHabitPoints(
         }
       }
     }
-    totalByMember.set(d.member_id, (totalByMember.get(d.member_id) ?? 0) + dayAward);
+    totalByMember.set(
+      d.member_id,
+      (totalByMember.get(d.member_id) ?? 0) + dayAward,
+    );
     if (perHabitAward.size > 0) {
       const memberHabitTotals =
         totalByMemberHabit.get(d.member_id) ?? new Map<string, number>();
@@ -257,7 +313,10 @@ export type MetricWindows = {
   final: Record<string, number | undefined>;
 };
 
-type MetricSourceRow = Pick<SubmissionRow, "member_id" | "metrics" | "timestamp">;
+type MetricSourceRow = Pick<
+  SubmissionRow,
+  "member_id" | "metrics" | "timestamp"
+>;
 
 function normalizeMetricRows(
   metricRows: MetricSourceRow[],
@@ -399,6 +458,63 @@ export function scorePerformance(
   return perfPoints;
 }
 
+function bfpScoreOverrides(args: {
+  cfg: ChallengeConfig;
+  submissions: SubmissionRow[];
+  memberIds: string[];
+  memberName: Map<string, string>;
+  memberDivision: Map<string, DivisionKey>;
+}) {
+  const { cfg, memberDivision, memberIds, memberName, submissions } = args;
+  if (!usesAdjustedBfpScoring(cfg)) return undefined;
+  if (
+    !cfg.performance.metrics.some(
+      (metric) => metric.key === "inbody_body_fat_pct",
+    )
+  ) {
+    return undefined;
+  }
+
+  const memberMeta = new Map(
+    memberIds.map((memberId) => [
+      memberId,
+      {
+        name: memberName.get(memberId) ?? memberId,
+        division: memberDivision.get(memberId) ?? "open",
+      },
+    ]),
+  );
+  const today = todayYmd(cfg.timezone);
+  const end =
+    today < cfg.challengeWindow.start
+      ? cfg.challengeWindow.start
+      : today > cfg.challengeWindow.end
+        ? cfg.challengeWindow.end
+        : today;
+  const analyses = buildBodyCompositionParticipantAnalyses({
+    cfg,
+    submissions,
+    memberIds,
+    memberMeta,
+    end,
+    weightKey: "body_weight_lb",
+    bodyFatPctKey: "inbody_body_fat_pct",
+    fatMassKey: "inbody_fat_mass_lb",
+    muscleKey: "inbody_muscle_mass_lb",
+  });
+
+  return new Map(
+    analyses.map((analysis) => [
+      analysis.memberId,
+      analysis.muscleStabilizedScore?.points ?? 0,
+    ]),
+  );
+}
+
+export function usesAdjustedBfpScoring(cfg: ChallengeConfig) {
+  return cfg.slug === "summer-shred-challenge" && cfg.year === 2026;
+}
+
 export interface MemberDailyLog {
   date: string;
   dailyPoints: number;
@@ -444,6 +560,7 @@ export interface MemberDetailResponse {
     string,
     { improvement: number; points: number; baseline?: number; final?: number }
   >;
+  bodyComposition?: BodyCompositionParticipantAnalysis;
   updatedAt: string;
 }
 
@@ -460,6 +577,7 @@ export async function computeMemberDetail(
     timestamp: string;
     date: string;
     checkins: Record<string, boolean>;
+    preserveCheckins: Record<string, boolean>;
     metrics: Record<string, number>;
   };
   const rawMine: RawSub[] = [];
@@ -470,19 +588,13 @@ export async function computeMemberDetail(
       cfg.timezone,
       cfg.checkinWindow.startHour,
     );
-    if (
-      !isWithinYmdRange(
-        date,
-        cfg.challengeWindow.start,
-        cfg.challengeWindow.end,
-      )
-    ) {
-      continue;
-    }
+    const credited = creditCheckinWindow(s, cfg, date);
+    if (!credited) continue;
     rawMine.push({
       timestamp: s.timestamp,
-      date,
-      checkins: s.checkins ?? {},
+      date: credited.date,
+      checkins: credited.checkins,
+      preserveCheckins: credited.preserveCheckins,
       metrics: s.metrics ?? {},
     });
   }
@@ -559,6 +671,19 @@ export async function computeMemberDetail(
     const countedIndex = Math.max(0, subs.length - 1);
     const latest = subs[countedIndex];
     if (!latest) continue;
+    const preservedCheckins: Record<string, boolean> = {};
+    const mergedMetrics: Record<string, number> = {};
+    for (const sub of subs) {
+      Object.assign(mergedMetrics, sub.metrics);
+      for (const [checkinKey, value] of Object.entries(sub.preserveCheckins)) {
+        if (value) preservedCheckins[checkinKey] = true;
+      }
+    }
+    const counted: RawSub = {
+      ...latest,
+      checkins: { ...latest.checkins, ...preservedCheckins },
+      metrics: mergedMetrics,
+    };
     const submissionsAudit: DailySubmissionAudit[] = subs.map((s, idx) => {
       const dayOfChallenge =
         Math.round(
@@ -585,7 +710,6 @@ export async function computeMemberDetail(
       };
     });
 
-    const counted = latest;
     const perHabitAwards: Record<string, HabitAwardDetail> = {};
     let dailyBeforeCap = 0;
     for (const [key, basePoints] of pointsByKey.entries()) {
@@ -595,7 +719,8 @@ export async function computeMemberDetail(
       if (attempted && basePoints > 0) {
         let allow = basePoints;
         for (const wk of windowKeysFor(key, date)) {
-          const hmap = awardedByHabitWindow.get(key) || new Map<string, number>();
+          const hmap =
+            awardedByHabitWindow.get(key) || new Map<string, number>();
           if (!awardedByHabitWindow.has(key)) {
             awardedByHabitWindow.set(key, hmap);
           }
@@ -640,6 +765,30 @@ export async function computeMemberDetail(
 
   const habitTotal = windows.reduce((sum, w) => sum + w.dailyPointsAwarded, 0);
   const metricRows = submissions.filter((s) => s.member_id === memberId);
+  const bodyComposition = usesAdjustedBfpScoring(cfg)
+    ? buildBodyCompositionParticipantAnalyses({
+        cfg,
+        submissions,
+        memberIds: [memberId],
+        memberMeta: new Map([
+          [
+            memberId,
+            {
+              name: member_name,
+              division,
+            },
+          ],
+        ]),
+        end:
+          todayYmd(cfg.timezone) > cfg.challengeWindow.end
+            ? cfg.challengeWindow.end
+            : todayYmd(cfg.timezone),
+        weightKey: "body_weight_lb",
+        bodyFatPctKey: "inbody_body_fat_pct",
+        fatMassKey: "inbody_fat_mass_lb",
+        muscleKey: "inbody_muscle_mass_lb",
+      })[0]
+    : undefined;
   const windowsByMember = extractMetricWindows(metricRows, cfg);
   const w = windowsByMember.get(memberId) || { baseline: {}, final: {} };
   const improvements: Record<
@@ -647,13 +796,26 @@ export async function computeMemberDetail(
     { improvement: number; points: number; baseline?: number; final?: number }
   > = {};
   let perfTotal = 0;
-  for (const spec of cfg.performance.metrics) {
+  const performanceMetricsToScore = usesAdjustedBfpScoring(cfg)
+    ? cfg.performance.metrics.filter(
+        (spec) => spec.key === "inbody_body_fat_pct",
+      )
+    : cfg.performance.metrics;
+
+  for (const spec of performanceMetricsToScore) {
     const baseline = w.baseline[spec.key];
     const final = w.final[spec.key];
-    const direction: "up" | "down" =
-      spec.direction === "down" ? "down" : "up";
-    const imp = improvementForMetric(spec.kind, baseline, final, direction);
-    const points = spec.scoring({ improvement: imp, baseline, final });
+    const direction: "up" | "down" = spec.direction === "down" ? "down" : "up";
+    const adjustedBfpScore =
+      usesAdjustedBfpScoring(cfg) && spec.key === "inbody_body_fat_pct"
+        ? bodyComposition?.muscleStabilizedScore
+        : undefined;
+    const imp =
+      adjustedBfpScore?.bodyFatPctDrop ??
+      improvementForMetric(spec.kind, baseline, final, direction);
+    const points =
+      adjustedBfpScore?.points ??
+      spec.scoring({ improvement: imp, baseline, final });
     const hide = !!(spec as { sensitive?: boolean }).sensitive;
     improvements[spec.key] = {
       improvement: imp,
@@ -689,6 +851,7 @@ export async function computeMemberDetail(
     dailyLogs,
     dailyWindows: windows,
     improvements,
+    bodyComposition,
     updatedAt: new Date().toISOString(),
   };
 }
@@ -712,8 +875,17 @@ export async function computeLeaderboard(
     memberDivision.set(d.member_id, d.division);
   }
 
+  const allMemberIds = Array.from(memberDivision.keys());
   const habitByMember = scoreHabits(dailies, cfg);
-  const perfByMember = scorePerformance(submissions, cfg, memberDivision);
+  const rawPerfByMember = scorePerformance(submissions, cfg, memberDivision);
+  const bfpPerfOverride = bfpScoreOverrides({
+    cfg,
+    submissions,
+    memberIds: allMemberIds,
+    memberName,
+    memberDivision,
+  });
+  const perfByMember = bfpPerfOverride ?? rawPerfByMember;
 
   const divisions = new Set<DivisionKey>(
     cfg.divisions.keys.length
@@ -749,7 +921,9 @@ export async function computeLeaderboard(
         return b.performancePoints - a.performancePoints;
       }
       if (b.habitPoints !== a.habitPoints) return b.habitPoints - a.habitPoints;
-      return (stableHash(a.member_id) % 1000) - (stableHash(b.member_id) % 1000);
+      return (
+        (stableHash(a.member_id) % 1000) - (stableHash(b.member_id) % 1000)
+      );
     });
     rows.forEach((r, i) => (r.rank = i + 1));
     return rows;

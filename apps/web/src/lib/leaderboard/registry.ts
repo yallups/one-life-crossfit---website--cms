@@ -609,7 +609,8 @@ export const summerShred2025: ChallengeConfig = {
   },
 };
 
-const SUMMER_SHRED_2026_SHEET_ID = "1_cEs6UpI02eS1RQtsZTNGwNBajzzMSXaYToZDZZUVjk";
+const SUMMER_SHRED_2026_SHEET_ID =
+  "1_cEs6UpI02eS1RQtsZTNGwNBajzzMSXaYToZDZZUVjk";
 const SUMMER_SHRED_2026_FORM_RESPONSES_GID = "1595997590";
 const SUMMER_SHRED_2026_REGISTRATION_TAB = "Registration";
 
@@ -620,12 +621,7 @@ function normalizeEmail(value?: string) {
 function normalizeDivision(value?: string): "men" | "women" | undefined {
   const raw = (value ?? "").toString().trim().toLowerCase();
   if (!raw) return undefined;
-  if (
-    raw === "men" ||
-    raw === "mens" ||
-    raw === "male" ||
-    raw === "m"
-  ) {
+  if (raw === "men" || raw === "mens" || raw === "male" || raw === "m") {
     return "men";
   }
   if (
@@ -666,9 +662,9 @@ function mapSummerShred2026RegistrationRow(
 ): Member | undefined {
   const id = normalizeEmail(
     row["Email"] ||
-    row["Email Address"] ||
-    row["Member Email"] ||
-    row["member_id"],
+      row["Email Address"] ||
+      row["Member Email"] ||
+      row["member_id"],
   );
   if (!id) return undefined;
 
@@ -685,11 +681,11 @@ function mapSummerShred2026RegistrationRow(
   const name = rawName.toString().trim() || id.split("@")[0] || id;
   const division = normalizeDivision(
     row["Division"] ||
-    row["division"] ||
-    row["Sex"] ||
-    row["Gender"] ||
-    row["Category"] ||
-    row["Group"],
+      row["division"] ||
+      row["Sex"] ||
+      row["Gender"] ||
+      row["Category"] ||
+      row["Group"],
   );
 
   return {
@@ -754,9 +750,17 @@ export const summerShred2026: ChallengeConfig = {
         limits: [{ window: "week", maxPoints: 10, weekStartsOn: "mon" }],
       },
     ],
+    creditWindows: [
+      {
+        key: "inbody_scan",
+        start: "2026-04-04",
+        end: "2026-04-04",
+        creditDate: "2026-04-05",
+      },
+    ],
   },
   performance: {
-    baselineWindow: { start: "2026-04-05", end: "2026-05-17" },
+    baselineWindow: { start: "2026-04-04", end: "2026-05-17" },
     finalWindow: { start: "2026-04-05", end: "2026-05-17" },
     liveScoring: { mode: "latest_to_date", lockAfterEnd: true },
     metrics: [
@@ -852,7 +856,8 @@ export const summerShred2026: ChallengeConfig = {
       bodybuilding: truthy(row["Body Building 🏋️"]),
       social_media: truthy(row["Social media 🤳"]),
       inbody_scan: completedSummerShred2026InBodyScan(
-        row["Completed weekly InBody Scan 📉"] || row["Completed InBody Scan 📉"],
+        row["Completed weekly InBody Scan 📉"] ||
+          row["Completed InBody Scan 📉"],
       ),
     };
 

@@ -1,17 +1,21 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
+import { buildBodyCompositionParticipantAnalyses } from "@/lib/leaderboard/body-composition-normalization";
 import {
   isWithinYmdRange,
   monthKeyFromYmd,
   scoringDate,
+  todayYmd,
   weekKeyFromYmd,
 } from "@/lib/leaderboard/date";
 import {
   extractMetricWindows,
   latestByBucket,
+  loadRegisteredMembers,
   loadSubmissions,
   scoreHabits,
   scorePerformance,
+  usesAdjustedBfpScoring,
 } from "@/lib/leaderboard/engine";
 import { getChallengeConfig } from "@/lib/leaderboard/registry";
 import { roundTo } from "@/lib/leaderboard/scoring";
@@ -142,12 +146,15 @@ export async function GET(
   }
 
   try {
-    // Load all submissions
-    const submissions = await loadSubmissions(cfg);
+    // Load all submissions and registration metadata
+    const [submissions, registrations] = await Promise.all([
+      loadSubmissions(cfg),
+      loadRegisteredMembers(cfg),
+    ]);
 
     // Get daily aggregates (latest per member per day)
-    const dailies = latestByBucket(submissions, cfg).sort((a, b) =>
-      a.timestamp.localeCompare(b.timestamp),
+    const dailies = latestByBucket(submissions, cfg, registrations).sort(
+      (a, b) => a.timestamp.localeCompare(b.timestamp),
     );
 
     // Track member metadata
@@ -157,10 +164,51 @@ export async function GET(
       memberName.set(d.member_id, d.member_name);
       memberDivision.set(d.member_id, d.division);
     }
+    const memberIds = Array.from(memberDivision.keys());
+    const today = todayYmd(cfg.timezone);
+    const challengeToDateEnd =
+      today < cfg.challengeWindow.start
+        ? cfg.challengeWindow.start
+        : today > cfg.challengeWindow.end
+          ? cfg.challengeWindow.end
+          : today;
+    const bodyCompositionByMember = usesAdjustedBfpScoring(cfg)
+      ? new Map(
+          buildBodyCompositionParticipantAnalyses({
+            cfg,
+            submissions,
+            memberIds,
+            memberMeta: new Map(
+              memberIds.map((memberId) => [
+                memberId,
+                {
+                  name: memberName.get(memberId) ?? memberId,
+                  division: memberDivision.get(memberId) ?? "open",
+                },
+              ]),
+            ),
+            end: challengeToDateEnd,
+            weightKey: "body_weight_lb",
+            bodyFatPctKey: "inbody_body_fat_pct",
+            fatMassKey: "inbody_fat_mass_lb",
+            muscleKey: "inbody_muscle_mass_lb",
+          }).map((analysis) => [analysis.memberId, analysis]),
+        )
+      : new Map();
 
     // Calculate scores
     const habitByMember = scoreHabits(dailies, cfg);
-    const perfByMember = scorePerformance(submissions, cfg, memberDivision);
+    const rawPerfByMember = scorePerformance(submissions, cfg, memberDivision);
+    const adjustedBfpPerfByMember = usesAdjustedBfpScoring(cfg)
+      ? new Map(
+          memberIds.map((memberId) => [
+            memberId,
+            bodyCompositionByMember.get(memberId)?.muscleStabilizedScore
+              ?.points ?? 0,
+          ]),
+        )
+      : undefined;
+    const perfByMember = adjustedBfpPerfByMember ?? rawPerfByMember;
     const metricWindowsByMember = extractMetricWindows(submissions, cfg);
 
     // Group by division
@@ -378,13 +426,18 @@ export async function GET(
           const final = metricWindows.final[spec.key];
           const direction: "up" | "down" =
             spec.direction === "down" ? "down" : "up";
-          const improvement = improvementForMetric(
-            spec.kind,
-            baseline,
-            final,
-            direction,
-          );
-          const points = spec.scoring({ improvement, baseline, final });
+          const adjustedBfpScore =
+            usesAdjustedBfpScoring(cfg) && spec.key === "inbody_body_fat_pct"
+              ? bodyCompositionByMember.get(memberId)?.muscleStabilizedScore
+              : undefined;
+          const improvement =
+            adjustedBfpScore?.bodyFatPctDrop ??
+            improvementForMetric(spec.kind, baseline, final, direction);
+          const points =
+            adjustedBfpScore?.points ??
+            (usesAdjustedBfpScoring(cfg)
+              ? 0
+              : spec.scoring({ improvement, baseline, final }));
 
           const hide = Boolean(
             (spec as { sensitive?: boolean }).sensitive ?? false,

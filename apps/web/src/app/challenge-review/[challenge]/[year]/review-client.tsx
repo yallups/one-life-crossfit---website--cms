@@ -1,9 +1,10 @@
 "use client";
 
-import type { RefObject } from "react";
-import { useEffect, useMemo, useRef, useState, useTransition } from "react";
-import { useRouter } from "next/navigation";
 import { toPng } from "html-to-image";
+import { useRouter } from "next/navigation";
+import type { ReactNode, RefObject } from "react";
+import { useEffect, useMemo, useRef, useState, useTransition } from "react";
+import type { LegendPayload } from "recharts";
 import {
   Bar,
   BarChart,
@@ -12,7 +13,7 @@ import {
   Legend,
   Line,
   LineChart,
-  ResponsiveContainer,
+  ReferenceLine,
   Scatter,
   ScatterChart,
   Tooltip,
@@ -39,6 +40,20 @@ type BodyCompositionMetricKey =
   | "totalFatMass"
   | "averageBodyFatPct";
 
+type ParticipantChartMetricKey =
+  | "bodyWeight"
+  | "reportedFatMass"
+  | "muscleMass"
+  | "bodyFatPct"
+  | "muscleStabilizedBodyFatPct";
+
+type ParticipantChartAxisId = "pounds" | "pct";
+
+type ChartFrameProps = {
+  children: (size: { height: number; width: number }) => ReactNode;
+  className: string;
+};
+
 const CHART_COLORS = [
   "#f4c95d",
   "#ff8f6b",
@@ -51,6 +66,60 @@ const CHART_COLORS = [
   "#f2adff",
   "#8dc6ff",
 ];
+
+const PARTICIPANT_CHART_METRICS = [
+  "bodyWeight",
+  "muscleMass",
+  "reportedFatMass",
+  "bodyFatPct",
+  "muscleStabilizedBodyFatPct",
+] as const satisfies ParticipantChartMetricKey[];
+
+const DEFAULT_HIDDEN_PARTICIPANT_CHART_METRICS = {} satisfies Partial<
+  Record<ParticipantChartMetricKey, boolean>
+>;
+
+function ChartFrame({ children, className }: ChartFrameProps) {
+  const frameRef = useRef<HTMLDivElement | null>(null);
+  const [size, setSize] = useState({ height: 0, width: 0 });
+
+  useEffect(() => {
+    const measure = () => {
+      const rect = frameRef.current?.getBoundingClientRect();
+      if (!rect) return;
+      const width = Math.round(rect.width);
+      const height = Math.round(rect.height);
+      if (width <= 0 || height <= 0) return;
+      setSize((current) =>
+        current.width === width && current.height === height
+          ? current
+          : { height, width },
+      );
+    };
+
+    measure();
+    const frame = window.requestAnimationFrame(measure);
+    const observer =
+      typeof ResizeObserver === "undefined"
+        ? undefined
+        : new ResizeObserver(measure);
+
+    if (frameRef.current) observer?.observe(frameRef.current);
+    window.addEventListener("resize", measure);
+
+    return () => {
+      window.cancelAnimationFrame(frame);
+      observer?.disconnect();
+      window.removeEventListener("resize", measure);
+    };
+  }, []);
+
+  return (
+    <div className={className} ref={frameRef}>
+      {size.width > 0 && size.height > 0 ? children(size) : null}
+    </div>
+  );
+}
 
 function formatPercent(value: number, decimals = 0) {
   return `${(value * 100).toFixed(decimals)}%`;
@@ -149,7 +218,8 @@ function SummaryCard({
         </div>
         <div>
           <div className="text-4xl font-black text-white">
-            {summary.totalSubmittedSubmissions}/{summary.totalExpectedSubmissions}
+            {summary.totalSubmittedSubmissions}/
+            {summary.totalExpectedSubmissions}
           </div>
           <div className="text-sm text-white/70">Submitted check-ins</div>
         </div>
@@ -170,6 +240,13 @@ function SummaryCard({
             {summary.participantsImprovedBodyFatPct}/{summary.totalParticipants}
           </div>
           <div className="text-sm text-white/70">Improved body fat %</div>
+        </div>
+        <div>
+          <div className="text-2xl font-bold text-white">
+            {summary.bodyCompositionEligibleParticipants}/
+            {summary.totalParticipants}
+          </div>
+          <div className="text-sm text-white/70">Score-eligible scans</div>
         </div>
       </div>
     </div>
@@ -261,7 +338,7 @@ function normalizeTrendData(
         key,
         view === "rate"
           ? (bucket.habitRates[key] ?? 0) * 100
-          : bucket.habitCompletions[key] ?? 0,
+          : (bucket.habitCompletions[key] ?? 0),
       ]),
     ),
   }));
@@ -284,6 +361,42 @@ function formatBodyCompositionDelta(
   const sign = value > 0 ? "+" : "";
   if (key === "averageBodyFatPct") return `${sign}${value.toFixed(1)}%`;
   return `${sign}${value.toFixed(1)} lb`;
+}
+
+function formatScoreValue(
+  value: number | undefined,
+  suffix = "",
+  decimals = 1,
+) {
+  if (value == null || !Number.isFinite(value)) return "—";
+  return `${value.toFixed(decimals)}${suffix}`;
+}
+
+function formatScoreRange(
+  start: number | undefined,
+  final: number | undefined,
+  suffix = "",
+  decimals = 1,
+) {
+  if (
+    start == null ||
+    final == null ||
+    !Number.isFinite(start) ||
+    !Number.isFinite(final)
+  ) {
+    return "—";
+  }
+  return `${start.toFixed(decimals)}${suffix} to ${final.toFixed(decimals)}${suffix}`;
+}
+
+function isFiniteMetric(value: unknown): value is number {
+  return typeof value === "number" && Number.isFinite(value);
+}
+
+function relativeChange(value: number | undefined, baseline: number | undefined) {
+  return isFiniteMetric(value) && isFiniteMetric(baseline)
+    ? Number((value - baseline).toFixed(1))
+    : undefined;
 }
 
 function bodyCompositionMetricLabel(key: BodyCompositionMetricKey) {
@@ -312,6 +425,120 @@ function bodyCompositionMetricColor(key: BodyCompositionMetricKey) {
   }
 }
 
+function participantChartMetricLabel(key: ParticipantChartMetricKey) {
+  switch (key) {
+    case "bodyWeight":
+      return "Weight change";
+    case "reportedFatMass":
+      return "Fat mass change";
+    case "muscleMass":
+      return "SMM change";
+    case "bodyFatPct":
+      return "BFP change";
+    case "muscleStabilizedBodyFatPct":
+      return "BFP adjusted* change";
+  }
+}
+
+function participantChartMetricColor(key: ParticipantChartMetricKey) {
+  switch (key) {
+    case "bodyWeight":
+      return "#f4c95d";
+    case "reportedFatMass":
+      return "#f97171";
+    case "muscleMass":
+      return "#c5a3ff";
+    case "bodyFatPct":
+      return "#86a8ff";
+    case "muscleStabilizedBodyFatPct":
+      return "#7ae0b5";
+  }
+}
+
+function participantChartMetricAxis(
+  key: ParticipantChartMetricKey,
+): ParticipantChartAxisId {
+  switch (key) {
+    case "bodyFatPct":
+    case "muscleStabilizedBodyFatPct":
+      return "pct";
+    case "bodyWeight":
+    case "reportedFatMass":
+    case "muscleMass":
+      return "pounds";
+  }
+}
+
+function participantChartStrokeDasharray(key: ParticipantChartMetricKey) {
+  switch (key) {
+    case "muscleStabilizedBodyFatPct":
+      return "8 5";
+    default:
+      return undefined;
+  }
+}
+
+function participantChartStrokeWidth(key: ParticipantChartMetricKey) {
+  switch (key) {
+    case "muscleStabilizedBodyFatPct":
+      return 3;
+    default:
+      return 2;
+  }
+}
+
+function participantChartDot(key: ParticipantChartMetricKey) {
+  return [
+    "bodyFatPct",
+    "bodyWeight",
+    "reportedFatMass",
+    "muscleMass",
+  ].includes(key)
+    ? { r: 3 }
+    : false;
+}
+
+function isParticipantChartMetricKey(
+  value: unknown,
+): value is ParticipantChartMetricKey {
+  return (
+    typeof value === "string" &&
+    (PARTICIPANT_CHART_METRICS as readonly string[]).includes(value)
+  );
+}
+
+function formatParticipantChartAxisTick(value: number) {
+  return Math.abs(value) < 0.05 ? "Day 0" : `Day ${Math.round(value)}`;
+}
+
+function formatPoundsAxisTick(value: number) {
+  const sign = value > 0 ? "+" : "";
+  return `${sign}${value.toFixed(0)}`;
+}
+
+function formatPercentAxisTick(value: number) {
+  const sign = value > 0 ? "+" : "";
+  const formatted = value.toFixed(1);
+  return `${sign}${formatted.endsWith(".0") ? formatted.slice(0, -2) : formatted}`;
+}
+
+function formatParticipantChartTooltipLabel(
+  value: unknown,
+  payload: ReadonlyArray<{ payload?: { chartLabel?: string; day?: number } }>,
+) {
+  const point = payload[0]?.payload;
+  const day =
+    typeof point?.day === "number"
+      ? point.day
+      : typeof value === "number"
+        ? value
+        : Number(value);
+  const dayLabel = Number.isFinite(day)
+    ? `Day ${day.toFixed(Math.abs(day % 1) > 0.05 ? 1 : 0)}`
+    : "Day —";
+  return point?.chartLabel ? `${point.chartLabel} · ${dayLabel}` : dayLabel;
+}
+
 export default function ReviewClient({
   basePath,
   data,
@@ -330,9 +557,16 @@ export default function ReviewClient({
   );
   const [bodyCompositionMetric, setBodyCompositionMetric] =
     useState<BodyCompositionMetricKey>("totalWeight");
+  const [selectedBodyCompositionMemberId, setSelectedBodyCompositionMemberId] =
+    useState(data.bodyComposition.participants[0]?.memberId ?? "");
+  const [hiddenParticipantChartMetrics, setHiddenParticipantChartMetrics] =
+    useState<Partial<Record<ParticipantChartMetricKey, boolean>>>(
+      DEFAULT_HIDDEN_PARTICIPANT_CHART_METRICS,
+    );
   const summaryRef = useRef<HTMLDivElement>(null);
   const habitsRef = useRef<HTMLDivElement>(null);
   const trendsRef = useRef<HTMLDivElement>(null);
+  const normalizedBodyCompositionRef = useRef<HTMLDivElement>(null);
   const outcomeRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -346,13 +580,135 @@ export default function ReviewClient({
     }
   }, [data.successMetrics, successMetric]);
 
+  useEffect(() => {
+    if (
+      !data.bodyComposition.participants.some(
+        (participant) =>
+          participant.memberId === selectedBodyCompositionMemberId,
+      )
+    ) {
+      setSelectedBodyCompositionMemberId(
+        data.bodyComposition.participants[0]?.memberId ?? "",
+      );
+    }
+  }, [data.bodyComposition.participants, selectedBodyCompositionMemberId]);
+
   const habitLookup = useMemo(
-    () => Object.fromEntries(data.habits.map((habit) => [habit.key, habit.label])),
+    () =>
+      Object.fromEntries(data.habits.map((habit) => [habit.key, habit.label])),
     [data.habits],
   );
   const trendBuckets =
     trendGranularity === "weekly" ? data.trends.weekly : data.trends.daily;
   const bodyCompositionBuckets = data.bodyComposition.daily;
+  const selectedBodyCompositionParticipant =
+    data.bodyComposition.participants.find(
+      (participant) => participant.memberId === selectedBodyCompositionMemberId,
+    ) ?? data.bodyComposition.participants[0];
+  const bodyCompositionChartData = selectedBodyCompositionParticipant
+    ? (() => {
+        const scans = selectedBodyCompositionParticipant.scans;
+        const baselineWeight = scans.find((scan) =>
+          isFiniteMetric(scan.bodyWeight),
+        )?.bodyWeight;
+        const baselineMuscleMass = scans.find((scan) =>
+          isFiniteMetric(scan.muscleMass),
+        )?.muscleMass;
+        const baselineFatMass = scans.find((scan) =>
+          isFiniteMetric(scan.reportedFatMass),
+        )?.reportedFatMass;
+        const baselineBodyFatPct = scans.find((scan) =>
+          isFiniteMetric(scan.bodyFatPct),
+        )?.bodyFatPct;
+        const baselineAdjustedBodyFatPct = scans.find((scan) =>
+          isFiniteMetric(scan.muscleStabilizedBodyFatPct),
+        )?.muscleStabilizedBodyFatPct;
+
+        return scans.map((scan, index) => ({
+          ...scan,
+          bodyWeight: relativeChange(scan.bodyWeight, baselineWeight),
+          muscleMass: relativeChange(scan.muscleMass, baselineMuscleMass),
+          reportedFatMass: relativeChange(scan.reportedFatMass, baselineFatMass),
+          bodyFatPct: relativeChange(scan.bodyFatPct, baselineBodyFatPct),
+          muscleStabilizedBodyFatPct: relativeChange(
+            scan.muscleStabilizedBodyFatPct,
+            baselineAdjustedBodyFatPct,
+          ),
+          chartLabel:
+            scans.filter((candidate) => candidate.date === scan.date).length > 1
+              ? `${scan.label} #${index + 1}`
+              : scan.label,
+        }));
+      })()
+    : [];
+  const rawBodyCompositionComparison = useMemo(() => {
+    const scoreScans =
+      selectedBodyCompositionParticipant?.scans.filter(
+        (scan) =>
+          isFiniteMetric(scan.bodyWeight) && isFiniteMetric(scan.bodyFatPct),
+      ) ?? [];
+    const start = scoreScans[0];
+    const final = scoreScans.at(-1);
+
+    if (
+      !start ||
+      !final ||
+      !isFiniteMetric(start.bodyFatPct) ||
+      !isFiniteMetric(final.bodyFatPct)
+    ) {
+      return undefined;
+    }
+
+    const bodyFatPctDrop = Math.max(0, start.bodyFatPct - final.bodyFatPct);
+
+    return {
+      start,
+      final,
+      bodyFatPctDrop,
+      points: bodyFatPctDrop * 80,
+      weightLoss:
+        isFiniteMetric(start.bodyWeight) && isFiniteMetric(final.bodyWeight)
+          ? start.bodyWeight - final.bodyWeight
+          : undefined,
+      fatMassLoss:
+        isFiniteMetric(start.reportedFatMass) &&
+        isFiniteMetric(final.reportedFatMass)
+          ? start.reportedFatMass - final.reportedFatMass
+          : undefined,
+      muscleMassChange:
+        isFiniteMetric(start.muscleMass) && isFiniteMetric(final.muscleMass)
+          ? final.muscleMass - start.muscleMass
+          : undefined,
+    };
+  }, [selectedBodyCompositionParticipant]);
+  const participantChartMetrics = PARTICIPANT_CHART_METRICS;
+  const visibleParticipantChartAxes = useMemo(
+    () =>
+      new Set<ParticipantChartAxisId>(
+        participantChartMetrics
+          .filter((metric) => !hiddenParticipantChartMetrics[metric])
+          .map(participantChartMetricAxis),
+      ),
+    [hiddenParticipantChartMetrics, participantChartMetrics],
+  );
+  const participantChartMargin = {
+    top: 16,
+    right: visibleParticipantChartAxes.has("pct") ? 18 : 12,
+    left: 4,
+    bottom: 8,
+  };
+  const participantChartTicks = useMemo(
+    () => Array.from(new Set(bodyCompositionChartData.map((scan) => scan.day))),
+    [bodyCompositionChartData],
+  );
+  const toggleParticipantChartMetric = (payload: LegendPayload) => {
+    const metric = payload.dataKey;
+    if (!isParticipantChartMetricKey(metric)) return;
+    setHiddenParticipantChartMetrics((current) => ({
+      ...current,
+      [metric]: !current[metric],
+    }));
+  };
   useEffect(() => {
     if (
       !bodyCompositionBuckets.some(
@@ -442,9 +798,29 @@ export default function ReviewClient({
   }, [bodyCompositionBuckets]);
 
   const goToRange = (params: Record<string, string | undefined>) => {
-    const query = buildQuery(params);
+    const normalizedParams = { ...params };
+    if (
+      !("participants" in normalizedParams) &&
+      data.participantMode === "eligible"
+    ) {
+      normalizedParams.participants = "eligible";
+    }
+    const query = buildQuery(normalizedParams);
     router.push(query ? `${basePath}?${query}` : basePath);
   };
+
+  const currentReviewParams = () => ({
+    division: data.division === "all" ? undefined : data.division,
+    rangeMode: data.range.mode,
+    week:
+      data.range.mode === "week" && data.range.week
+        ? String(data.range.week)
+        : undefined,
+    start: data.range.mode === "custom" ? customStart : undefined,
+    end: data.range.mode === "custom" ? customEnd : undefined,
+    participants:
+      data.participantMode === "eligible" ? data.participantMode : undefined,
+  });
 
   return (
     <main
@@ -510,7 +886,8 @@ export default function ReviewClient({
                   <button
                     key={week.week}
                     className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
-                      data.range.mode === "week" && data.range.week === week.week
+                      data.range.mode === "week" &&
+                      data.range.week === week.week
                         ? "bg-white text-black"
                         : "border border-white/20 bg-white/8 text-white hover:bg-white/16"
                     }`}
@@ -536,7 +913,9 @@ export default function ReviewClient({
                   <div className="text-xs font-semibold uppercase tracking-[0.24em] text-white/60">
                     Controls
                   </div>
-                  <div className="mt-1 text-lg font-bold">{data.range.label}</div>
+                  <div className="mt-1 text-lg font-bold">
+                    {data.range.label}
+                  </div>
                 </div>
                 <div className="text-right text-xs text-white/60">
                   Updated
@@ -563,7 +942,9 @@ export default function ReviewClient({
                             ? String(data.range.week)
                             : undefined,
                         start:
-                          data.range.mode === "custom" ? customStart : undefined,
+                          data.range.mode === "custom"
+                            ? customStart
+                            : undefined,
                         end:
                           data.range.mode === "custom" ? customEnd : undefined,
                       })
@@ -579,14 +960,91 @@ export default function ReviewClient({
                   </select>
                 </label>
 
+                <div className="grid gap-2 text-sm">
+                  <span className="font-semibold text-white/72">
+                    Participant set
+                  </span>
+                  <div className="grid grid-cols-2 gap-2">
+                    <button
+                      className={`rounded-2xl px-3 py-3 text-sm font-semibold ${
+                        data.participantMode === "all"
+                          ? "bg-white text-black"
+                          : "border border-white/20 bg-white/8 text-white"
+                      }`}
+                      onClick={() =>
+                        goToRange({
+                          division:
+                            data.division === "all" ? undefined : data.division,
+                          rangeMode: data.range.mode,
+                          week:
+                            data.range.mode === "week" && data.range.week
+                              ? String(data.range.week)
+                              : undefined,
+                          start:
+                            data.range.mode === "custom"
+                              ? customStart
+                              : undefined,
+                          end:
+                            data.range.mode === "custom"
+                              ? customEnd
+                              : undefined,
+                          participants: undefined,
+                        })
+                      }
+                      type="button"
+                    >
+                      All
+                    </button>
+                    <button
+                      className={`rounded-2xl px-3 py-3 text-sm font-semibold ${
+                        data.participantMode === "eligible"
+                          ? "bg-white text-black"
+                          : "border border-white/20 bg-white/8 text-white"
+                      }`}
+                      onClick={() =>
+                        goToRange({
+                          division:
+                            data.division === "all" ? undefined : data.division,
+                          rangeMode: data.range.mode,
+                          week:
+                            data.range.mode === "week" && data.range.week
+                              ? String(data.range.week)
+                              : undefined,
+                          start:
+                            data.range.mode === "custom"
+                              ? customStart
+                              : undefined,
+                          end:
+                            data.range.mode === "custom"
+                              ? customEnd
+                              : undefined,
+                          participants: "eligible",
+                        })
+                      }
+                      type="button"
+                    >
+                      Eligible only
+                    </button>
+                  </div>
+                  <div className="text-xs text-white/55">
+                    {data.bodyComposition.eligibility.eligibleParticipants}{" "}
+                    eligible ·{" "}
+                    {data.bodyComposition.eligibility.ineligibleParticipants}{" "}
+                    excluded when filtered
+                  </div>
+                </div>
+
                 <div className="grid gap-3 md:grid-cols-2">
                   <label className="grid gap-2 text-sm">
-                    <span className="font-semibold text-white/72">Start date</span>
+                    <span className="font-semibold text-white/72">
+                      Start date
+                    </span>
                     <input
                       className="rounded-2xl border border-white/15 bg-black/35 px-3 py-3 text-white outline-none"
                       max={
-                        data.range.weekOptions[data.range.weekOptions.length - 1]
-                          ?.end
+                        data.range.weekOptions[
+                          data.range.weekOptions.length - 1
+                        ]?.end
                       }
                       min={data.range.weekOptions[0]?.start}
                       onChange={(event) => setCustomStart(event.target.value)}
@@ -595,12 +1053,15 @@ export default function ReviewClient({
                     />
                   </label>
                   <label className="grid gap-2 text-sm">
-                    <span className="font-semibold text-white/72">End date</span>
+                    <span className="font-semibold text-white/72">
+                      End date
+                    </span>
                     <input
                       className="rounded-2xl border border-white/15 bg-black/35 px-3 py-3 text-white outline-none"
                       max={
-                        data.range.weekOptions[data.range.weekOptions.length - 1]
-                          ?.end
+                        data.range.weekOptions[
+                          data.range.weekOptions.length - 1
+                        ]?.end
                       }
                       min={customStart}
                       onChange={(event) => setCustomEnd(event.target.value)}
@@ -614,7 +1075,8 @@ export default function ReviewClient({
                   className="rounded-2xl bg-white px-4 py-3 text-sm font-bold uppercase tracking-[0.16em] text-black"
                   onClick={() =>
                     goToRange({
-                      division: data.division === "all" ? undefined : data.division,
+                      division:
+                        data.division === "all" ? undefined : data.division,
                       rangeMode: "custom",
                       start: customStart,
                       end: customEnd,
@@ -687,7 +1149,8 @@ export default function ReviewClient({
                     />
                   </div>
                   <div className="mt-2 text-xs text-white/60">
-                    {habit.awardedPoints} awarded points out of {habit.possiblePoints} possible
+                    {habit.awardedPoints} awarded points out of{" "}
+                    {habit.possiblePoints} possible
                   </div>
                 </div>
               ))}
@@ -763,13 +1226,18 @@ export default function ReviewClient({
               </button>
             </div>
 
-            <div className="h-[360px] md:h-[420px]">
-              <ResponsiveContainer>
+            <ChartFrame className="h-[360px] md:h-[420px]">
+              {({ height, width }) => (
                 <BarChart
                   data={normalizedTrendData}
+                  height={height}
                   margin={{ top: 16, right: 10, left: 0, bottom: 16 }}
+                  width={width}
                 >
-                  <CartesianGrid stroke="rgba(255,255,255,0.1)" vertical={false} />
+                  <CartesianGrid
+                    stroke="rgba(255,255,255,0.1)"
+                    vertical={false}
+                  />
                   <XAxis dataKey="label" stroke="rgba(255,255,255,0.65)" />
                   <YAxis
                     stroke="rgba(255,255,255,0.65)"
@@ -794,7 +1262,7 @@ export default function ReviewClient({
                       return [
                         trendView === "rate" && Number.isFinite(normalizedValue)
                           ? `${normalizedValue.toFixed(0)}%`
-                          : `${Array.isArray(value) ? value.join(", ") : value ?? ""}`,
+                          : `${Array.isArray(value) ? value.join(", ") : (value ?? "")}`,
                         habitLookup[normalizedName] ?? normalizedName,
                       ];
                     }}
@@ -810,8 +1278,8 @@ export default function ReviewClient({
                     />
                   ))}
                 </BarChart>
-              </ResponsiveContainer>
-            </div>
+              )}
+            </ChartFrame>
           </div>
 
           <div className={cardClassName()}>
@@ -861,17 +1329,22 @@ export default function ReviewClient({
               </div>
             </div>
 
-            <div className="mt-6 h-[240px]">
-              <ResponsiveContainer>
+            <ChartFrame className="mt-6 h-[240px]">
+              {({ height, width }) => (
                 <LineChart
                   data={trendBuckets.map((bucket) => ({
                     label: bucket.label,
                     missedCount: bucket.missedCount,
                     averageMissingPerDay: bucket.averageMissingPerDay,
                   }))}
+                  height={height}
                   margin={{ top: 16, right: 10, left: 0, bottom: 8 }}
+                  width={width}
                 >
-                  <CartesianGrid stroke="rgba(255,255,255,0.1)" vertical={false} />
+                  <CartesianGrid
+                    stroke="rgba(255,255,255,0.1)"
+                    vertical={false}
+                  />
                   <XAxis dataKey="label" stroke="rgba(255,255,255,0.65)" />
                   <YAxis stroke="rgba(255,255,255,0.65)" />
                   <Tooltip
@@ -890,8 +1363,8 @@ export default function ReviewClient({
                     type="monotone"
                   />
                 </LineChart>
-              </ResponsiveContainer>
-            </div>
+              )}
+            </ChartFrame>
           </div>
         </section>
 
@@ -906,8 +1379,8 @@ export default function ReviewClient({
                   Group body comp over time
                 </h2>
                 <p className="mt-2 text-sm text-white/70">
-                  Daily body-comp snapshots across the full challenge duration for this{" "}
-                  {data.division === "all" ? "group" : "division"}.
+                  Daily body-comp snapshots through the latest recorded point
+                  for this {data.division === "all" ? "group" : "division"}.
                 </p>
               </div>
               <div className="text-right text-xs text-white/60">
@@ -997,11 +1470,13 @@ export default function ReviewClient({
                     ))}
                 </div>
 
-                <div className="h-[360px] md:h-[420px]">
-                  <ResponsiveContainer>
+                <ChartFrame className="h-[360px] md:h-[420px]">
+                  {({ height, width }) => (
                     <LineChart
                       data={bodyCompositionBuckets}
+                      height={height}
                       margin={{ top: 16, right: 12, left: 0, bottom: 8 }}
+                      width={width}
                     >
                       <CartesianGrid
                         stroke="rgba(255,255,255,0.1)"
@@ -1029,7 +1504,9 @@ export default function ReviewClient({
                               bodyCompositionMetric,
                               typeof value === "number"
                                 ? value
-                                : Number(Array.isArray(value) ? value[0] : value),
+                                : Number(
+                                    Array.isArray(value) ? value[0] : value,
+                                  ),
                             ),
                             bodyCompositionMetricLabel(bodyCompositionMetric),
                           ];
@@ -1046,17 +1523,477 @@ export default function ReviewClient({
                         dataKey={bodyCompositionMetric}
                         dot={false}
                         name={bodyCompositionMetricLabel(bodyCompositionMetric)}
-                        stroke={bodyCompositionMetricColor(bodyCompositionMetric)}
+                        stroke={bodyCompositionMetricColor(
+                          bodyCompositionMetric,
+                        )}
                         strokeWidth={3}
                         type="monotone"
                       />
                     </LineChart>
-                  </ResponsiveContainer>
-                </div>
+                  )}
+                </ChartFrame>
               </>
             ) : (
               <div className="rounded-2xl border border-white/10 bg-black/20 px-4 py-5 text-sm text-white/72">
-                No body-composition trend data is available in this range yet.
+                No body-composition scan data is available in this range yet.
+              </div>
+            )}
+          </div>
+        </section>
+
+        <section className="mb-8">
+          <div className={cardClassName()} ref={normalizedBodyCompositionRef}>
+            <div className="mb-5 flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+              <div>
+                <div className="text-xs font-semibold uppercase tracking-[0.24em] text-white/60">
+                  Normalized scoring
+                </div>
+                <h2 className="mt-2 text-2xl font-black">
+                  Raw scans vs derived score
+                </h2>
+                <p className="mt-2 max-w-3xl text-sm text-white/70">
+                  Entered scan measurements compared with BFP adjusted*, the
+                  scoring estimate derived from baseline BFP, scale-weight loss,
+                  capped SMM loss, and a depth-of-cut fat-loss credit curve.
+                  Pound-based measurements are plotted as change from the first
+                  scan; BFP lines are plotted as percentage-point change from
+                  the first scan.
+                </p>
+              </div>
+              <ShareButton
+                targetRef={normalizedBodyCompositionRef}
+                title={`${data.challenge.slug}-normalized-body-composition`}
+              />
+            </div>
+
+            <div className="mb-5 grid gap-4 lg:grid-cols-[1fr_0.72fr]">
+              <label className="grid gap-2 text-sm">
+                <span className="font-semibold text-white/72">Participant</span>
+                <select
+                  className="rounded-2xl border border-white/15 bg-black/35 px-3 py-3 text-white outline-none"
+                  onChange={(event) =>
+                    setSelectedBodyCompositionMemberId(event.target.value)
+                  }
+                  value={selectedBodyCompositionParticipant?.memberId ?? ""}
+                >
+                  {data.bodyComposition.participants.map((participant) => (
+                    <option
+                      key={participant.memberId}
+                      value={participant.memberId}
+                    >
+                      {participant.memberName} · {participant.statusLabel}
+                    </option>
+                  ))}
+                </select>
+              </label>
+
+              <div className="grid grid-cols-3 gap-3">
+                <div className="rounded-2xl border border-white/10 bg-black/20 px-3 py-3">
+                  <div className="text-xs uppercase tracking-[0.16em] text-white/55">
+                    Eligible
+                  </div>
+                  <div className="mt-2 text-2xl font-black">
+                    {data.bodyComposition.eligibility.eligibleParticipants}
+                  </div>
+                </div>
+                <div className="rounded-2xl border border-white/10 bg-black/20 px-3 py-3">
+                  <div className="text-xs uppercase tracking-[0.16em] text-white/55">
+                    Ineligible
+                  </div>
+                  <div className="mt-2 text-2xl font-black">
+                    {data.bodyComposition.eligibility.ineligibleParticipants}
+                  </div>
+                </div>
+                <div className="rounded-2xl border border-white/10 bg-black/20 px-3 py-3">
+                  <div className="text-xs uppercase tracking-[0.16em] text-white/55">
+                    Included
+                  </div>
+                  <div className="mt-2 text-2xl font-black">
+                    {data.bodyComposition.eligibility.includedParticipants}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {selectedBodyCompositionParticipant ? (
+              <>
+                <div className="mb-5 grid gap-4 lg:grid-cols-3">
+                  <div className="rounded-2xl border border-white/10 bg-black/20 px-4 py-4">
+                    <div className="text-xs uppercase tracking-[0.18em] text-white/55">
+                      Status
+                    </div>
+                    <div className="mt-2 text-2xl font-black">
+                      {selectedBodyCompositionParticipant.statusLabel}
+                    </div>
+                    <div className="mt-1 text-sm text-white/70">
+                      {selectedBodyCompositionParticipant.validScoreScanCount}{" "}
+                      scoreable scans
+                    </div>
+                  </div>
+                  <div className="rounded-2xl border border-white/10 bg-black/20 px-4 py-4">
+                    <div className="text-xs uppercase tracking-[0.18em] text-white/55">
+                      Entered BFP score
+                    </div>
+                    <div className="mt-2 text-3xl font-black">
+                      {formatScoreValue(
+                        rawBodyCompositionComparison?.points,
+                        " pts",
+                        0,
+                      )}
+                    </div>
+                    <div className="mt-1 text-sm text-white/70">
+                      {formatScoreValue(
+                        rawBodyCompositionComparison?.bodyFatPctDrop,
+                        "% BFP drop",
+                      )}
+                    </div>
+                  </div>
+                  <div className="rounded-2xl border border-white/10 bg-black/20 px-4 py-4">
+                    <div className="text-xs uppercase tracking-[0.18em] text-white/55">
+                      BFP adjusted* score
+                    </div>
+                    <div className="mt-2 text-3xl font-black">
+                      {formatScoreValue(
+                        selectedBodyCompositionParticipant.muscleStabilizedScore
+                          ?.points,
+                        " pts",
+                        0,
+                      )}
+                    </div>
+                    <div className="mt-1 text-sm text-white/70">
+                      {formatScoreValue(
+                        selectedBodyCompositionParticipant.muscleStabilizedScore
+                          ?.bodyFatPctDrop,
+                        "% BFP drop",
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {bodyCompositionChartData.length ? (
+                  <ChartFrame className="h-[420px] md:h-[500px]">
+                    {({ height, width }) => (
+                      <LineChart
+                        data={bodyCompositionChartData}
+                        height={height}
+                        margin={participantChartMargin}
+                        width={width}
+                      >
+                        <CartesianGrid
+                          stroke="rgba(255,255,255,0.1)"
+                          vertical={false}
+                        />
+                        <XAxis
+                          dataKey="day"
+                          domain={["dataMin", "dataMax"]}
+                          stroke="rgba(255,255,255,0.65)"
+                          tickFormatter={formatParticipantChartAxisTick}
+                          ticks={participantChartTicks}
+                          type="number"
+                        />
+                        {visibleParticipantChartAxes.has("pounds") ? (
+                          <YAxis
+                            domain={["auto", "auto"]}
+                            stroke={participantChartMetricColor("bodyWeight")}
+                            tickFormatter={formatPoundsAxisTick}
+                            width={54}
+                            yAxisId="pounds"
+                          />
+                        ) : null}
+                        {visibleParticipantChartAxes.has("pct") ? (
+                          <YAxis
+                            domain={["auto", "auto"]}
+                            orientation="right"
+                            stroke={participantChartMetricColor("bodyFatPct")}
+                            tickFormatter={formatPercentAxisTick}
+                            width={48}
+                            yAxisId="pct"
+                          />
+                        ) : null}
+                        <ReferenceLine
+                          stroke="rgba(255,255,255,0.42)"
+                          strokeDasharray="4 4"
+                          y={0}
+                          yAxisId="pounds"
+                        />
+                        <ReferenceLine
+                          stroke="rgba(255,255,255,0.42)"
+                          strokeDasharray="4 4"
+                          y={0}
+                          yAxisId="pct"
+                        />
+                        <Tooltip
+                          contentStyle={{
+                            backgroundColor: "#081018",
+                            border: "1px solid rgba(255,255,255,0.12)",
+                            borderRadius: 16,
+                          }}
+                          formatter={(value, name, item) => {
+                            const numericValue =
+                              typeof value === "number"
+                                ? value
+                                : Number(
+                                    Array.isArray(value) ? value[0] : value,
+                                  );
+                            const label =
+                              typeof name === "string" ? name : `${name ?? ""}`;
+                            const axis = isParticipantChartMetricKey(
+                              item.dataKey,
+                            )
+                              ? participantChartMetricAxis(item.dataKey)
+                              : "pounds";
+                            return [
+                              Number.isFinite(numericValue)
+                                ? axis === "pct"
+                                  ? `${numericValue > 0 ? "+" : ""}${numericValue.toFixed(1)} pp`
+                                  : `${numericValue > 0 ? "+" : ""}${numericValue.toFixed(1)} lb`
+                                : "—",
+                              label,
+                            ];
+                          }}
+                          labelFormatter={formatParticipantChartTooltipLabel}
+                        />
+                        <Legend
+                          onClick={toggleParticipantChartMetric}
+                          wrapperStyle={{ cursor: "pointer" }}
+                        />
+                        {participantChartMetrics.map((metric) => (
+                          <Line
+                            connectNulls
+                            dataKey={metric}
+                            dot={participantChartDot(metric)}
+                            hide={hiddenParticipantChartMetrics[metric]}
+                            key={metric}
+                            name={participantChartMetricLabel(metric)}
+                            stroke={participantChartMetricColor(metric)}
+                            strokeDasharray={participantChartStrokeDasharray(
+                              metric,
+                            )}
+                            strokeWidth={participantChartStrokeWidth(metric)}
+                            type="monotone"
+                            yAxisId={participantChartMetricAxis(metric)}
+                          />
+                        ))}
+                      </LineChart>
+                    )}
+                  </ChartFrame>
+                ) : (
+                  <div className="rounded-2xl border border-white/10 bg-black/20 px-4 py-5 text-sm text-white/72">
+                    No body-composition scan values are available for this
+                    participant.
+                  </div>
+                )}
+
+                <div className="mt-5 grid gap-4 lg:grid-cols-2">
+                  <div className="rounded-2xl border border-white/10 bg-black/20 px-4 py-4">
+                    <div className="text-sm font-bold text-white">
+                      Entered first/latest measurements
+                    </div>
+                    <div className="mt-3 grid grid-cols-2 gap-3 text-sm text-white/72">
+                      <div>Start scan</div>
+                      <div className="text-right text-white">
+                        {rawBodyCompositionComparison?.start.label ?? "—"}
+                      </div>
+                      <div>Final scan</div>
+                      <div className="text-right text-white">
+                        {rawBodyCompositionComparison?.final.label ?? "—"}
+                      </div>
+                      <div>Start BFP</div>
+                      <div className="text-right text-white">
+                        {formatScoreValue(
+                          rawBodyCompositionComparison?.start.bodyFatPct,
+                          "%",
+                        )}
+                      </div>
+                      <div>Final BFP</div>
+                      <div className="text-right text-white">
+                        {formatScoreValue(
+                          rawBodyCompositionComparison?.final.bodyFatPct,
+                          "%",
+                        )}
+                      </div>
+                      <div>BFP drop</div>
+                      <div className="text-right text-white">
+                        {formatScoreValue(
+                          rawBodyCompositionComparison?.bodyFatPctDrop,
+                          "%",
+                        )}
+                      </div>
+                      <div>Body weight</div>
+                      <div className="text-right text-white">
+                        {formatScoreRange(
+                          rawBodyCompositionComparison?.start.bodyWeight,
+                          rawBodyCompositionComparison?.final.bodyWeight,
+                          " lb",
+                        )}
+                      </div>
+                      <div>Fat mass</div>
+                      <div className="text-right text-white">
+                        {formatScoreRange(
+                          rawBodyCompositionComparison?.start.reportedFatMass,
+                          rawBodyCompositionComparison?.final.reportedFatMass,
+                          " lb",
+                        )}
+                      </div>
+                      <div>SMM</div>
+                      <div className="text-right text-white">
+                        {formatScoreRange(
+                          rawBodyCompositionComparison?.start.muscleMass,
+                          rawBodyCompositionComparison?.final.muscleMass,
+                          " lb",
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="rounded-2xl border border-white/10 bg-black/20 px-4 py-4">
+                    <div className="text-sm font-bold text-white">
+                      BFP adjusted* calculation
+                    </div>
+                    <div className="mt-3 grid grid-cols-2 gap-3 text-sm text-white/72">
+                      <div>Start BFP</div>
+                      <div className="text-right text-white">
+                        {formatScoreValue(
+                          selectedBodyCompositionParticipant
+                            .muscleStabilizedScore?.baselineBodyFatPct,
+                          "%",
+                        )}
+                      </div>
+                      <div>Final BFP</div>
+                      <div className="text-right text-white">
+                        {formatScoreValue(
+                          selectedBodyCompositionParticipant
+                            .muscleStabilizedScore?.finalBodyFatPct,
+                          "%",
+                        )}
+                      </div>
+                      <div>BFP drop</div>
+                      <div className="text-right text-white">
+                        {formatScoreValue(
+                          selectedBodyCompositionParticipant
+                            .muscleStabilizedScore?.bodyFatPctDrop,
+                          "%",
+                        )}
+                      </div>
+                      <div>Weight loss</div>
+                      <div className="text-right text-white">
+                        {formatScoreValue(
+                          selectedBodyCompositionParticipant
+                            .muscleStabilizedScore?.weightLoss,
+                          " lb",
+                        )}
+                      </div>
+                      <div>SMM baseline</div>
+                      <div className="text-right text-white">
+                        {formatScoreValue(
+                          selectedBodyCompositionParticipant
+                            .muscleStabilizedScore?.baselineMuscleMass,
+                          " lb",
+                        )}
+                      </div>
+                      <div>Baseline scans</div>
+                      <div className="text-right text-white">
+                        {selectedBodyCompositionParticipant
+                          .muscleStabilizedScore?.baselineMuscleScanCount ??
+                          "—"}
+                      </div>
+                      <div>Baseline spread</div>
+                      <div className="text-right text-white">
+                        {formatScoreValue(
+                          selectedBodyCompositionParticipant
+                            .muscleStabilizedScore?.baselineMuscleSpread,
+                          " lb",
+                        )}
+                      </div>
+                      <div>Reported SMM loss</div>
+                      <div className="text-right text-white">
+                        {formatScoreValue(
+                          selectedBodyCompositionParticipant
+                            .muscleStabilizedScore?.reportedMuscleLoss,
+                          " lb",
+                        )}
+                      </div>
+                      <div>Allowed SMM loss</div>
+                      <div className="text-right text-white">
+                        {formatScoreValue(
+                          selectedBodyCompositionParticipant
+                            .muscleStabilizedScore?.allowedMuscleLoss,
+                          " lb",
+                        )}
+                      </div>
+                      <div>Used SMM loss</div>
+                      <div className="text-right text-white">
+                        {formatScoreValue(
+                          selectedBodyCompositionParticipant
+                            .muscleStabilizedScore?.usedMuscleLoss,
+                          " lb",
+                        )}
+                      </div>
+                      <div>Weight loss %</div>
+                      <div className="text-right text-white">
+                        {formatScoreValue(
+                          selectedBodyCompositionParticipant
+                            .muscleStabilizedScore?.weightLossPct,
+                          "%",
+                          2,
+                        )}
+                      </div>
+                      <div>Depth curve credit</div>
+                      <div className="text-right text-white">
+                        {formatScoreValue(
+                          selectedBodyCompositionParticipant
+                            .muscleStabilizedScore?.fatLossCreditCurvePct,
+                          "%",
+                          2,
+                        )}
+                      </div>
+                      <div>Effective fat-loss credit</div>
+                      <div className="text-right text-white">
+                        {formatScoreValue(
+                          selectedBodyCompositionParticipant
+                            .muscleStabilizedScore
+                            ?.fatLossCreditPctOfWeightLoss,
+                          "%",
+                          2,
+                        )}
+                      </div>
+                      <div>Max credited fat loss</div>
+                      <div className="text-right text-white">
+                        {formatScoreValue(
+                          selectedBodyCompositionParticipant
+                            .muscleStabilizedScore?.maxCreditedFatLoss,
+                          " lb",
+                        )}
+                      </div>
+                      <div>Estimated fat loss</div>
+                      <div className="text-right text-white">
+                        {formatScoreValue(
+                          selectedBodyCompositionParticipant
+                            .muscleStabilizedScore?.estimatedFatMassLoss,
+                          " lb",
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {selectedBodyCompositionParticipant.notes.length > 0 ||
+                selectedBodyCompositionParticipant.exclusionReason ? (
+                  <div className="mt-5 rounded-2xl border border-white/10 bg-black/20 px-4 py-4 text-sm text-white/72">
+                    {selectedBodyCompositionParticipant.exclusionReason ? (
+                      <div>
+                        {selectedBodyCompositionParticipant.exclusionReason}
+                      </div>
+                    ) : null}
+                    {selectedBodyCompositionParticipant.notes.map((note) => (
+                      <div key={note}>{note}</div>
+                    ))}
+                  </div>
+                ) : null}
+              </>
+            ) : (
+              <div className="rounded-2xl border border-white/10 bg-black/20 px-4 py-5 text-sm text-white/72">
+                No participants are available for this filter.
               </div>
             )}
           </div>
@@ -1098,17 +2035,24 @@ export default function ReviewClient({
             ))}
           </div>
 
-          <div className="h-[340px] md:h-[400px]">
-            <ResponsiveContainer>
+          <ChartFrame className="h-[340px] md:h-[400px]">
+            {({ height, width }) => (
               <ScatterChart
+                height={height}
                 margin={{ top: 16, right: 12, left: 0, bottom: 16 }}
+                width={width}
               >
-                <CartesianGrid stroke="rgba(255,255,255,0.1)" vertical={false} />
+                <CartesianGrid
+                  stroke="rgba(255,255,255,0.1)"
+                  vertical={false}
+                />
                 <XAxis
                   dataKey="complianceRate"
                   domain={[0, 1]}
                   stroke="rgba(255,255,255,0.65)"
-                  tickFormatter={(value: number) => `${Math.round(value * 100)}%`}
+                  tickFormatter={(value: number) =>
+                    `${Math.round(value * 100)}%`
+                  }
                   type="number"
                 />
                 <YAxis
@@ -1154,8 +2098,8 @@ export default function ReviewClient({
                   type="linear"
                 />
               </ScatterChart>
-            </ResponsiveContainer>
-          </div>
+            )}
+          </ChartFrame>
 
           <div className="mt-5 grid gap-3 md:grid-cols-5">
             {data.complianceBands.map((band) => (
@@ -1166,7 +2110,9 @@ export default function ReviewClient({
                 <div className="text-xs uppercase tracking-[0.16em] text-white/55">
                   {band.label}
                 </div>
-                <div className="mt-2 text-2xl font-black">{band.participantCount}</div>
+                <div className="mt-2 text-2xl font-black">
+                  {band.participantCount}
+                </div>
                 <div className="text-sm text-white/70">participants</div>
               </div>
             ))}

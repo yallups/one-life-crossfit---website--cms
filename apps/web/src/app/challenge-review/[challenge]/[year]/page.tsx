@@ -1,6 +1,10 @@
 import { notFound } from "next/navigation";
-import { computeChallengeReview, type ReviewRangeMode } from "@/lib/leaderboard/review";
 import { getChallengeConfig } from "@/lib/leaderboard/registry";
+import {
+  computeChallengeReview,
+  type ReviewParticipantMode,
+  type ReviewRangeMode,
+} from "@/lib/leaderboard/review";
 import ReviewClient from "./review-client";
 
 type ChallengeReviewPageProps = {
@@ -26,6 +30,12 @@ function parseString(value: string | string[] | undefined) {
   return Array.isArray(value) ? value[0] : value;
 }
 
+function parseParticipantMode(
+  value: string | string[] | undefined,
+): ReviewParticipantMode {
+  return parseString(value) === "eligible" ? "eligible" : "all";
+}
+
 export default async function ChallengeReviewPage({
   params,
   searchParams,
@@ -41,12 +51,14 @@ export default async function ChallengeReviewPage({
   const weekValue = Number(parseString(search.week));
   const start = parseString(search.start);
   const end = parseString(search.end);
+  const participantMode = parseParticipantMode(search.participants);
 
   const data = await computeChallengeReview(challenge, yearNum, division, {
     mode: rangeMode,
     week: Number.isFinite(weekValue) ? weekValue : undefined,
     start,
     end,
+    participantMode,
   });
 
   if (!data) notFound();

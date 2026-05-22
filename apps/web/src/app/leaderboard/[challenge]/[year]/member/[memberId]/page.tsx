@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import type { ReactElement } from "react";
 import { Fragment } from "react";
 import { getChallengeConfig } from "@/lib/leaderboard/registry";
+import MemberBodyCompositionChart from "./member-body-composition-chart";
 
 export const dynamic = "force-dynamic";
 
@@ -36,7 +37,9 @@ export default async function MemberDetailPage(props: {
   if (!res.ok) throw new Error(`Failed to load member detail: ${res.status}`);
   const detail: any = await res.json();
 
-  const metrics = cfg.performance.metrics;
+  const metrics = detail.bodyComposition
+    ? cfg.performance.metrics.filter((m) => m.key === "inbody_body_fat_pct")
+    : cfg.performance.metrics;
   const habits = cfg.checkins.items;
 
   return (
@@ -66,6 +69,8 @@ export default async function MemberDetailPage(props: {
         />
         <Stat label="Total" value={Number(detail.total).toFixed(2)} />
       </section>
+
+      <MemberBodyCompositionChart analysis={detail.bodyComposition} />
 
       <section className="mb-8">
         <h2 className="mb-2 text-lg font-semibold">Daily Check-ins</h2>
@@ -265,6 +270,10 @@ export default async function MemberDetailPage(props: {
             <tbody>
               {metrics.map((m) => {
                 const imp = detail.improvements?.[m.key];
+                const metricLabel =
+                  detail.bodyComposition && m.key === "inbody_body_fat_pct"
+                    ? "BFP adjusted*"
+                    : m.label;
                 const improvement =
                   m.kind === "percent_gain"
                     ? `${fmtNum(100 * imp?.improvement)}%`
@@ -277,10 +286,9 @@ export default async function MemberDetailPage(props: {
                 const unit = m.kind === "percent_gain" ? "%" : "unit";
                 const dir = m.direction === "up" ? "gained" : "lost";
 
-                console.log(`${pointsPerUnit} points per ${unit} ${dir}`);
                 return (
                   <tr key={m.key} className="border-b border-border/60">
-                    <td className="px-2 py-2 text-left">{m.label}</td>
+                    <td className="px-2 py-2 text-left">{metricLabel}</td>
                     <td className="px-2 py-2 tabular-nums">
                       {fmtNum(imp?.baseline)}
                     </td>

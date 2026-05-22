@@ -1,6 +1,10 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-import { computeChallengeReview, type ReviewRangeMode } from "@/lib/leaderboard/review";
+import {
+  computeChallengeReview,
+  type ReviewParticipantMode,
+  type ReviewRangeMode,
+} from "@/lib/leaderboard/review";
 
 export const dynamic = "force-dynamic";
 
@@ -15,6 +19,10 @@ function parseRangeMode(value: string | null): ReviewRangeMode {
     default:
       return "this_week";
   }
+}
+
+function parseParticipantMode(value: string | null): ReviewParticipantMode {
+  return value === "eligible" ? "eligible" : "all";
 }
 
 export async function GET(
@@ -34,13 +42,20 @@ export async function GET(
   const division = search.get("division") || "all";
   const start = search.get("start") || undefined;
   const end = search.get("end") || undefined;
+  const participantMode = parseParticipantMode(search.get("participants"));
 
-  const review = await computeChallengeReview(params.challenge, year, division, {
-    mode: rangeMode,
-    week: Number.isFinite(week) ? week : undefined,
-    start,
-    end,
-  });
+  const review = await computeChallengeReview(
+    params.challenge,
+    year,
+    division,
+    {
+      mode: rangeMode,
+      week: Number.isFinite(week) ? week : undefined,
+      start,
+      end,
+      participantMode,
+    },
+  );
 
   if (!review) {
     return NextResponse.json(
