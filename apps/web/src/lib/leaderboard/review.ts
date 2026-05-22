@@ -1,7 +1,9 @@
 import {
   type BodyCompositionParticipantAnalysis,
   type BodyCompositionParticipantStatus,
-  buildBodyCompositionParticipantAnalyses,
+  buildBodyCompositionMemberMeta,
+  buildConfiguredBodyCompositionParticipantAnalyses,
+  usesAdjustedBfpScoring,
 } from "./body-composition-normalization";
 import { calendarDate, isWithinYmdRange, todayYmd } from "./date";
 import {
@@ -13,7 +15,6 @@ import {
   loadSubmissions,
   scoreHabits,
   scorePerformance,
-  usesAdjustedBfpScoring,
 } from "./engine";
 import { getChallengeConfig } from "./registry";
 import { roundTo } from "./scoring";
@@ -1137,26 +1138,17 @@ export async function computeChallengeReview(
     ["muscle mass", "skeletal muscle mass", "smm"],
   );
 
-  const memberMeta = new Map(
-    candidateMemberIds.map((memberId) => [
-      memberId,
-      {
-        name: memberName.get(memberId) ?? memberId,
-        division: memberDivision.get(memberId) ?? "open",
-      },
-    ]),
-  );
   const allBodyCompositionParticipants =
-    buildBodyCompositionParticipantAnalyses({
+    buildConfiguredBodyCompositionParticipantAnalyses({
       cfg,
       submissions,
       memberIds: candidateMemberIds,
-      memberMeta,
+      memberMeta: buildBodyCompositionMemberMeta({
+        memberIds: candidateMemberIds,
+        memberName,
+        memberDivision,
+      }),
       end: challengeToDateEnd,
-      weightKey,
-      bodyFatPctKey,
-      fatMassKey,
-      muscleKey,
     });
   const eligibleBodyCompositionMemberIds = new Set(
     allBodyCompositionParticipants

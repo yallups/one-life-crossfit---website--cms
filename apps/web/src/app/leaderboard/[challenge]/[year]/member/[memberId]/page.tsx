@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { ReactElement } from "react";
 import { Fragment } from "react";
+import { getAdjustedBfpScoringConfig } from "@/lib/leaderboard/body-composition-normalization";
 import { getChallengeConfig } from "@/lib/leaderboard/registry";
 import MemberBodyCompositionChart from "./member-body-composition-chart";
 
@@ -37,8 +38,10 @@ export default async function MemberDetailPage(props: {
   if (!res.ok) throw new Error(`Failed to load member detail: ${res.status}`);
   const detail: any = await res.json();
 
+  const adjustedBfpMetricKey = getAdjustedBfpScoringConfig(cfg)?.metricKeys
+    .bodyFatPct;
   const metrics = detail.bodyComposition
-    ? cfg.performance.metrics.filter((m) => m.key === "inbody_body_fat_pct")
+    ? cfg.performance.metrics.filter((m) => m.key === adjustedBfpMetricKey)
     : cfg.performance.metrics;
   const habits = cfg.checkins.items;
 
@@ -271,7 +274,7 @@ export default async function MemberDetailPage(props: {
               {metrics.map((m) => {
                 const imp = detail.improvements?.[m.key];
                 const metricLabel =
-                  detail.bodyComposition && m.key === "inbody_body_fat_pct"
+                  detail.bodyComposition && m.key === adjustedBfpMetricKey
                     ? "BFP adjusted*"
                     : m.label;
                 const improvement =

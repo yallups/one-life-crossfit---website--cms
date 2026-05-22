@@ -4,7 +4,6 @@ import { toPng } from "html-to-image";
 import { useRouter } from "next/navigation";
 import type { ReactNode, RefObject } from "react";
 import { useEffect, useMemo, useRef, useState, useTransition } from "react";
-import type { LegendPayload } from "recharts";
 import {
   Bar,
   BarChart,
@@ -13,7 +12,6 @@ import {
   Legend,
   Line,
   LineChart,
-  ReferenceLine,
   Scatter,
   ScatterChart,
   Tooltip,
@@ -27,6 +25,7 @@ import type {
   ReviewSummary,
   ReviewTrendBucket,
 } from "@/lib/leaderboard/review";
+import { BodyCompositionPerformanceChart } from "@/components/leaderboard/body-composition-performance-chart";
 
 type ReviewClientProps = {
   basePath: string;
@@ -39,15 +38,6 @@ type BodyCompositionMetricKey =
   | "totalMuscleMass"
   | "totalFatMass"
   | "averageBodyFatPct";
-
-type ParticipantChartMetricKey =
-  | "bodyWeight"
-  | "reportedFatMass"
-  | "muscleMass"
-  | "bodyFatPct"
-  | "muscleStabilizedBodyFatPct";
-
-type ParticipantChartAxisId = "pounds" | "pct";
 
 type ChartFrameProps = {
   children: (size: { height: number; width: number }) => ReactNode;
@@ -66,18 +56,6 @@ const CHART_COLORS = [
   "#f2adff",
   "#8dc6ff",
 ];
-
-const PARTICIPANT_CHART_METRICS = [
-  "bodyWeight",
-  "muscleMass",
-  "reportedFatMass",
-  "bodyFatPct",
-  "muscleStabilizedBodyFatPct",
-] as const satisfies ParticipantChartMetricKey[];
-
-const DEFAULT_HIDDEN_PARTICIPANT_CHART_METRICS = {} satisfies Partial<
-  Record<ParticipantChartMetricKey, boolean>
->;
 
 function ChartFrame({ children, className }: ChartFrameProps) {
   const frameRef = useRef<HTMLDivElement | null>(null);
@@ -393,12 +371,6 @@ function isFiniteMetric(value: unknown): value is number {
   return typeof value === "number" && Number.isFinite(value);
 }
 
-function relativeChange(value: number | undefined, baseline: number | undefined) {
-  return isFiniteMetric(value) && isFiniteMetric(baseline)
-    ? Number((value - baseline).toFixed(1))
-    : undefined;
-}
-
 function bodyCompositionMetricLabel(key: BodyCompositionMetricKey) {
   switch (key) {
     case "totalWeight":
@@ -425,120 +397,6 @@ function bodyCompositionMetricColor(key: BodyCompositionMetricKey) {
   }
 }
 
-function participantChartMetricLabel(key: ParticipantChartMetricKey) {
-  switch (key) {
-    case "bodyWeight":
-      return "Weight change";
-    case "reportedFatMass":
-      return "Fat mass change";
-    case "muscleMass":
-      return "SMM change";
-    case "bodyFatPct":
-      return "BFP change";
-    case "muscleStabilizedBodyFatPct":
-      return "BFP adjusted* change";
-  }
-}
-
-function participantChartMetricColor(key: ParticipantChartMetricKey) {
-  switch (key) {
-    case "bodyWeight":
-      return "#f4c95d";
-    case "reportedFatMass":
-      return "#f97171";
-    case "muscleMass":
-      return "#c5a3ff";
-    case "bodyFatPct":
-      return "#86a8ff";
-    case "muscleStabilizedBodyFatPct":
-      return "#7ae0b5";
-  }
-}
-
-function participantChartMetricAxis(
-  key: ParticipantChartMetricKey,
-): ParticipantChartAxisId {
-  switch (key) {
-    case "bodyFatPct":
-    case "muscleStabilizedBodyFatPct":
-      return "pct";
-    case "bodyWeight":
-    case "reportedFatMass":
-    case "muscleMass":
-      return "pounds";
-  }
-}
-
-function participantChartStrokeDasharray(key: ParticipantChartMetricKey) {
-  switch (key) {
-    case "muscleStabilizedBodyFatPct":
-      return "8 5";
-    default:
-      return undefined;
-  }
-}
-
-function participantChartStrokeWidth(key: ParticipantChartMetricKey) {
-  switch (key) {
-    case "muscleStabilizedBodyFatPct":
-      return 3;
-    default:
-      return 2;
-  }
-}
-
-function participantChartDot(key: ParticipantChartMetricKey) {
-  return [
-    "bodyFatPct",
-    "bodyWeight",
-    "reportedFatMass",
-    "muscleMass",
-  ].includes(key)
-    ? { r: 3 }
-    : false;
-}
-
-function isParticipantChartMetricKey(
-  value: unknown,
-): value is ParticipantChartMetricKey {
-  return (
-    typeof value === "string" &&
-    (PARTICIPANT_CHART_METRICS as readonly string[]).includes(value)
-  );
-}
-
-function formatParticipantChartAxisTick(value: number) {
-  return Math.abs(value) < 0.05 ? "Day 0" : `Day ${Math.round(value)}`;
-}
-
-function formatPoundsAxisTick(value: number) {
-  const sign = value > 0 ? "+" : "";
-  return `${sign}${value.toFixed(0)}`;
-}
-
-function formatPercentAxisTick(value: number) {
-  const sign = value > 0 ? "+" : "";
-  const formatted = value.toFixed(1);
-  return `${sign}${formatted.endsWith(".0") ? formatted.slice(0, -2) : formatted}`;
-}
-
-function formatParticipantChartTooltipLabel(
-  value: unknown,
-  payload: ReadonlyArray<{ payload?: { chartLabel?: string; day?: number } }>,
-) {
-  const point = payload[0]?.payload;
-  const day =
-    typeof point?.day === "number"
-      ? point.day
-      : typeof value === "number"
-        ? value
-        : Number(value);
-  const dayLabel = Number.isFinite(day)
-    ? `Day ${day.toFixed(Math.abs(day % 1) > 0.05 ? 1 : 0)}`
-    : "Day —";
-  return point?.chartLabel ? `${point.chartLabel} · ${dayLabel}` : dayLabel;
-}
-
 export default function ReviewClient({
   basePath,
   data,
@@ -559,10 +417,6 @@ export default function ReviewClient({
     useState<BodyCompositionMetricKey>("totalWeight");
   const [selectedBodyCompositionMemberId, setSelectedBodyCompositionMemberId] =
     useState(data.bodyComposition.participants[0]?.memberId ?? "");
-  const [hiddenParticipantChartMetrics, setHiddenParticipantChartMetrics] =
-    useState<Partial<Record<ParticipantChartMetricKey, boolean>>>(
-      DEFAULT_HIDDEN_PARTICIPANT_CHART_METRICS,
-    );
   const summaryRef = useRef<HTMLDivElement>(null);
   const habitsRef = useRef<HTMLDivElement>(null);
   const trendsRef = useRef<HTMLDivElement>(null);
@@ -605,42 +459,6 @@ export default function ReviewClient({
     data.bodyComposition.participants.find(
       (participant) => participant.memberId === selectedBodyCompositionMemberId,
     ) ?? data.bodyComposition.participants[0];
-  const bodyCompositionChartData = selectedBodyCompositionParticipant
-    ? (() => {
-        const scans = selectedBodyCompositionParticipant.scans;
-        const baselineWeight = scans.find((scan) =>
-          isFiniteMetric(scan.bodyWeight),
-        )?.bodyWeight;
-        const baselineMuscleMass = scans.find((scan) =>
-          isFiniteMetric(scan.muscleMass),
-        )?.muscleMass;
-        const baselineFatMass = scans.find((scan) =>
-          isFiniteMetric(scan.reportedFatMass),
-        )?.reportedFatMass;
-        const baselineBodyFatPct = scans.find((scan) =>
-          isFiniteMetric(scan.bodyFatPct),
-        )?.bodyFatPct;
-        const baselineAdjustedBodyFatPct = scans.find((scan) =>
-          isFiniteMetric(scan.muscleStabilizedBodyFatPct),
-        )?.muscleStabilizedBodyFatPct;
-
-        return scans.map((scan, index) => ({
-          ...scan,
-          bodyWeight: relativeChange(scan.bodyWeight, baselineWeight),
-          muscleMass: relativeChange(scan.muscleMass, baselineMuscleMass),
-          reportedFatMass: relativeChange(scan.reportedFatMass, baselineFatMass),
-          bodyFatPct: relativeChange(scan.bodyFatPct, baselineBodyFatPct),
-          muscleStabilizedBodyFatPct: relativeChange(
-            scan.muscleStabilizedBodyFatPct,
-            baselineAdjustedBodyFatPct,
-          ),
-          chartLabel:
-            scans.filter((candidate) => candidate.date === scan.date).length > 1
-              ? `${scan.label} #${index + 1}`
-              : scan.label,
-        }));
-      })()
-    : [];
   const rawBodyCompositionComparison = useMemo(() => {
     const scoreScans =
       selectedBodyCompositionParticipant?.scans.filter(
@@ -681,34 +499,6 @@ export default function ReviewClient({
           : undefined,
     };
   }, [selectedBodyCompositionParticipant]);
-  const participantChartMetrics = PARTICIPANT_CHART_METRICS;
-  const visibleParticipantChartAxes = useMemo(
-    () =>
-      new Set<ParticipantChartAxisId>(
-        participantChartMetrics
-          .filter((metric) => !hiddenParticipantChartMetrics[metric])
-          .map(participantChartMetricAxis),
-      ),
-    [hiddenParticipantChartMetrics, participantChartMetrics],
-  );
-  const participantChartMargin = {
-    top: 16,
-    right: visibleParticipantChartAxes.has("pct") ? 18 : 12,
-    left: 4,
-    bottom: 8,
-  };
-  const participantChartTicks = useMemo(
-    () => Array.from(new Set(bodyCompositionChartData.map((scan) => scan.day))),
-    [bodyCompositionChartData],
-  );
-  const toggleParticipantChartMetric = (payload: LegendPayload) => {
-    const metric = payload.dataKey;
-    if (!isParticipantChartMetricKey(metric)) return;
-    setHiddenParticipantChartMetrics((current) => ({
-      ...current,
-      [metric]: !current[metric],
-    }));
-  };
   useEffect(() => {
     if (
       !bodyCompositionBuckets.some(
@@ -1670,113 +1460,12 @@ export default function ReviewClient({
                   </div>
                 </div>
 
-                {bodyCompositionChartData.length ? (
-                  <ChartFrame className="h-[420px] md:h-[500px]">
-                    {({ height, width }) => (
-                      <LineChart
-                        data={bodyCompositionChartData}
-                        height={height}
-                        margin={participantChartMargin}
-                        width={width}
-                      >
-                        <CartesianGrid
-                          stroke="rgba(255,255,255,0.1)"
-                          vertical={false}
-                        />
-                        <XAxis
-                          dataKey="day"
-                          domain={["dataMin", "dataMax"]}
-                          stroke="rgba(255,255,255,0.65)"
-                          tickFormatter={formatParticipantChartAxisTick}
-                          ticks={participantChartTicks}
-                          type="number"
-                        />
-                        {visibleParticipantChartAxes.has("pounds") ? (
-                          <YAxis
-                            domain={["auto", "auto"]}
-                            stroke={participantChartMetricColor("bodyWeight")}
-                            tickFormatter={formatPoundsAxisTick}
-                            width={54}
-                            yAxisId="pounds"
-                          />
-                        ) : null}
-                        {visibleParticipantChartAxes.has("pct") ? (
-                          <YAxis
-                            domain={["auto", "auto"]}
-                            orientation="right"
-                            stroke={participantChartMetricColor("bodyFatPct")}
-                            tickFormatter={formatPercentAxisTick}
-                            width={48}
-                            yAxisId="pct"
-                          />
-                        ) : null}
-                        <ReferenceLine
-                          stroke="rgba(255,255,255,0.42)"
-                          strokeDasharray="4 4"
-                          y={0}
-                          yAxisId="pounds"
-                        />
-                        <ReferenceLine
-                          stroke="rgba(255,255,255,0.42)"
-                          strokeDasharray="4 4"
-                          y={0}
-                          yAxisId="pct"
-                        />
-                        <Tooltip
-                          contentStyle={{
-                            backgroundColor: "#081018",
-                            border: "1px solid rgba(255,255,255,0.12)",
-                            borderRadius: 16,
-                          }}
-                          formatter={(value, name, item) => {
-                            const numericValue =
-                              typeof value === "number"
-                                ? value
-                                : Number(
-                                    Array.isArray(value) ? value[0] : value,
-                                  );
-                            const label =
-                              typeof name === "string" ? name : `${name ?? ""}`;
-                            const axis = isParticipantChartMetricKey(
-                              item.dataKey,
-                            )
-                              ? participantChartMetricAxis(item.dataKey)
-                              : "pounds";
-                            return [
-                              Number.isFinite(numericValue)
-                                ? axis === "pct"
-                                  ? `${numericValue > 0 ? "+" : ""}${numericValue.toFixed(1)} pp`
-                                  : `${numericValue > 0 ? "+" : ""}${numericValue.toFixed(1)} lb`
-                                : "—",
-                              label,
-                            ];
-                          }}
-                          labelFormatter={formatParticipantChartTooltipLabel}
-                        />
-                        <Legend
-                          onClick={toggleParticipantChartMetric}
-                          wrapperStyle={{ cursor: "pointer" }}
-                        />
-                        {participantChartMetrics.map((metric) => (
-                          <Line
-                            connectNulls
-                            dataKey={metric}
-                            dot={participantChartDot(metric)}
-                            hide={hiddenParticipantChartMetrics[metric]}
-                            key={metric}
-                            name={participantChartMetricLabel(metric)}
-                            stroke={participantChartMetricColor(metric)}
-                            strokeDasharray={participantChartStrokeDasharray(
-                              metric,
-                            )}
-                            strokeWidth={participantChartStrokeWidth(metric)}
-                            type="monotone"
-                            yAxisId={participantChartMetricAxis(metric)}
-                          />
-                        ))}
-                      </LineChart>
-                    )}
-                  </ChartFrame>
+                {selectedBodyCompositionParticipant.scans.length ? (
+                  <BodyCompositionPerformanceChart
+                    analysis={selectedBodyCompositionParticipant}
+                    appearance="review"
+                    className="h-[420px] md:h-[500px]"
+                  />
                 ) : (
                   <div className="rounded-2xl border border-white/10 bg-black/20 px-4 py-5 text-sm text-white/72">
                     No body-composition scan values are available for this

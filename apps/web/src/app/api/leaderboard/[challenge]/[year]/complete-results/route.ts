@@ -1,21 +1,25 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-import { buildBodyCompositionParticipantAnalyses } from "@/lib/leaderboard/body-composition-normalization";
+import {
+  buildBodyCompositionMemberMeta,
+  buildConfiguredBodyCompositionParticipantAnalyses,
+  getAdjustedBfpScoringConfig,
+  usesAdjustedBfpScoring,
+} from "@/lib/leaderboard/body-composition-normalization";
 import {
   isWithinYmdRange,
   monthKeyFromYmd,
   scoringDate,
-  todayYmd,
   weekKeyFromYmd,
 } from "@/lib/leaderboard/date";
 import {
+  currentChallengeDate,
   extractMetricWindows,
   latestByBucket,
   loadRegisteredMembers,
   loadSubmissions,
   scoreHabits,
   scorePerformance,
-  usesAdjustedBfpScoring,
 } from "@/lib/leaderboard/engine";
 import { getChallengeConfig } from "@/lib/leaderboard/registry";
 import { roundTo } from "@/lib/leaderboard/scoring";
@@ -165,33 +169,21 @@ export async function GET(
       memberDivision.set(d.member_id, d.division);
     }
     const memberIds = Array.from(memberDivision.keys());
-    const today = todayYmd(cfg.timezone);
-    const challengeToDateEnd =
-      today < cfg.challengeWindow.start
-        ? cfg.challengeWindow.start
-        : today > cfg.challengeWindow.end
-          ? cfg.challengeWindow.end
-          : today;
-    const bodyCompositionByMember = usesAdjustedBfpScoring(cfg)
+    const adjustedBfpMetricKey = getAdjustedBfpScoringConfig(cfg)?.metricKeys
+      .bodyFatPct;
+    const hasAdjustedBfpScoring = usesAdjustedBfpScoring(cfg);
+    const bodyCompositionByMember = hasAdjustedBfpScoring
       ? new Map(
-          buildBodyCompositionParticipantAnalyses({
+          buildConfiguredBodyCompositionParticipantAnalyses({
             cfg,
             submissions,
             memberIds,
-            memberMeta: new Map(
-              memberIds.map((memberId) => [
-                memberId,
-                {
-                  name: memberName.get(memberId) ?? memberId,
-                  division: memberDivision.get(memberId) ?? "open",
-                },
-              ]),
-            ),
-            end: challengeToDateEnd,
-            weightKey: "body_weight_lb",
-            bodyFatPctKey: "inbody_body_fat_pct",
-            fatMassKey: "inbody_fat_mass_lb",
-            muscleKey: "inbody_muscle_mass_lb",
+            memberMeta: buildBodyCompositionMemberMeta({
+              memberIds,
+              memberName,
+              memberDivision,
+            }),
+            end: currentChallengeDate(cfg),
           }).map((analysis) => [analysis.memberId, analysis]),
         )
       : new Map();
@@ -199,7 +191,7 @@ export async function GET(
     // Calculate scores
     const habitByMember = scoreHabits(dailies, cfg);
     const rawPerfByMember = scorePerformance(submissions, cfg, memberDivision);
-    const adjustedBfpPerfByMember = usesAdjustedBfpScoring(cfg)
+    const adjustedBfpPerfByMember = hasAdjustedBfpScoring
       ? new Map(
           memberIds.map((memberId) => [
             memberId,
@@ -427,7 +419,7 @@ export async function GET(
           const direction: "up" | "down" =
             spec.direction === "down" ? "down" : "up";
           const adjustedBfpScore =
-            usesAdjustedBfpScoring(cfg) && spec.key === "inbody_body_fat_pct"
+            spec.key === adjustedBfpMetricKey
               ? bodyCompositionByMember.get(memberId)?.muscleStabilizedScore
               : undefined;
           const improvement =
@@ -435,7 +427,7 @@ export async function GET(
             improvementForMetric(spec.kind, baseline, final, direction);
           const points =
             adjustedBfpScore?.points ??
-            (usesAdjustedBfpScoring(cfg)
+            (hasAdjustedBfpScoring
               ? 0
               : spec.scoring({ improvement, baseline, final }));
 

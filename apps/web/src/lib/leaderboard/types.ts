@@ -53,6 +53,16 @@ export interface MetricSpec {
   sensitive?: boolean;
 }
 
+export interface AdjustedBfpScoringConfig {
+  type: "adjusted_bfp";
+  metricKeys: {
+    weight: MetricKey;
+    bodyFatPct: MetricKey;
+    fatMass?: MetricKey;
+    muscleMass?: MetricKey;
+  };
+}
+
 export interface ChallengeConfig {
   id: string; // e.g., "flex-the-halls-challenge-2025"
   slug: string; // e.g., "flex-the-halls-challenge"
@@ -100,6 +110,10 @@ export interface ChallengeConfig {
       mode: "latest_to_date" | "final_window_only"; // default: final_window_only
       lockAfterEnd?: boolean; // if true, after challenge end keep the last computed final
     };
+  };
+
+  bodyComposition?: {
+    scoring?: AdjustedBfpScoringConfig;
   };
 
   weights: { habits: number; performance: number };

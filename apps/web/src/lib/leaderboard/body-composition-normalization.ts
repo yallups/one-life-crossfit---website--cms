@@ -1,6 +1,11 @@
 import { calendarDate } from "./date";
 import { roundTo } from "./scoring";
-import type { ChallengeConfig, DivisionKey, SubmissionRow } from "./types";
+import type {
+  AdjustedBfpScoringConfig,
+  ChallengeConfig,
+  DivisionKey,
+  SubmissionRow,
+} from "./types";
 
 export type BodyCompositionParticipantStatus =
   | "eligible"
@@ -70,7 +75,7 @@ export interface BodyCompositionParticipantAnalysis {
 
 type MetricRow = Pick<SubmissionRow, "member_id" | "metrics" | "timestamp">;
 
-type MemberMeta = {
+export type BodyCompositionMemberMeta = {
   name: string;
   division: DivisionKey;
 };
@@ -106,6 +111,34 @@ const FAT_LOSS_CREDIT_DECAY_EXPONENT = 1.5;
 
 function isFiniteNumber(value: unknown): value is number {
   return typeof value === "number" && Number.isFinite(value);
+}
+
+export function getAdjustedBfpScoringConfig(
+  cfg: ChallengeConfig,
+): AdjustedBfpScoringConfig | undefined {
+  const scoring = cfg.bodyComposition?.scoring;
+  return scoring?.type === "adjusted_bfp" ? scoring : undefined;
+}
+
+export function usesAdjustedBfpScoring(cfg: ChallengeConfig) {
+  return getAdjustedBfpScoringConfig(cfg) != null;
+}
+
+export function buildBodyCompositionMemberMeta(args: {
+  memberIds: string[];
+  memberName: Map<string, string>;
+  memberDivision: Map<string, DivisionKey>;
+}) {
+  const { memberDivision, memberIds, memberName } = args;
+  return new Map(
+    memberIds.map((memberId) => [
+      memberId,
+      {
+        name: memberName.get(memberId) ?? memberId,
+        division: memberDivision.get(memberId) ?? "open",
+      },
+    ]),
+  );
 }
 
 function roundOptional(value: number | undefined, decimals = 2) {
@@ -487,11 +520,11 @@ function addAdjustedBodyFatLine(
   });
 }
 
-export function buildBodyCompositionParticipantAnalyses(args: {
+function buildBodyCompositionParticipantAnalyses(args: {
   cfg: ChallengeConfig;
   submissions: SubmissionRow[];
   memberIds: string[];
-  memberMeta: Map<string, MemberMeta>;
+  memberMeta: Map<string, BodyCompositionMemberMeta>;
   end: string;
   weightKey?: string;
   bodyFatPctKey?: string;
@@ -602,4 +635,23 @@ export function buildBodyCompositionParticipantAnalyses(args: {
         left.memberName.localeCompare(right.memberName)
       );
     });
+}
+
+export function buildConfiguredBodyCompositionParticipantAnalyses(args: {
+  cfg: ChallengeConfig;
+  submissions: SubmissionRow[];
+  memberIds: string[];
+  memberMeta: Map<string, BodyCompositionMemberMeta>;
+  end: string;
+}) {
+  const scoring = getAdjustedBfpScoringConfig(args.cfg);
+  if (!scoring) return [];
+
+  return buildBodyCompositionParticipantAnalyses({
+    ...args,
+    weightKey: scoring.metricKeys.weight,
+    bodyFatPctKey: scoring.metricKeys.bodyFatPct,
+    fatMassKey: scoring.metricKeys.fatMass,
+    muscleKey: scoring.metricKeys.muscleMass,
+  });
 }

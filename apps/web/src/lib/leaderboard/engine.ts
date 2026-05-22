@@ -1,6 +1,9 @@
 import {
   type BodyCompositionParticipantAnalysis,
-  buildBodyCompositionParticipantAnalyses,
+  buildBodyCompositionMemberMeta,
+  buildConfiguredBodyCompositionParticipantAnalyses,
+  getAdjustedBfpScoringConfig,
+  usesAdjustedBfpScoring,
 } from "./body-composition-normalization";
 import { fetchCsvText, parseCsv } from "./csv";
 import {
@@ -28,6 +31,13 @@ function stableHash(str: string): number {
     h = Math.imul(h, 16777619);
   }
   return h >>> 0;
+}
+
+export function currentChallengeDate(cfg: ChallengeConfig) {
+  const today = todayYmd(cfg.timezone);
+  if (today < cfg.challengeWindow.start) return cfg.challengeWindow.start;
+  if (today > cfg.challengeWindow.end) return cfg.challengeWindow.end;
+  return today;
 }
 
 export async function loadSubmissions(
@@ -458,7 +468,7 @@ export function scorePerformance(
   return perfPoints;
 }
 
-function bfpScoreOverrides(args: {
+function adjustedBfpPerformanceOverrides(args: {
   cfg: ChallengeConfig;
   submissions: SubmissionRow[];
   memberIds: string[];
@@ -466,41 +476,26 @@ function bfpScoreOverrides(args: {
   memberDivision: Map<string, DivisionKey>;
 }) {
   const { cfg, memberDivision, memberIds, memberName, submissions } = args;
-  if (!usesAdjustedBfpScoring(cfg)) return undefined;
+  const scoring = getAdjustedBfpScoringConfig(cfg);
+  if (!scoring) return undefined;
   if (
     !cfg.performance.metrics.some(
-      (metric) => metric.key === "inbody_body_fat_pct",
+      (metric) => metric.key === scoring.metricKeys.bodyFatPct,
     )
   ) {
     return undefined;
   }
 
-  const memberMeta = new Map(
-    memberIds.map((memberId) => [
-      memberId,
-      {
-        name: memberName.get(memberId) ?? memberId,
-        division: memberDivision.get(memberId) ?? "open",
-      },
-    ]),
-  );
-  const today = todayYmd(cfg.timezone);
-  const end =
-    today < cfg.challengeWindow.start
-      ? cfg.challengeWindow.start
-      : today > cfg.challengeWindow.end
-        ? cfg.challengeWindow.end
-        : today;
-  const analyses = buildBodyCompositionParticipantAnalyses({
+  const analyses = buildConfiguredBodyCompositionParticipantAnalyses({
     cfg,
     submissions,
     memberIds,
-    memberMeta,
-    end,
-    weightKey: "body_weight_lb",
-    bodyFatPctKey: "inbody_body_fat_pct",
-    fatMassKey: "inbody_fat_mass_lb",
-    muscleKey: "inbody_muscle_mass_lb",
+    memberMeta: buildBodyCompositionMemberMeta({
+      memberIds,
+      memberName,
+      memberDivision,
+    }),
+    end: currentChallengeDate(cfg),
   });
 
   return new Map(
@@ -509,10 +504,6 @@ function bfpScoreOverrides(args: {
       analysis.muscleStabilizedScore?.points ?? 0,
     ]),
   );
-}
-
-export function usesAdjustedBfpScoring(cfg: ChallengeConfig) {
-  return cfg.slug === "summer-shred-challenge" && cfg.year === 2026;
 }
 
 export interface MemberDailyLog {
@@ -765,8 +756,9 @@ export async function computeMemberDetail(
 
   const habitTotal = windows.reduce((sum, w) => sum + w.dailyPointsAwarded, 0);
   const metricRows = submissions.filter((s) => s.member_id === memberId);
-  const bodyComposition = usesAdjustedBfpScoring(cfg)
-    ? buildBodyCompositionParticipantAnalyses({
+  const hasAdjustedBfpScoring = usesAdjustedBfpScoring(cfg);
+  const bodyComposition = hasAdjustedBfpScoring
+    ? buildConfiguredBodyCompositionParticipantAnalyses({
         cfg,
         submissions,
         memberIds: [memberId],
@@ -779,14 +771,7 @@ export async function computeMemberDetail(
             },
           ],
         ]),
-        end:
-          todayYmd(cfg.timezone) > cfg.challengeWindow.end
-            ? cfg.challengeWindow.end
-            : todayYmd(cfg.timezone),
-        weightKey: "body_weight_lb",
-        bodyFatPctKey: "inbody_body_fat_pct",
-        fatMassKey: "inbody_fat_mass_lb",
-        muscleKey: "inbody_muscle_mass_lb",
+        end: currentChallengeDate(cfg),
       })[0]
     : undefined;
   const windowsByMember = extractMetricWindows(metricRows, cfg);
@@ -796,9 +781,11 @@ export async function computeMemberDetail(
     { improvement: number; points: number; baseline?: number; final?: number }
   > = {};
   let perfTotal = 0;
-  const performanceMetricsToScore = usesAdjustedBfpScoring(cfg)
+  const adjustedBfpMetricKey = getAdjustedBfpScoringConfig(cfg)?.metricKeys
+    .bodyFatPct;
+  const performanceMetricsToScore = hasAdjustedBfpScoring
     ? cfg.performance.metrics.filter(
-        (spec) => spec.key === "inbody_body_fat_pct",
+        (spec) => spec.key === adjustedBfpMetricKey,
       )
     : cfg.performance.metrics;
 
@@ -807,7 +794,7 @@ export async function computeMemberDetail(
     const final = w.final[spec.key];
     const direction: "up" | "down" = spec.direction === "down" ? "down" : "up";
     const adjustedBfpScore =
-      usesAdjustedBfpScoring(cfg) && spec.key === "inbody_body_fat_pct"
+      spec.key === adjustedBfpMetricKey
         ? bodyComposition?.muscleStabilizedScore
         : undefined;
     const imp =
@@ -878,14 +865,14 @@ export async function computeLeaderboard(
   const allMemberIds = Array.from(memberDivision.keys());
   const habitByMember = scoreHabits(dailies, cfg);
   const rawPerfByMember = scorePerformance(submissions, cfg, memberDivision);
-  const bfpPerfOverride = bfpScoreOverrides({
+  const adjustedBfpPerfOverride = adjustedBfpPerformanceOverrides({
     cfg,
     submissions,
     memberIds: allMemberIds,
     memberName,
     memberDivision,
   });
-  const perfByMember = bfpPerfOverride ?? rawPerfByMember;
+  const perfByMember = adjustedBfpPerfOverride ?? rawPerfByMember;
 
   const divisions = new Set<DivisionKey>(
     cfg.divisions.keys.length

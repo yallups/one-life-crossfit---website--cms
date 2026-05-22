@@ -803,6 +803,17 @@ export const summerShred2026: ChallengeConfig = {
       },
     ],
   },
+  bodyComposition: {
+    scoring: {
+      type: "adjusted_bfp",
+      metricKeys: {
+        weight: "body_weight_lb",
+        bodyFatPct: "inbody_body_fat_pct",
+        fatMass: "inbody_fat_mass_lb",
+        muscleMass: "inbody_muscle_mass_lb",
+      },
+    },
+  },
   weights: { habits: 1, performance: 1 },
   tieBreakers: [
     { type: "performance" },
