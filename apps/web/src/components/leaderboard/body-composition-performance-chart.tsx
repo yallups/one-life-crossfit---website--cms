@@ -46,10 +46,20 @@ const METRICS = [
 
 const CHART_STYLES = {
   public: {
-    grid: "hsl(var(--border))",
-    axis: "hsl(var(--muted-foreground))",
-    reference: "hsl(var(--muted-foreground))",
-    tooltip: undefined,
+    grid: "var(--border)",
+    axis: "var(--muted-foreground)",
+    reference: "var(--muted-foreground)",
+    tooltip: {
+      backgroundColor: "var(--popover)",
+      border: "1px solid var(--border)",
+      borderRadius: 8,
+      boxShadow: "var(--shadow-lg)",
+      color: "var(--popover-foreground)",
+    },
+    tooltipLabel: {
+      color: "var(--muted-foreground)",
+      fontWeight: 500,
+    },
   },
   review: {
     grid: "rgba(255,255,255,0.1)",
@@ -59,6 +69,11 @@ const CHART_STYLES = {
       backgroundColor: "#081018",
       border: "1px solid rgba(255,255,255,0.12)",
       borderRadius: 16,
+      color: "rgba(255,255,255,0.9)",
+    },
+    tooltipLabel: {
+      color: "rgba(255,255,255,0.62)",
+      fontWeight: 500,
     },
   },
 } satisfies Record<
@@ -67,7 +82,8 @@ const CHART_STYLES = {
     axis: string;
     grid: string;
     reference: string;
-    tooltip?: CSSProperties;
+    tooltip: CSSProperties;
+    tooltipLabel: CSSProperties;
   }
 >;
 
@@ -267,6 +283,7 @@ export function BodyCompositionPerformanceChart({
             dataKey="day"
             domain={["dataMin", "dataMax"]}
             stroke={styles.axis}
+            tick={{ fill: styles.axis }}
             tickFormatter={formatDay}
             ticks={dayTicks}
             type="number"
@@ -274,6 +291,7 @@ export function BodyCompositionPerformanceChart({
           <YAxis
             domain={["auto", "auto"]}
             stroke={styles.axis}
+            tick={{ fill: styles.axis }}
             tickFormatter={formatPoundsTick}
             width={46}
             yAxisId="pounds"
@@ -282,6 +300,7 @@ export function BodyCompositionPerformanceChart({
             domain={["auto", "auto"]}
             orientation="right"
             stroke={styles.axis}
+            tick={{ fill: styles.axis }}
             tickFormatter={formatPercentagePointTick}
             width={52}
             yAxisId="pct"
@@ -302,6 +321,7 @@ export function BodyCompositionPerformanceChart({
           />
           <Tooltip
             contentStyle={styles.tooltip}
+            labelStyle={styles.tooltipLabel}
             formatter={(value, name, item) => {
               const numericValue =
                 typeof value === "number"
