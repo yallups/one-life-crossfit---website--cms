@@ -586,6 +586,16 @@ export default function ReviewClient({
       }),
     ) as Record<BodyCompositionMetricKey, number | undefined>;
   }, [bodyCompositionBuckets]);
+  const complianceLeaderboard = useMemo(
+    () =>
+      [...data.members].sort(
+        (left, right) =>
+          right.complianceRate - left.complianceRate ||
+          right.habitPointsInRange - left.habitPointsInRange ||
+          left.memberName.localeCompare(right.memberName),
+      ),
+    [data.members],
+  );
 
   const goToRange = (params: Record<string, string | undefined>) => {
     const normalizedParams = { ...params };
@@ -898,6 +908,79 @@ export default function ReviewClient({
             title={`${data.challenge.slug}-group-summary`}
           />
         </div>
+
+        <section className="mb-8">
+          <div className={cardClassName()}>
+            <div className="mb-5 flex flex-wrap items-start justify-between gap-4">
+              <div>
+                <div className="text-xs font-semibold uppercase tracking-[0.24em] text-white/60">
+                  Member compliance
+                </div>
+                <h2 className="mt-2 text-2xl font-black">
+                  Compliance leaderboard
+                </h2>
+                <p className="mt-2 text-sm text-white/70">
+                  Sorted by habit-point compliance for {data.range.label}.
+                </p>
+              </div>
+              <div className="rounded-full border border-white/15 bg-black/20 px-3 py-2 text-sm font-bold text-white">
+                {data.summary.totalHabitPoints.toFixed(0)}/
+                {data.summary.totalPossibleHabitPoints.toFixed(0)} group points
+              </div>
+            </div>
+
+            <div className="overflow-hidden rounded-2xl border border-white/10">
+              <div className="hidden grid-cols-[72px_1fr_130px_150px_130px] gap-3 border-white/10 border-b bg-black/25 px-4 py-3 text-xs font-bold uppercase tracking-[0.16em] text-white/55 md:grid">
+                <div>Rank</div>
+                <div>Member</div>
+                <div className="text-right">Compliance</div>
+                <div className="text-right">Habit points</div>
+                <div className="text-right">Check-ins</div>
+              </div>
+              <div className="divide-y divide-white/10">
+                {complianceLeaderboard.map((member, index) => (
+                  <div
+                    className="grid gap-3 px-4 py-4 md:grid-cols-[72px_1fr_130px_150px_130px] md:items-center"
+                    key={member.memberId}
+                  >
+                    <div className="flex items-center justify-between gap-3 md:block">
+                      <span className="inline-flex h-8 min-w-8 items-center justify-center rounded-full bg-white/12 px-2 font-black text-white">
+                        {index + 1}
+                      </span>
+                      <span className="text-right text-2xl font-black text-white md:hidden">
+                        {formatPercent(member.complianceRate, 1)}
+                      </span>
+                    </div>
+                    <div>
+                      <div className="font-bold text-white">
+                        {member.memberName}
+                      </div>
+                      <div className="mt-1 text-xs uppercase tracking-[0.16em] text-white/45">
+                        {member.division}
+                      </div>
+                    </div>
+                    <div className="hidden text-right text-2xl font-black text-white md:block">
+                      {formatPercent(member.complianceRate, 1)}
+                    </div>
+                    <div className="flex items-center justify-between text-sm text-white/70 md:block md:text-right">
+                      <span className="md:hidden">Habit points</span>
+                      <span className="font-semibold text-white">
+                        {member.habitPointsInRange.toFixed(0)}/
+                        {member.possibleHabitPointsInRange.toFixed(0)}
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between text-sm text-white/70 md:block md:text-right">
+                      <span className="md:hidden">Check-ins</span>
+                      <span className="font-semibold text-white">
+                        {member.completedDays}/{member.possibleDays}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
 
         <section className="mb-8">
           <div className={cardClassName()} ref={habitsRef}>

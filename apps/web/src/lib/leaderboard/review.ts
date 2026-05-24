@@ -861,13 +861,17 @@ function buildBodyCompositionBuckets(args: {
     muscleKey,
   ].filter((key): key is string => !!key);
   const memberIdSet = new Set(memberIds);
+  const baselineStart =
+    cfg.performance.baselineWindow.start < cfg.challengeWindow.start
+      ? cfg.performance.baselineWindow.start
+      : cfg.challengeWindow.start;
   const normalizedRows = normalizeBodyCompositionMetricRows(
     metricRows,
     cfg,
   ).filter(
     (row) =>
       memberIdSet.has(row.member_id) &&
-      isWithinYmdRange(row.date, cfg.challengeWindow.start, end),
+      isWithinYmdRange(row.date, baselineStart, end),
   );
 
   const updatesByDate = new Map<string, Map<string, Record<string, number>>>();
@@ -878,12 +882,14 @@ function buildBodyCompositionBuckets(args: {
       const bodyFatPct = bodyFatPctKey
         ? daily.metrics[bodyFatPctKey]
         : undefined;
+      const recordedValue = daily.metrics[metricKey];
       const value =
-        metricKey === fatMassKey &&
-        Number.isFinite(weight) &&
-        Number.isFinite(bodyFatPct)
-          ? (weight! * bodyFatPct!) / 100
-          : daily.metrics[metricKey];
+        Number.isFinite(recordedValue) ||
+        metricKey !== fatMassKey ||
+        !Number.isFinite(weight) ||
+        !Number.isFinite(bodyFatPct)
+          ? recordedValue
+          : (weight! * bodyFatPct!) / 100;
       if (!Number.isFinite(value)) continue;
       const compoundKey = `${daily.member_id}|${metricKey}`;
       const effectiveDate = seededMetricKeys.has(compoundKey)
