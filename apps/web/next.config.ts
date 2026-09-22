@@ -29,10 +29,23 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     const redirects = await client.fetch(queryRedirects);
-    return redirects.map((redirect) => ({
-      ...redirect,
-      permanent: redirect.permanent ?? false,
-    }));
+    return [
+      {
+        source: "/:path*",
+        has: [
+          {
+            type: "host" as const,
+            value: "one-life-crossfit-website-.*\\.vercel\\.app",
+          },
+        ],
+        destination: "https://onelifecrossfit.com/:path*",
+        permanent: true,
+      },
+      ...redirects.map((redirect) => ({
+        ...redirect,
+        permanent: redirect.permanent ?? false,
+      })),
+    ];
   },
 };
 
